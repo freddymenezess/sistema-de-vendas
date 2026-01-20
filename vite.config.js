@@ -15,7 +15,9 @@ export default defineConfig({
       '@widgets': path.resolve(__dirname, 'src/components/widgets'),
       '@services': path.resolve(__dirname, 'src/services'),
       '@data': path.resolve(__dirname, 'src/data'),
-      '@routes': path.resolve(__dirname, 'src/routes')
+      '@routes': path.resolve(__dirname, 'src/routes'),
+      '@auth': path.resolve(__dirname, 'src/auth'),
+      '@hooks': path.resolve(__dirname, 'src/hooks'),
     },
   },
 });
