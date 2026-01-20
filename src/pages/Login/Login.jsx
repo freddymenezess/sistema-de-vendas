@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { getItem, setItem } from "@services/storage.js";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "@auth/AuthContext.jsx";
 import usersStorage from "@data/users.json";
+import { getItem, setItem } from "@services/storage.js";
 import mamev from "/mamev-icon.png";
 import styles from "./Login.module.css";
 
@@ -9,7 +10,20 @@ function Login() {
   const [id, setId] = useState(0);
   const [password, setPassword] = useState("");
   const [correctData, setCorrectData] = useState(true);
+
+  const { user, login } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  // Redireciona se já estiver logado
+  useEffect(() => {
+    if (user) {
+      if (user.role === "admin" || user.role === "manager") {
+        navigate("/dashboard", { replace: true });
+      } else {
+        navigate("/home", { replace: true });
+      }
+    }
+  }, [user, navigate]);
 
   function handleId(event) {
     setId(parseInt(event.target.value));
@@ -22,24 +36,19 @@ function Login() {
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (!getItem("users")) {
-      setItem("users", usersStorage);
-    }
+    if (!getItem("users")) setItem("users", usersStorage);
 
     const users = getItem("users");
-    const user = users.find(
+    const foundUser = users.find(
       (u) => (u.nif === id || u.id === id) && u.password === password,
     );
 
-    if (user) {
-      setItem("currentUser", user);
-      user.role === "admin"
-        || user.role === "manager"
-        ? navigate("/dashboard")
-        : navigate('/');
-    } else {
+    if (!foundUser) {
       setCorrectData(false);
+      return;
     }
+
+    login(foundUser);
   }
 
   function handleSetCorrectData() {
@@ -53,7 +62,7 @@ function Login() {
       </div>
       <div className={styles.desc}>
         <p>
-          Bem-vindo(a) ao sitema de gestão da empresa{" "}
+          Bem-vindo(a) ao sistema de gestão da empresa{" "}
           <strong>MAMEV Cosméticos</strong>! Por favor, inicie sessão para
           continuar.
         </p>

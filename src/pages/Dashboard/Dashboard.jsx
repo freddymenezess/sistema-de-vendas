@@ -1,4 +1,5 @@
-import { DollarSign, Users, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
+import SalesChart from "@components/SalesChart/SalesChart";
 import styles from "./Dashboard.module.css";
 
 function Dashboard() {
@@ -8,13 +9,9 @@ function Dashboard() {
     { id: 3, nome: "Arroz 5kg", vendas: 80 },
   ];
 
-  // const produtosBaixoEstoque = [
-  //   { id: 1, nome: "Óleo 1L", estoque: 4 },
-  //   { id: 2, nome: "Arroz 5kg", estoque: 2 },
-  // ];
-
   return (
     <div className={styles.dashboard}>
+      <SalesChart />
       {/* Destaque principal */}
       
 

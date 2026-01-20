@@ -1,18 +1,18 @@
-import { createContext, useState } from "react";
-import { getItem, setItem, removeItem } from "@services/storage.js";
+import { createContext, useState } from 'react';
+import { getItem, setItem, removeItem } from '@services/storage.js';
 
 export const AuthContext = createContext();
 
 function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => getItem("currentUser"));
+  const [user, setUser] = useState(() => getItem('currentUser'));
 
   const login = (userData) => {
-    setItem("currentUser", userData);
+    setItem('currentUser', userData);
     setUser(userData);
   };
 
   const logout = () => {
-    removeItem("currentUser");
+    removeItem('currentUser');
     setUser(null);
   };
 
