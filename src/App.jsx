@@ -1,9 +1,14 @@
-import './src/components/Dashboard/Dashboard.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashboard from "@pages/Dashboard/Dashboard";
 
 function App() {
   return (
-    <h1>MAMEV Cosméticos</h1>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
