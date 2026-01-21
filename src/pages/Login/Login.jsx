@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@auth/AuthContext.jsx";
 import usersStorage from "@data/users.json";
 import { getItem, setItem } from "@services/storage.js";
+=======
+import { useState } from "react";
+import { getItem, setItem } from "@services/storage.js";
+import { useNavigate } from "react-router-dom";
+import usersStorage from "@data/users.json";
+>>>>>>> a956360282488fab58b216e7fbba5789feedc573
 import mamev from "/mamev-icon.png";
 import styles from "./Login.module.css";
 
@@ -10,6 +17,7 @@ function Login() {
   const [id, setId] = useState(0);
   const [password, setPassword] = useState("");
   const [correctData, setCorrectData] = useState(true);
+  const navigate = useNavigate();
 
   const { user, login } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -36,6 +44,7 @@ function Login() {
   function handleSubmit(event) {
     event.preventDefault();
 
+<<<<<<< HEAD
     if (!getItem("users")) setItem("users", usersStorage);
 
     const users = getItem("users");
@@ -44,6 +53,24 @@ function Login() {
     );
 
     if (!foundUser) {
+=======
+    if (!getItem("users")) {
+      setItem("users", usersStorage);
+    }
+
+    const users = getItem("users");
+    const user = users.find(
+      (u) => (u.nif === id || u.id === id) && u.password === password,
+    );
+
+    if (user) {
+      setItem("currentUser", user);
+      user.role === "admin"
+        || user.role === "manager"
+        ? navigate("/dashboard")
+        : navigate('/');
+    } else {
+>>>>>>> a956360282488fab58b216e7fbba5789feedc573
       setCorrectData(false);
       return;
     }
@@ -62,7 +89,11 @@ function Login() {
       </div>
       <div className={styles.desc}>
         <p>
+<<<<<<< HEAD
           Bem-vindo(a) ao sistema de gestão da empresa{" "}
+=======
+          Bem-vindo(a) ao sitema de gestão da empresa{" "}
+>>>>>>> a956360282488fab58b216e7fbba5789feedc573
           <strong>MAMEV Cosméticos</strong>! Por favor, inicie sessão para
           continuar.
         </p>
