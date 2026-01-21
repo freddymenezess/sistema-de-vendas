@@ -1,0 +1,8 @@
+.header {
+  padding: 20px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+  background: var(--main-grad);
+}
