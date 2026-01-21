@@ -55,49 +55,52 @@ function Login() {
   }
 
   return (
-    <form className={`${styles.loginForm} flex`} onSubmit={handleSubmit}>
-      <div className={styles.logoContainer}>
-        <img src={mamev} alt='Logo MAMEV' />
-      </div>
-      <div className={styles.desc}>
-        <p>
-          <strong>MAMEV Cosméticos</strong>! Por favor, inicie sessão para
-          continuar.
-        </p>
-      </div>
-      <div className={styles.inputGroup}>
-        <label htmlFor='username'>NIF ou número de processo</label>
-        <input
-          type='text'
-          id='username'
-          name='username'
-          onChange={handleId}
-          onFocus={handleSetCorrectData}
-          autoFocus
-          required
-        />
-      </div>
-      <div className={styles.inputGroup}>
-        <label htmlFor='password'>Palavra-passe</label>
-        <input
-          type='password'
-          id='password'
-          name='password'
-          onChange={handlePasswordChange}
-          onFocus={handleSetCorrectData}
-          required
-        />
-      </div>
-      <button type='submit' className={styles.loginButton}>
-        Iniciar Sessão
-      </button>
-      {!correctData && (
-        <p className={styles.errorMessage}>
-          Dados inválidos. Em caso de perda ou esquecimento dos seus dados de
-          acesso, contacte a direção da empresa.
-        </p>
-      )}
-    </form>
+    <div className='container'>
+      <form className={`${styles.loginForm} flex`} onSubmit={handleSubmit}>
+        <div className={styles.logoContainer}>
+          <img src={mamev} alt='Logo MAMEV' />
+        </div>
+        <div className={styles.desc}>
+          <p>
+            Bem-vindo ao sistema de gestão da{' '}
+            <strong>MAMEV Cosméticos</strong>! Por favor, inicie sessão para
+            continuar.
+          </p>
+        </div>
+        <div className={styles.inputGroup}>
+          <label htmlFor='username'>NIF ou número de processo</label>
+          <input
+            type='text'
+            id='username'
+            name='username'
+            onChange={handleId}
+            onFocus={handleSetCorrectData}
+            autoFocus
+            required
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <label htmlFor='password'>Palavra-passe</label>
+          <input
+            type='password'
+            id='password'
+            name='password'
+            onChange={handlePasswordChange}
+            onFocus={handleSetCorrectData}
+            required
+          />
+        </div>
+        <button type='submit' className={styles.loginButton}>
+          Iniciar Sessão
+        </button>
+        {!correctData && (
+          <p className={styles.errorMessage}>
+            Dados inválidos. Em caso de perda ou esquecimento dos seus dados de
+            acesso, contacte a direção da empresa.
+          </p>
+        )}
+      </form>
+    </div>
   );
 }
 

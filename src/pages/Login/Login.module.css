@@ -45,11 +45,16 @@
   margin-bottom: 10px;
 }
 
+.inputGroup input:focus {
+  border: 2px solid var(--main);
+  outline: none;
+}
+
 .loginButton {
   width: 100%;
   padding: 12px;
   margin-top: 12px;
-  background-color: #4CAF50;
+  background-color: var(--main);
   color: white;
   font-size: 1rem;
   border: none;
@@ -59,7 +64,7 @@
 }
 
 .loginButton:hover {
-  background-color: #45a049;
+  background-color: var(--m-desfoque);
 }
 
 .errorMessage {
