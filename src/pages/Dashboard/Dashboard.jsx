@@ -1,4 +1,7 @@
 import { TrendingUp } from "lucide-react";
+import LowStock from "@widgets/LowStock/LowStock";
+import OnStaff from "@widgets/OnStaff/OnStaff";
+import Statics from "@widgets/Statics/Statics";
 import SalesChart from "@components/SalesChart/SalesChart";
 import styles from "./Dashboard.module.css";
 
@@ -11,6 +14,9 @@ function Dashboard() {
 
   return (
     <div className={styles.dashboard}>
+      <Statics />
+      <OnStaff />
+      <LowStock />
       <SalesChart />
       {/* Destaque principal */}
       
@@ -39,6 +45,7 @@ function Dashboard() {
         {/* Produtos em baixa */}
         
       </div>
+      <p>Página em desenvolvimento</p>
     </div>
   );
 }

@@ -13,6 +13,7 @@ function AppRoutes() {
         path="/login"
         element={<Login />}
       />
+
       <Route
         path="/"
         element={
