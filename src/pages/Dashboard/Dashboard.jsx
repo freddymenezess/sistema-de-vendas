@@ -1,4 +1,5 @@
 import { TrendingUp } from "lucide-react";
+import Header from "@components/Header/Header";
 import LowStock from "@widgets/LowStock/LowStock";
 import OnStaff from "@widgets/OnStaff/OnStaff";
 import Statics from "@widgets/Statics/Statics";

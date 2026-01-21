@@ -18,6 +18,7 @@ export default defineConfig({
       '@routes': path.resolve(__dirname, 'src/routes'),
       '@auth': path.resolve(__dirname, 'src/auth'),
       '@hooks': path.resolve(__dirname, 'src/hooks'),
+      '@templates': path.resolve(__dirname, 'src/templates'),
     },
   },
 });
