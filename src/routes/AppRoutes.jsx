@@ -20,7 +20,7 @@ function AppRoutes() {
           </PrivateRoute>
         }
       >
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Route>
     </Routes>
