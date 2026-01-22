@@ -6,7 +6,6 @@ import styles from './MainLayout.module.css';
 function MainLayout() {
   return (
     <div className={styles.container}>
-      <Header className={styles.header} />
       <NavBar className={styles.nav} />
       <main className={styles.main}>
         <Outlet />

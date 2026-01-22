@@ -1,27 +1,17 @@
 .container {
-  display: grid;
-  grid-template-columns: 60px 1fr;
-  grid-template-rows: 60px 1fr;
-  grid-template-areas: 
-    "header header"
-    "nav main";
-
+  position: relative;
   min-height: 100vh;
   background-color: var(--bg);
-}
-
-.header {
-  grid-area: header;
+  overflow-y: auto;
 }
 
 .nav {
-  grid-area: nav;
-  background-color: var(--nav-bg);
-  padding: 20px;
-  border-right: 1px solid var(--border-color);
+  height: 100vh;
 }
 
 .main {
-  grid-area: main;
-  padding: 8px;
+  position: absolute;
+  top: 0;
+  left: 50px;
+  width: calc(100% - 50px);
 }
