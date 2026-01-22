@@ -1,17 +1,13 @@
-import { DollarSign } from "lucide-react";
 import styles from "./Statics.module.css";
 
 function MainCard() {
-  const vendasHoje = 125000;
+  const vendasHoje = 1250000;
   
   return (
     <div className={styles.destaque}>
-      <strong>
-        <DollarSign size={44} />
-      </strong>
       <div>
         <span>Total vendido hoje</span>
-        <h1 className={styles.price}>
+        <p className={styles.price}>
           <strong>
             {vendasHoje.toLocaleString("pt-AO", {
               style: "currency",
@@ -20,7 +16,7 @@ function MainCard() {
               maximumFractionDigits: 2,
             })}
           </strong>
-        </h1>
+        </p>
       </div>
     </div>
   );
