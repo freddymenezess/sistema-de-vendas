@@ -1,3 +1,37 @@
-.title {
-    color: orange;
+.navbar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 10px;
+
+  position: sticky;
+  top: 0;
+  width: 50px;
+  padding-top: 20px;
+  background: #fff;
+  border-right: 2px solid var(--border);
+}
+
+.logoWrapper {
+  padding: 0 6px;
+}
+
+.logoWrapper > img {
+  max-width: 100%;
+  object-fit: cover;
+}
+
+.logoDesktop {
+  display: none;
+}
+
+.label {
+  display: none;
+}
+
+.logout {
+  display: flex;
+  align-items: flex-end;
+  flex: 1 1 100%;
 }
