@@ -24,6 +24,10 @@
   box-sizing: border-box;
 }
 
+body, #root {
+  background-color: var(--bg);
+}
+
 #root {
   margin: 0;
   color: #000;
