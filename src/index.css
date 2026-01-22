@@ -10,11 +10,12 @@
   /*
     Paleta de cores
   */
-  --bg: #f0f2f5;
-  --main: #ae9d1c;
+  --bg: #F5EFE6;
+  --border: #dcdcdc;
+  --main: #D4A373;
   --main-grad: linear-gradient(135deg, #9a8739 0%, #ae9d1c 100%);
-  --m-desfoque: #d4c96c;
-  --sec: #007bff;
+  --m-desfoque: #FFEBD2;
+  --sec: #B37C5F;
 }
 
 * {
