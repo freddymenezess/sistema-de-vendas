@@ -8,7 +8,6 @@ function Home() {
 
   return (
     <>
-      <NavBar />
       <h1>Bem-vindo(a), {user.name}!</h1>
       <p>Página em desenvolvimnto</p>
     </>
