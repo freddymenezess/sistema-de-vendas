@@ -26,28 +26,17 @@ function NavBar({ className = '' }) {
 
   return (
     <nav className={`${styles.navbar} ${className}`}>
-      <Link
-        className={styles.logoWrapper}
-        to="/"
-      >
-        <img 
-          src={logo} 
-          alt="Mamev" 
-          className={styles.logoMobile} 
-        />
-        <img 
-          src={logo_full} 
-          alt="Mamev" 
-          className={styles.logoDesktop} 
-        />
+      <Link className={styles.logoWrapper} to="/">
+        <img src={logo} alt="Mamev" className={styles.logoMobile} />
+        <img src={logo_full} alt="Mamev" className={styles.logoDesktop} />
       </Link>
 
       {navItems.map(({ to, label, icon: Icon }) => (
         <NavLink key={to} to={to} title={label} className={styles.navlink}>
           {({ isActive }) => (
-            <div className={styles.navItem}>
+            <div className={`${styles.navItem} flex`}>
               <Icon
-                size={30}
+                size={24}
                 color={isActive ? "#D4A373" : "#6b7280"}
                 fill={isActive ? "#D4A373" : "none"}
               />
@@ -56,13 +45,13 @@ function NavBar({ className = '' }) {
           )}
         </NavLink>
       ))}
-      <NavLink to="/logout" className={styles.logout}>
+      <NavLink to="/logout" className={`${styles.logout} ${styles.navlink}`}>
         <div
-          className="navItem"
+          className={`${styles.navItem} flex`}
           onClick={() => logout()}
           title="Terminar sessão"
         >
-          <LogOut size={30} color="red" />
+          <LogOut size={24} color="red" />
           <span className={styles.label}>Terminar sessão</span>
         </div>
       </NavLink>

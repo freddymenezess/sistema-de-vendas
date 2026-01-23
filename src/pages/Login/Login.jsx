@@ -63,7 +63,7 @@ function Login() {
         <div className={styles.desc}>
           <p>
             Bem-vindo ao sistema de gestão da{' '}
-            <strong>MAMEV Cosméticos</strong>! Por favor, inicie sessão para
+            <strong>MAMEV Cosmetics</strong>! Por favor, inicie sessão para
             continuar.
           </p>
         </div>

@@ -1,17 +1,10 @@
 .container {
-  position: relative;
+  display: flex;
   min-height: 100vh;
   background-color: var(--bg);
   overflow-y: auto;
 }
 
-.nav {
-  height: 100vh;
-}
-
 .main {
-  position: absolute;
-  top: 0;
-  left: 50px;
-  width: calc(100% - 50px);
+  flex: 1 1 100%;
 }

@@ -3,10 +3,10 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  row-gap: 10px;
 
   position: sticky;
   top: 0;
+  height: 100dvh;
   width: 50px;
   padding-top: 20px;
   background: #fff;
@@ -34,4 +34,49 @@
   display: flex;
   align-items: flex-end;
   flex: 1 1 100%;
+}
+
+
+@media screen and (min-width: 768px) {
+  .navbar{
+    width: 260px;
+  }
+
+  .logoMobile {
+    display: none;
+  }
+
+  .logoDesktop {
+    display: block;
+  }
+  
+  .navlink {
+    width: 100%;
+    text-decoration: none;
+  }
+  
+  .navlink .navItem {
+    flex-direction: row;
+    justify-content: flex-start;
+    column-gap: 12px;
+    padding: 12px;
+  }
+
+  [title].navlink:hover {
+    background: var(--border);
+  }
+  
+  .label {
+    display: inline-block;
+    color: #6b7280;
+    font-weight: bolder;
+  }
+
+  .logout .navItem {
+    width: 100%;
+  }
+
+  .logout .label {
+    color: red;
+  }
 }
