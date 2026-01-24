@@ -16,9 +16,9 @@ import styles from './NavBar.module.css';
 const navItems = [
   { to: '/', label: 'Home', icon: Home },
   { to: '/register', label: 'Cadastrar', icon: UserRoundPlus },
-  { to: '/dashboard', label: 'Projetos', icon: LayoutDashboard },
+  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/reports', label: 'Relatórios', icon: ClipboardPlus },
-  { to: '/products', label: 'Produtos', icon: ShoppingCart },
+  { to: '/stock', label: 'Estoque', icon: ShoppingCart },
 ];
 
 function NavBar({ className = '' }) {
@@ -34,7 +34,7 @@ function NavBar({ className = '' }) {
       {navItems.map(({ to, label, icon: Icon }) => (
         <NavLink key={to} to={to} title={label} className={styles.navlink}>
           {({ isActive }) => (
-            <div className={`${styles.navItem} flex`}>
+            <div className={`${styles.navItem} ${isActive ? styles.active : '' } flex`}>
               <Icon
                 size={24}
                 color={isActive ? "#D4A373" : "#6b7280"}

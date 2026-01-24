@@ -3,12 +3,13 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  row-gap: 10px;
 
   position: sticky;
   top: 0;
   height: 100dvh;
   width: 50px;
-  padding-top: 20px;
+  padding: 20px 2px 2px;
   background: #fff;
   border-right: 2px solid var(--border);
 }
@@ -36,10 +37,14 @@
   flex: 1 1 100%;
 }
 
+.logout .navItem {
+  padding-bottom: 18px;
+}
 
 @media screen and (min-width: 768px) {
   .navbar{
     width: 260px;
+    row-gap: 0;
   }
 
   .logoMobile {
@@ -62,8 +67,12 @@
     padding: 12px;
   }
 
+  [title].navlink {
+    border-radius: 8px;
+  }
+
   [title].navlink:hover {
-    background: var(--border);
+    background: var(--m-desfoque);
   }
   
   .label {
@@ -72,8 +81,17 @@
     font-weight: bolder;
   }
 
+  .active .label {
+    color: var(--main);
+  }
+  
   .logout .navItem {
     width: 100%;
+    border-radius: 8px;
+  }
+
+  .logout .navItem:hover {
+    background: #ff000047;
   }
 
   .logout .label {
