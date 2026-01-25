@@ -2,9 +2,12 @@
   display: flex;
   min-height: 100vh;
   background-color: var(--bg);
-  overflow-y: auto;
 }
 
 .main {
   flex: 1 1 100%;
+}
+
+.outlet {
+  padding: 15px;
 }

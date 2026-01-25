@@ -4,6 +4,8 @@ import { AuthContext } from '@auth/AuthContext.jsx';
 import usersStorage from '@data/users.json';
 import { getItem, setItem } from '@services/storage.js';
 import mamev from '/mamev-icon.png';
+import BoxShadow from '@components/BoxShadow/BoxShadow';
+import Spinner from '@components/Spinner/Spinner'
 import styles from './Login.module.css';
 
 function Login() {
@@ -11,7 +13,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [correctData, setCorrectData] = useState(true);
 
-  const { user, login } = useContext(AuthContext);
+  const { user, loading, login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,6 +25,10 @@ function Login() {
       }
     }
   }, [user, navigate]);
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   function handleId(event) {
     setId(parseInt(event.target.value));
@@ -55,51 +61,54 @@ function Login() {
   }
 
   return (
-    <div className='container'>
-      <form className={`${styles.loginForm} flex`} onSubmit={handleSubmit}>
-        <div className={styles.logoContainer}>
-          <img src={mamev} alt='Logo MAMEV' />
-        </div>
-        <div className={styles.desc}>
-          <p>
-            Bem-vindo ao sistema de gestão da{' '}
-            <strong>MAMEV Cosmetics</strong>! Por favor, inicie sessão para
-            continuar.
-          </p>
-        </div>
-        <div className={styles.inputGroup}>
-          <label htmlFor='username'>NIF ou número de processo</label>
-          <input
-            type='text'
-            id='username'
-            name='username'
-            onChange={handleId}
-            onFocus={handleSetCorrectData}
-            autoFocus
-            required
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label htmlFor='password'>Palavra-passe</label>
-          <input
-            type='password'
-            id='password'
-            name='password'
-            onChange={handlePasswordChange}
-            onFocus={handleSetCorrectData}
-            required
-          />
-        </div>
-        <button type='submit' className={styles.loginButton}>
-          Iniciar Sessão
-        </button>
-        {!correctData && (
-          <p className={styles.errorMessage}>
-            Dados inválidos. Em caso de perda ou esquecimento dos seus dados de
-            acesso, contacte a direção da empresa.
-          </p>
-        )}
-      </form>
+    <div className="container">
+      <BoxShadow>
+        <form className={`${styles.loginForm} flex`} onSubmit={handleSubmit}>
+          <div className={styles.logoContainer}>
+            <img src={mamev} alt="Logo MAMEV" />
+          </div>
+          <div className={styles.desc}>
+            <p>
+              Bem-vindo ao sistema de gestão da <strong>MAMEV Cosmetics</strong>!
+              Por favor, inicie sessão para continuar.
+            </p>
+          </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="username">NIF ou número de processo</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="123456780LA059"
+              onChange={handleId}
+              onFocus={handleSetCorrectData}
+              autoFocus
+              required
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="password">Palavra-passe</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Escreva aqui a sua palavra-passe"
+              onChange={handlePasswordChange}
+              onFocus={handleSetCorrectData}
+              required
+            />
+          </div>
+          <button type="submit" className={styles.loginButton}>
+            Iniciar Sessão
+          </button>
+          {!correctData && (
+            <p className={styles.errorMessage}>
+              Dados inválidos. Em caso de perda ou esquecimento dos seus dados de
+              acesso, contacte a direção da empresa.
+            </p>
+          )}
+        </form>
+      </BoxShadow>
     </div>
   );
 }

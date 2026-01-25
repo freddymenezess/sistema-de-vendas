@@ -10,7 +10,6 @@ import Dashboard from '@pages/Dashboard/Dashboard';
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="*" element={<Login />} />
       <Route path="/login" element={<Login />} />
 
       <Route
@@ -20,6 +19,7 @@ function AppRoutes() {
           </PrivateRoute>
         }
       >
+        <Route path="*" element={<Home />} />
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Route>

@@ -1,0 +1,28 @@
+.container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.06);
+}
+
+.table {
+  width: 100%;
+  color: #000000af;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background-color: var(--desfoque);
+  border-bottom: 2px solid var(--border);
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: var(--desfoque);
+}
+
+.table th,
+.table td {
+  text-align: center;
+  padding: 6px 0;
+}

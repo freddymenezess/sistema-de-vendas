@@ -15,6 +15,7 @@
   --main: #D4A373;
   --main-grad: linear-gradient(135deg, #9a8739 0%, #ae9d1c 100%);
   --m-desfoque: #FFEBD2;
+  --desfoque: #dcdcdc48;
   --sec: #B37C5F;
 }
 
@@ -26,6 +27,7 @@
 
 body, #root {
   background-color: var(--bg);
+  font-size: 12px;
 }
 
 #root {
@@ -55,4 +57,16 @@ body, #root {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+@media screen and (min-width: 768px) {
+  body, #root {
+    font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  body, #root {
+    font-size: 1rem;
+  }
 }

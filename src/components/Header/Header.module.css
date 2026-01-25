@@ -1,0 +1,13 @@
+header.container {
+  justify-content: flex-start;
+  flex-direction: row;
+  column-gap: 15px;
+  padding: 20px;
+  background: #fff;
+  border-bottom: 2px solid var(--border);
+}
+
+.info {
+  font-weight: bold;
+  color: #0000006b;
+}

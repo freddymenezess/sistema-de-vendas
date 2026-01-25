@@ -1,0 +1,28 @@
+.container {
+  padding: 15px;
+  background: #fff;
+  border-radius: inherit;
+}
+
+div.header {
+  align-items: stretch;
+  justify-content: flex-start;
+  flex-direction: row;
+  column-gap: 15px;
+  border-radius: inherit;
+}
+
+div.header .icon {
+  align-self: center;
+  padding: 20px;
+  border-radius: inherit;
+}
+
+strong.info {
+  align-items: flex-start;
+}
+
+.desc {
+  font-size: .6.5rem;
+  color: #00000062;
+}

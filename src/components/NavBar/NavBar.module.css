@@ -3,32 +3,81 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  row-gap: 10px;
 
-  position: sticky;
+  position: absolute;
   top: 0;
+  left: 0;
   height: 100dvh;
-  width: 50px;
+  width: 260px;
   padding: 20px 2px 2px;
   background: #fff;
   border-right: 2px solid var(--border);
 }
 
-.logoWrapper {
+nav.close {
+  display: none;
+}
+
+div.logoWrapper {
+  flex-direction: row;
+  justify-content: space-between;
   padding: 0 6px;
 }
 
 .logoWrapper > img {
-  max-width: 100%;
+  max-width: 80%;
   object-fit: cover;
 }
 
+.btn:hover {
+  cursor: pointer;
+}
+
 .logoDesktop {
-  display: none;
+  display: block;
+}
+
+.navlink {
+  width: 100%;
+  text-decoration: none;
+}
+
+.navlink .navItem {
+  flex-direction: row;
+  justify-content: flex-start;
+  column-gap: 12px;
+  padding: 12px;
+}
+
+[title].navlink {
+  border-radius: 8px;
+}
+
+[title].navlink:hover {
+  background: var(--m-desfoque);
 }
 
 .label {
-  display: none;
+  display: inline-block;
+  color: #6b7280;
+  font-weight: bolder;
+}
+
+.active .label {
+  color: var(--main);
+}
+
+.logout .navItem {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.logout .navItem:hover {
+  background: #ff000047;
+}
+
+.logout .label {
+  color: red;
 }
 
 .logout {
@@ -42,59 +91,11 @@
 }
 
 @media screen and (min-width: 768px) {
-  .navbar{
-    width: 260px;
-    row-gap: 0;
-  }
+  .navbar { position: sticky; }
+}
 
-  .logoMobile {
-    display: none;
-  }
-
-  .logoDesktop {
-    display: block;
-  }
-  
-  .navlink {
-    width: 100%;
-    text-decoration: none;
-  }
-  
-  .navlink .navItem {
-    flex-direction: row;
-    justify-content: flex-start;
-    column-gap: 12px;
-    padding: 12px;
-  }
-
-  [title].navlink {
-    border-radius: 8px;
-  }
-
-  [title].navlink:hover {
-    background: var(--m-desfoque);
-  }
-  
-  .label {
-    display: inline-block;
-    color: #6b7280;
-    font-weight: bolder;
-  }
-
-  .active .label {
-    color: var(--main);
-  }
-  
-  .logout .navItem {
-    width: 100%;
-    border-radius: 8px;
-  }
-
-  .logout .navItem:hover {
-    background: #ff000047;
-  }
-
-  .logout .label {
-    color: red;
-  }
+@media screen and (min-width: 1024px) {
+  .navbar { position: sticky; }
+  .navbar.close { display: flex; }
+  .btn { display: none; }
 }

@@ -4,14 +4,15 @@ import {
   ClipboardPlus,
   UserRoundPlus,
   ShoppingCart,
-  LogOut
-} from 'lucide-react'
-import { Link, NavLink } from 'react-router-dom';
-import logo from '/mamev-icon.png';
+  LogOut,
+  X
+} from 'lucide-react';
+import { useMenu } from '@context/MenuProvider'
+import { useRef } from 'react';
+import { NavLink } from 'react-router-dom';
 import logo_full from '/mamev-full.png';
-import useAuth from "@hooks/useAuth";
+import useAuth from '@hooks/useAuth';
 import styles from './NavBar.module.css';
-
 
 const navItems = [
   { to: '/', label: 'Home', icon: Home },
@@ -23,18 +24,27 @@ const navItems = [
 
 function NavBar({ className = '' }) {
   const { logout } = useAuth();
+  const { isOpen, closeMenu } = useMenu();
 
   return (
-    <nav className={`${styles.navbar} ${className}`}>
-      <Link className={styles.logoWrapper} to="/">
-        <img src={logo} alt="Mamev" className={styles.logoMobile} />
-        <img src={logo_full} alt="Mamev" className={styles.logoDesktop} />
-      </Link>
+    <nav
+      className={`${styles.navbar} ${!isOpen ? styles.close : ""} ${className}`}
+    >
+      <div className={`${styles.logoWrapper} flex`}>
+        <img
+          src={logo_full}
+          alt="Mamev"
+          className={styles.logoDesktop}
+        />
+        <X size={28} color="#6b7280" className={styles.btn} onClick={closeMenu} />
+      </div>
 
       {navItems.map(({ to, label, icon: Icon }) => (
         <NavLink key={to} to={to} title={label} className={styles.navlink}>
           {({ isActive }) => (
-            <div className={`${styles.navItem} ${isActive ? styles.active : '' } flex`}>
+            <div
+              className={`${styles.navItem} ${isActive ? styles.active : ""} flex`}
+            >
               <Icon
                 size={24}
                 color={isActive ? "#D4A373" : "#6b7280"}
