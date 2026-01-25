@@ -19,6 +19,8 @@ export default defineConfig({
       '@auth': path.resolve(__dirname, 'src/auth'),
       '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@templates': path.resolve(__dirname, 'src/templates'),
+      '@context': path.resolve(__dirname, 'src/context'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
     },
   },
 });
