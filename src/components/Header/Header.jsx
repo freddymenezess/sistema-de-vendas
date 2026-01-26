@@ -9,7 +9,7 @@ function Header() {
 
   return (
     <header className={`${styles.container} flex`}>
-      {!isOpen && <Menu onClick={openMenu} />}
+      {!isOpen && <Menu className={styles.btn} onClick={openMenu} />}
       <div className={styles.box2}>
         <h1>{USER.name}</h1>
         <p className={styles.info}>
