@@ -6,19 +6,8 @@
   width: 50px;
   height: 50px;
   font-weight: bold;
-  color: #fff;
+  color: var(--main);
+  background: var(--m-desfoque);
   border-radius: 50%;
   object-fit: cover;
-}
-
-.admin {
-  background: linear-gradient(135deg, #ff5f6d, #ffc371);
-}
-
-.manager {
-  background: linear-gradient(135deg, #56ab2f, #a8e063);
-}
-
-.seller {
-  background: linear-gradient(135deg, #36d1dc, #5b86e5);
 }
