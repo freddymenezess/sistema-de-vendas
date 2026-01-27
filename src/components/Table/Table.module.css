@@ -19,10 +19,22 @@
 
 .table tbody tr:nth-child(even) {
   background-color: var(--desfoque);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 .table th,
 .table td {
   text-align: center;
   padding: 6px 0;
+}
+
+.table thead:hover {
+  color: #000;
+  background: var(--desfoque);
+}
+
+.table tr:hover {
+  color: #000;
+  background: var(--desfoque);
 }

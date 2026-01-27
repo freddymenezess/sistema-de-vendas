@@ -1,7 +1,7 @@
-import { Menu } from 'lucide-react'
+import { Menu } from "lucide-react"
 import { useMenu } from "@context/MenuProvider";
-import useAuth from '@hooks/useAuth'
-import styles from './Header.module.css';
+import useAuth from "@hooks/useAuth"
+import styles from "./Header.module.css";
 
 function Header() {
   const { user: USER } = useAuth();

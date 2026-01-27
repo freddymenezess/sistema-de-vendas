@@ -1,19 +1,19 @@
-import { Users } from 'lucide-react';
-import data from '@data/users.json';
-import { getItem, setItem } from '@services/storage.js';
-import Avatar from '@components/Avatar/Avatar';
-import styles from './OnStaff.module.css';
+import { Users } from "lucide-react";
+import data from "@data/users.json";
+import { getItem, setItem } from "@services/storage.js";
+import Avatar from "@components/Avatar/Avatar";
+import styles from "./OnStaff.module.css";
 
 function OnStaff() {
-  if (!getItem('users')) {
+  if (!getItem("users")) {
     setItem("users", data);
   }
 
-  const team = getItem('users');
+  const team = getItem("users");
 
   return (
     <div className={styles.card}>
-      <header className='flex'>
+      <header className="flex">
         <Users />
         <h2>Funcionários online</h2>
       </header>
@@ -25,16 +25,16 @@ function OnStaff() {
               <div className={`flex ${styles.desc}`}>
                 <p>{f.name}</p>
                 <p className={styles.role}>
-                  Cargo:{' '}
+                  Cargo:{" "}
                   <strong>
                     {
-                      f.role === 'admin'
-                        ? 'Administrador'
-                        : f.role === 'manager'
-                          ? 'Gerente'
-                          : f.role === 'seller'
-                            ? 'Vendedor'
-                            : 'Desconhecido'
+                      f.role === "admin"
+                        ? "Administrador"
+                        : f.role === "manager"
+                          ? "Gerente"
+                          : f.role === "seller"
+                            ? "Vendedor"
+                            : "Desconhecido"
                     }
                   </strong>
                 </p>
@@ -45,7 +45,7 @@ function OnStaff() {
         ))}
       </ul>
       <div className={`${styles.footer} flex`}>
-        <a href='#'>Cadastrar funcionários</a>
+        <a href="#">Cadastrar funcionários</a>
       </div>
     </div>
   );

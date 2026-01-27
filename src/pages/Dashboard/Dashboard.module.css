@@ -2,3 +2,33 @@
   display: grid;
   gap: 12px;
 }
+
+@media screen and (min-width: 998px) {
+  .dashboard {
+    grid-template-columns: 1.6fr 1fr;
+    grid-template-areas: 
+    "team vendas"
+    "sales lowstock"
+    "statistics statistics";
+  }
+
+  .vendas {
+    grid-area: vendas;
+  }
+
+  .team {
+    grid-area: team;
+  }
+
+  .sales {
+    grid-area: sales;
+  }
+
+  .lowstock {
+    grid-area: lowstock;
+  }
+
+  .statistics {
+    grid-area: statistics;
+  }
+}

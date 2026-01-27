@@ -70,11 +70,13 @@ div.logoWrapper {
 
 .logout .navItem {
   width: 100%;
-  border-radius: 8px;
+  border-top: 2px solid red;
 }
 
 .logout .navItem:hover {
   background: #ff000047;
+  border: 0;
+  border-radius: 8px;
 }
 
 .logout .label {

@@ -1,7 +1,7 @@
 import { AuthContext } from "@auth/AuthContext";
 import { useContext } from "react";
 import NavBar from "@components/NavBar/NavBar";
-import styles from './Home.module.css';
+import styles from "./Home.module.css";
 
 function Home() {
   const { user } = useContext(AuthContext);

@@ -1,27 +1,27 @@
-import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '@auth/AuthContext.jsx';
-import usersStorage from '@data/users.json';
-import { getItem, setItem } from '@services/storage.js';
-import mamev from '/mamev-icon.png';
-import BoxShadow from '@components/BoxShadow/BoxShadow';
-import Spinner from '@components/Spinner/Spinner'
-import styles from './Login.module.css';
+import useAuth from "@hooks/useAuth";
+import usersStorage from "@data/users.json";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getItem, setItem } from "@services/storage.js";
+import mamev from "/mamev-icon.png";
+import BoxShadow from "@components/BoxShadow/BoxShadow";
+import Spinner from "@components/Spinner/Spinner"
+import styles from "./Login.module.css";
 
 function Login() {
   const [id, setId] = useState(0);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [correctData, setCorrectData] = useState(true);
 
-  const { user, loading, login } = useContext(AuthContext);
+  const { user, loading, login } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
-      if (user.role === 'admin' || user.role === 'manager') {
-        navigate('/dashboard', { replace: true });
+      if (user.role === "admin" || user.role === "manager") {
+        navigate("/dashboard", { replace: true });
       } else {
-        navigate('/home', { replace: true });
+        navigate("/home", { replace: true });
       }
     }
   }, [user, navigate]);
@@ -41,9 +41,9 @@ function Login() {
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (!getItem('users')) setItem('users', usersStorage);
+    if (!getItem("users")) setItem("users", usersStorage);
 
-    const users = getItem('users');
+    const users = getItem("users");
     const foundUser = users.find(
       (u) => (u.nif === id || u.id === id) && u.password === password,
     );

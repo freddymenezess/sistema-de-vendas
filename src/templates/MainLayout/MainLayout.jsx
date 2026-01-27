@@ -1,8 +1,8 @@
-import { Outlet } from 'react-router-dom';
-import { MenuProvider } from '@context/MenuProvider'
-import Header from '@components/Header/Header';
-import NavBar from '@components/NavBar/NavBar';
-import styles from './MainLayout.module.css';
+import { Outlet } from "react-router-dom";
+import { MenuProvider } from "@context/MenuProvider"
+import Header from "@components/Header/Header";
+import NavBar from "@components/NavBar/NavBar";
+import styles from "./MainLayout.module.css";
 
 function MainLayout() {
   return (

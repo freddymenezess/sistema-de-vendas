@@ -3,7 +3,7 @@ import { getItem, setItem } from "@services/storage.js";
 import lowProducts from "@data/lowProducts.json";
 import styles from "./LowStock.module.css";
 
-function LowStock() {
+function LowStock({ className }) {
   if (!getItem("lowProducts")) {
     setItem("lowProducts", lowProducts);
   }
@@ -11,7 +11,7 @@ function LowStock() {
   const products = getItem("lowProducts").slice(0, 3);
 
   return (
-    <div className={`${styles.card} ${styles.alerta}`}>
+    <div className={`${styles.card} ${styles.alerta} ${className}`}>
       <header>
         <AlertTriangle />
         <h2>Estoque baixo</h2>
@@ -20,9 +20,8 @@ function LowStock() {
         {products.map((p) => (
           <li key={p.id}>
             {p.nome}
-            <strong className={styles.danger}>{p.estoque} {
-              p.estoque > 1 ? "unidades" : "unidade"
-            }
+            <strong className={styles.danger}>
+              {p.estoque} {p.estoque > 1 ? "unidades" : "unidade"}
             </strong>
           </li>
         ))}
