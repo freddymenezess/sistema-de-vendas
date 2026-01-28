@@ -9,6 +9,9 @@ import styles from "./Dashboard.module.css";
 function Dashboard() {
   return (
     <section className={styles.dashboard}>
+      <section className={styles.dasboard}>
+        <h2>Dashboard</h2>
+      </section>
       <EmployeesWorking className={styles.team} />
       <SalesStatistics className={styles.vendas} />
       <MostSales className={styles.sales} />

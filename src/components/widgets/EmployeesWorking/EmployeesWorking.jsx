@@ -1,11 +1,11 @@
 import Card from "@components/Card/Card";
 import Avatar from "@components/Avatar/Avatar";
+import usersStorage from "@data/users.json"
 import { getItem } from "@services/storage";
-import { User } from "lucide-react";
 import styles from "./EmployeesWorking.module.css";
 
 function EmployeesWorking({ className }) {
-  const users = getItem("users");
+  const users = getItem("users") || usersStorage;
 
   return (
     <div className={`${styles.dashboard} ${className}`}>

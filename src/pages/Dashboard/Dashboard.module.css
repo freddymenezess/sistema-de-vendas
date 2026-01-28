@@ -1,15 +1,22 @@
 .dashboard {
   display: grid;
   gap: 12px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 @media screen and (min-width: 998px) {
   .dashboard {
     grid-template-columns: 1.6fr 1fr;
-    grid-template-areas: 
+    grid-template-areas:
+    "dashboard dashboard" 
     "team vendas"
     "sales lowstock"
     "statistics statistics";
+  }
+
+  .dashboard {
+    grid-area: dashboard;
   }
 
   .vendas {

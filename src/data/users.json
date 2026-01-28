@@ -27,6 +27,90 @@
     "nif": "123456782LA059"
   },
   {
+    "id": 23456,
+    "name": "João Garcia",
+    "password": "1234",
+    "role": "manager",
+    "nif": "123456780LA059"
+  },
+  {
+    "id": 33435,
+    "name": "Maria Silva",
+    "password": "1234",
+    "role": "seller",
+    "nif": "123456781LA059"
+  },
+  {
+    "id": 44363,
+    "name": "Adão Gaspar",
+    "password": "1234",
+    "role": "seller",
+    "nif": "123456782LA059"
+  },
+  {
+    "id": 23456,
+    "name": "João Garcia",
+    "password": "1234",
+    "role": "manager",
+    "nif": "123456780LA059"
+  },
+  {
+    "id": 33435,
+    "name": "Maria Silva",
+    "password": "1234",
+    "role": "seller",
+    "nif": "123456781LA059"
+  },
+  {
+    "id": 44363,
+    "name": "Adão Gaspar",
+    "password": "1234",
+    "role": "seller",
+    "nif": "123456782LA059"
+  },
+  {
+    "id": 23456,
+    "name": "João Garcia",
+    "password": "1234",
+    "role": "manager",
+    "nif": "123456780LA059"
+  },
+  {
+    "id": 33435,
+    "name": "Maria Silva",
+    "password": "1234",
+    "role": "seller",
+    "nif": "123456781LA059"
+  },
+  {
+    "id": 44363,
+    "name": "Adão Gaspar",
+    "password": "1234",
+    "role": "seller",
+    "nif": "123456782LA059"
+  },
+  {
+    "id": 23456,
+    "name": "João Garcia",
+    "password": "1234",
+    "role": "manager",
+    "nif": "123456780LA059"
+  },
+  {
+    "id": 33435,
+    "name": "Maria Silva",
+    "password": "1234",
+    "role": "seller",
+    "nif": "123456781LA059"
+  },
+  {
+    "id": 44363,
+    "name": "Adão Gaspar",
+    "password": "1234",
+    "role": "seller",
+    "nif": "123456782LA059"
+  },
+  {
     "id": 85455,
     "name": "Edson Ramos",
     "password": "1234",
