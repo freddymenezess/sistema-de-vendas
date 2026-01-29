@@ -13,10 +13,10 @@
   --bg: #F5EFE6;
   --border: #dcdcdc;
   --main: #D4A373;
-  --main-grad: linear-gradient(135deg, #9a8739 0%, #ae9d1c 100%);
   --m-desfoque: #FFEBD2;
   --desfoque: #dcdcdc48;
   --sec: #B37C5F;
+  --txt-opaco: #00000062;
 }
 
 * {
@@ -27,7 +27,7 @@
 
 body, #root {
   background-color: var(--bg);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 #root {

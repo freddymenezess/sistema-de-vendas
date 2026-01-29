@@ -12,8 +12,8 @@ function Dashboard() {
       <section className={styles.dasboard}>
         <h2>Dashboard</h2>
       </section>
-      <EmployeesWorking className={styles.team} />
       <SalesStatistics className={styles.vendas} />
+      <EmployeesWorking className={styles.team} />
       <MostSales className={styles.sales} />
       <LowStock className={styles.lowstock} />
       <SalesChart className={styles.statistics} />
