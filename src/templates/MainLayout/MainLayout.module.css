@@ -1,12 +1,14 @@
 .container {
   position: relative;
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   background-color: var(--bg);
 }
 
 .main {
   flex: 1 1 100%;
+  min-height: 0;
+  overflow: auto;
 }
 
 .outlet {

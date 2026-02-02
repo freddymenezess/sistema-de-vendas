@@ -56,16 +56,6 @@ function NavBar({ className = "" }) {
           )}
         </NavLink>
       ))}
-      <NavLink to="/logout" className={`${styles.logout} ${styles.navlink}`}>
-        <div
-          className={`${styles.navItem} flex`}
-          onClick={() => logout()}
-          title="Terminar sessão"
-        >
-          <LogOut size={24} color="red" />
-          <span className={styles.label}>Terminar sessão</span>
-        </div>
-      </NavLink>
     </nav>
   );
 }

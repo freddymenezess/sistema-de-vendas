@@ -1,0 +1,47 @@
+.container {
+  position: relative;
+  display: flex;
+  background-color: var(--bg);
+  height: 100%;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: hidden;
+}
+
+.outletContainer {
+  display: flex;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.menu {
+  flex: 0 0 400px;
+  position: sticky;
+  top: 0;
+}
+
+.outlet {
+  overflow-y: scroll;
+  min-height: 0;
+  padding: 20px;
+}
+
+.outlet {
+  scrollbar-width: thin;
+  scrollbar-color: #a8a8a850 transparent;
+}
+
+.outlet::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+.outlet::-webkit-scrollbar-thumb {
+  background: transparent;
+}

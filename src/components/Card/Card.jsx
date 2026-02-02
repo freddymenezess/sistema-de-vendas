@@ -13,7 +13,7 @@ function Card({
   return (
     <BoxShadow className={className}>
       <div className={`${styles.container} ${classContainer}`}>
-        <div className={`${styles.header} flex`}>
+        {((Icon || desc || dest) &&<div className={`${styles.header} flex`}>
           {Icon && (Icon && (<Icon
             size={64}
             color={color}
@@ -26,7 +26,7 @@ function Card({
               <p className={styles.desc}>{desc}</p>
               <h3 className={styles.dest}>{dest}</h3>
             </strong>)}
-        </div>
+        </div>)}
         {children}
       </div>
     </BoxShadow>
