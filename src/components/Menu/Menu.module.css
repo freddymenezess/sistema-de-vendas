@@ -1,3 +1,78 @@
 .menu {
+  padding: 10px;
   background-color: #fff;
+}
+
+.menu h3 {
+  font-size: 1.6rem;
+}
+
+.img {
+  max-width: 100%;
+}
+
+.price {
+  text-align: center;
+  margin-bottom: .75rem;
+}
+
+.qtdArea {
+  margin-bottom: .75rem;
+}
+
+.lblQtd {
+  display: flex;
+  align-items: center;
+  margin-bottom: .75rem;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 8px;
+  font-size: 1.4rem;
+  border: 1.5px solid var(--border);
+}
+
+.less {
+  margin-left: 12px;
+}
+
+.lblQtd input {
+  align-self: stretch;
+  width: 80px;
+  padding: 4px;
+  font-size: 1.4rem;
+  border: 1.5px solid var(--border);
+}
+
+/* Para Chrome, Safari, Edge e Opera */
+.lblQtd input::-webkit-outer-spin-button,
+.lblQtd input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Para Firefox */
+.lblQtd input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.finalPrice {
+}
+
+.closeBuy {
+  width: 100%;
+  padding: 10px 0;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  color: #fff;
+  background-color: var(--main);
+}
+
+.closeBuy:hover {
+  cursor: pointer;
+  opacity: 0.8;
 }

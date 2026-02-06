@@ -1,20 +1,29 @@
+import { useState } from "react";
 import Card from "@components/Card/Card";
 import products from "@data/products.json";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import styles from "./Products.module.css";
 
 function Products() {
-  const prods = products;
+  const [selectedId, setSelectedId] = useState(null);
+  const handleClick = (id) => {
+    setSelectedId(id);
+  };
 
   return (
     <div className={styles.container}>
-      {prods.map((prod) => (
-        <Card className={styles.product} classContainer={styles.max}>
+      {products.map((prod) => (
+        <Card
+          key={prod.id}
+          className={`${styles.product} ${selectedId === prod.id ? styles.selected : ""}`}
+          classContainer={styles.max}
+          onClick={() => handleClick(prod.id)}
+        >
           <div className={styles.flex}>
             <div className={`${styles.imgContainer} flex`}>
               <img
                 src={prod.src}
-                alt={`Não encontramos a imagem de ${prod.name}`}
+                alt="Não encontramos a imagem deste produto"
                 className={styles.img}
               />
             </div>

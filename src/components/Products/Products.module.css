@@ -5,6 +5,12 @@
   gap: 15px;
 }
 
+.selected {
+  border: 2px solid var(--main);
+  border-radius: 8px;
+}
+
+
 .max {
   height: 100%;
 }

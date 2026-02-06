@@ -24,7 +24,6 @@ const navItems = [
 ];
 
 function NavBar({ className = "" }) {
-  const { logout } = useAuth();
   const { isOpen, closeMenu } = useMenu();
 
   return (
