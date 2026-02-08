@@ -20,12 +20,13 @@
 }
 
 .menu {
-  flex: 0 0 400px;
+  flex: 0 0 350px;
   position: sticky;
   top: 0;
 }
 
 .outlet {
+  flex: 1;
   overflow-y: scroll;
   min-height: 0;
   padding: 20px;
