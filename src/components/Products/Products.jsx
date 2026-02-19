@@ -1,14 +1,13 @@
-import { useState } from "react";
+import { useSelectedProduct } from "@context/SelectedProductProvider";
 import Card from "@components/Card/Card";
-import products from "@data/products.json";
+import productsStorage from "@data/products.json";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
+import { getItem } from "@services/storage.js"
 import styles from "./Products.module.css";
 
 function Products() {
-  const [selectedId, setSelectedId] = useState(null);
-  const handleClick = (id) => {
-    setSelectedId(id);
-  };
+  const { selectedId, setSelectedId } = useSelectedProduct();
+  const products = getItem("products") || productsStorage;
 
   return (
     <div className={styles.container}>
@@ -17,7 +16,7 @@ function Products() {
           key={prod.id}
           className={`${styles.product} ${selectedId === prod.id ? styles.selected : ""}`}
           classContainer={styles.max}
-          onClick={() => handleClick(prod.id)}
+          onClick={() => setSelectedId(prod.id)}
         >
           <div className={styles.flex}>
             <div className={`${styles.imgContainer} flex`}>
