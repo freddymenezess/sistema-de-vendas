@@ -37,6 +37,10 @@ body, #root {
   font-size: 13px;
 }
 
+body {
+  position: relative;
+}
+
 #root {
   margin: 0;
   color: #000;

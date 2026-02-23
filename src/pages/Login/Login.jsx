@@ -13,7 +13,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [correctData, setCorrectData] = useState(true);
 
-  const { user, loading, login } = useAuth();
+  const { user, loading, login, handleSetActiveUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,7 +31,7 @@ function Login() {
   }
 
   function handleId(event) {
-    setId(parseInt(event.target.value));
+    setId(event.target.value);
   }
 
   function handlePasswordChange(event) {
@@ -45,15 +45,15 @@ function Login() {
 
     const users = getItem("users");
     const foundUser = users.find(
-      (u) => (u.nif === id || u.id === id) && u.password === password,
+      (u) => (u.nif === id || u.email === id) && u.password === password,
     );
 
     if (!foundUser) {
       setCorrectData(false);
       return;
     }
-
     login(foundUser);
+    handleSetActiveUser(foundUser.id);
   }
 
   function handleSetCorrectData() {

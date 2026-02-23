@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
-import { getItem, setItem, removeItem } from "@services/storage.js";
+import { getItem, setItem } from "@services/storage.js";
+import { users, products, lowProducts, salesChart } from "@data";
 
 export const AuthContext = createContext();
 
@@ -15,12 +16,15 @@ function AuthProvider({ children }) {
 
   const login = (userData) => {
     setItem("currentUser", userData);
+    setItem("users", users);
+    setItem("products", products);
+    setItem("lowProducts", lowProducts);
+    setItem("salesChart", salesChart);
     setUser(userData);
   };
 
   const logout = () => {
-    removeItem("currentUser");
-    removeItem("users");
+    localStorage.clear()
     setUser(null);
   };
 

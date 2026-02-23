@@ -5,18 +5,15 @@ import {
   ClipboardPlus,
   UserRoundPlus,
   ShoppingCart,
-  LogOut,
   X
 } from "lucide-react";
 import { useMenu } from "@context/MenuProvider";
 import { NavLink } from "react-router-dom";
 import logo_full from "/mamev-full.png";
-import useAuth from "@hooks/useAuth";
 import styles from "./NavBar.module.css";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
-  { to: "/register", label: "Cadastrar", icon: UserRoundPlus },
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/reports", label: "Relatórios", icon: ClipboardPlus },
   { to: "/stock", label: "Estoque", icon: ShoppingCart },

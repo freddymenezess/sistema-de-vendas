@@ -1,12 +1,11 @@
 import { useRef } from "react"
 import Card from "@components/Card/Card";
 import Avatar from "@components/Avatar/Avatar";
-import usersStorage from "@data/users.json"
 import { getItem } from "@services/storage";
 import styles from "./EmployeesWorking.module.css";
 
 function EmployeesWorking({ className }) {
-  const users = getItem("users") || usersStorage;
+  const users = getItem("users");
   const scrollRef = useRef(null);
 
   const scrollLeft = () => {
@@ -39,7 +38,7 @@ function EmployeesWorking({ className }) {
           </button>
           <div ref={scrollRef} className={`${styles.cards} flex`}>
             {users.map((user) => (
-              <div className={`${styles.containerCards} flex`}>
+              <div key={user.id} className={`${styles.containerCards} flex`}>
                 <Avatar key={user.id} name={user.name} />
                 <p>{user.name.split(" ")[0]}</p>
               </div>

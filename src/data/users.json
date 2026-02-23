@@ -1,78 +1,46 @@
 [
   {
-    "id": 12345,
+    "id": 1,
     "name": "Melísia Almeida",
+    "role": "admin",
     "password": "admin",
-    "role": "admin"
+    "email": "melisia.almeida@mamev.com",
+    "phone": "912345678"
   },
   {
-    "id": 23456,
+    "id": 2,
     "name": "João Garcia",
-    "password": "1234",
     "role": "manager",
-    "nif": "123456780LA059"
+    "password": "1234",
+    "nif": "123456780LA059",
+    "email": "joao.garcia@mamev.com",
+    "phone": "923456789"
   },
   {
-    "id": 33435,
+    "id": 3,
     "name": "Maria Silva",
-    "password": "1234",
     "role": "seller",
-    "nif": "123456781LA059"
+    "password": "1234",
+    "nif": "123456781LA059",
+    "email": "maria.silva@mamev.com",
+    "phone": "934567890"
   },
   {
-    "id": 44363,
+    "id": 4,
     "name": "Adão Gaspar",
-    "password": "1234",
     "role": "seller",
-    "nif": "123456782LA059"
-  },
-  {
-    "id": 23456,
-    "name": "João Garcia",
     "password": "1234",
-    "role": "manager",
-    "nif": "123456780LA059"
+    "nif": "123456782LA059",
+    "email": "adao.gaspar@mamev.com",
+    "phone": "945678901"
   },
   {
-    "id": 33435,
-    "name": "Maria Silva",
-    "password": "1234",
-    "role": "seller",
-    "nif": "123456781LA059"
-  },
-  {
-    "id": 44363,
-    "name": "Adão Gaspar",
-    "password": "1234",
-    "role": "seller",
-    "nif": "123456782LA059"
-  },
-  {
-    "id": 23456,
-    "name": "João Garcia",
-    "password": "1234",
-    "role": "manager",
-    "nif": "123456780LA059"
-  },
-  {
-    "id": 33435,
-    "name": "Maria Silva",
-    "password": "1234",
-    "role": "seller",
-    "nif": "123456781LA059"
-  },
-  {
-    "id": 44363,
-    "name": "Adão Gaspar",
-    "password": "1234",
-    "role": "seller",
-    "nif": "123456782LA059"
-  },
-  {
-    "id": 85455,
+    "id": 5,
     "name": "Edson Ramos",
-    "password": "1234",
     "role": "seller",
-    "nif": "123456783LA059"
+    "password": "1234",
+    "nif": "123456783LA059",
+    "email": "edson.ramos@mamev.com",
+    "phone": "956789012"
   }
 ]

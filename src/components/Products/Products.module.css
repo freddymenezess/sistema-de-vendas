@@ -59,7 +59,12 @@
   color: #fff;
   background: var(--main);
   border-radius: 8px;
-  border: none;
+  border: none;;
+}
+
+.btnAdd:hover {
+  opacity: 0.8;
+  cursor: pointer
 }
 
 @media screen and (min-width: 1440px) {

@@ -8,7 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import BoxShadow from "@components/BoxShadow/BoxShadow";
-import sales from "@data/salesChart.json";
+import { getItem } from "@services/storage.js";
 import styles from "./SalesChart.module.css";
 
 const formatCurrency = (value) =>
@@ -19,7 +19,7 @@ const formatCurrency = (value) =>
   });
 
 const SalesChart = ({ className }) => {
-  const data = sales;
+  const data = getItem("salesChart");
 
   return (
     <BoxShadow className={className}>

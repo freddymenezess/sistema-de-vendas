@@ -1,27 +1,24 @@
 import { useSelectedProduct } from "@context/SelectedProductProvider";
 import { useState, useEffect } from "react";
+import { getItem, setItem } from "@services/storage.js";
 import styles from "./Menu.module.css";
 
 function Menu({ className }) {
-  const { products, selectedId } = useSelectedProduct();
+  const { products, selectedId, qtd, setQtd, handleInc, handleDec } =
+    useSelectedProduct();
   const prod = products.find((prod) => prod.id == selectedId);
-  const [qtd, setQtd] = useState(0);
   const [venda, setVenda] = useState([]);
 
-  // Quando muda o produto selecionado, zera a quantidade local
   useEffect(() => {
     const existingItem = venda.find((item) => item.id === selectedId);
     setQtd(existingItem ? existingItem.quantidade : 0);
   }, [selectedId]);
-
-  // Atualiza o carrinho sempre que a quantidade mudar
   useEffect(() => {
     setVenda((prevVenda) => {
       const vendaArray = Array.isArray(prevVenda) ? prevVenda : [];
       const existingIndex = vendaArray.findIndex((item) => item.id === prod.id);
 
       if (qtd === 0) {
-        // Remove produto se qtd = 0
         return vendaArray.filter((item) => item.id !== prod.id);
       }
 
@@ -43,45 +40,27 @@ function Menu({ className }) {
     });
   }, [prod, qtd]);
 
-  function handleInc() {
-    setQtd(qtd + 1);
-  }
-
-  function handleDec() {
-    if (qtd > 0) setQtd(qtd - 1);
-  }
-
-  // Função para resetar a quantidade do produto atual
   function handleReset() {
-    setQtd(0); // volta para quantidade inicial
-    setVenda((prevVenda) => prevVenda.filter((item) => item.id !== prod.id)); // remove do carrinho
+    setQtd(0);
+    setVenda((prevVenda) => prevVenda.filter((item) => item.id !== prod.id));
   }
 
   function handleFinalize() {
-    // Pega as compras anteriores do localStorage
-    const comprasAnteriores = localStorage.getItem("compras") || [];
-
-    // Adiciona a nova compra
+    const comprasAnteriores = getItem("compras") || [];
     const novaCompra = {
-      idCompra: Date.now(), // ID único para a compra
+      idCompra: Date.now(),
       data: new Date().toISOString(),
       produtos: venda,
       total: venda.reduce((acc, item) => acc + item.preco_pagar, 0),
     };
 
-    // Salva de volta no localStorage
-    localStorage.setItem(
-      "compras",
-      [...comprasAnteriores, novaCompra],
-    );
+    setItem("compras", [...comprasAnteriores, novaCompra]);
 
-    // Limpa carrinho e quantidade
     setVenda([]);
     setQtd(1);
 
     alert("Compra finalizada e salva!");
   }
-
 
   const finalPrice = venda.reduce((acc, item) => acc + item.preco_pagar, 0);
 
@@ -120,10 +99,18 @@ function Menu({ className }) {
         </div>
       </div>
       <div style={{ display: "flex", gap: "8px", width: "100%" }}>
-        <button type="button" className={styles.closeBuy} onClick={handleReset}>
+        <button
+          type="button"
+          className={styles.closeBuy}
+          onClick={handleReset}
+        >
           Resetar produto
         </button>
-        <button type="button" className={styles.closeBuy} onClick={handleFinalize}>
+        <button
+          type="button"
+          className={styles.closeBuy}
+          onClick={handleFinalize}
+        >
           Finalizar compra
         </button>
       </div>

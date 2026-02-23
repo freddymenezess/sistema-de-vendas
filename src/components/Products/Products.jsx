@@ -1,13 +1,12 @@
 import { useSelectedProduct } from "@context/SelectedProductProvider";
 import Card from "@components/Card/Card";
-import productsStorage from "@data/products.json";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import { getItem } from "@services/storage.js"
 import styles from "./Products.module.css";
 
 function Products() {
-  const { selectedId, setSelectedId } = useSelectedProduct();
-  const products = getItem("products") || productsStorage;
+  const { selectedId, setSelectedId, handleInc } = useSelectedProduct();
+  const products = getItem("products");
 
   return (
     <div className={styles.container}>
@@ -29,7 +28,11 @@ function Products() {
             <div className={styles.desc}>
               <h5>{prod.name}</h5>
               <h4>{handleFormatCoin(prod.price)}</h4>
-              <button type="button" className={styles.btnAdd}>
+              <button
+                type="button"
+                className={styles.btnAdd}
+                onClick={handleInc}
+              >
                 Adicionar ao carrinho
               </button>
             </div>

@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import useAuth from "@hooks/useAuth";
 import Spinner from "@components/Spinner/Spinner";
 
-function PrivateRoute({ children }) {
+function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -16,4 +16,4 @@ function PrivateRoute({ children }) {
   return children;
 }
 
-export default PrivateRoute;
+export default ProtectedRoute;

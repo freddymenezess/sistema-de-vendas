@@ -1,0 +1,77 @@
+.container {
+  padding: 30px;
+}
+
+.kpis {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.kpiCard {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  flex: 1;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.kpiCard span {
+  font-size: 14px;
+  color: #888;
+}
+
+.kpiCard strong {
+  font-size: 22px;
+  margin-top: 8px;
+}
+
+.salesList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.saleCard {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.saleHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.total {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: left;
+  font-size: 14px;
+  color: #666;
+  padding-bottom: 8px;
+}
+
+.table td {
+  padding: 8px 0;
+  border-top: 1px solid #eee;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+  margin-top: 30px;
+}

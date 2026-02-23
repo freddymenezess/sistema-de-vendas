@@ -1,0 +1,23 @@
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 40px;
+}
+
+table.table {
+  border-radius: 16px;
+}
+
+.btn {
+  padding: 8px 18px;
+  border: none;
+  color: #fff;
+  background: var(--main);
+  border-radius: 4px;
+}
+
+.btn:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}

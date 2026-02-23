@@ -3,31 +3,66 @@
     "id": 1,
     "name": "Bronzeador",
     "stock": 20,
+    "minStock": 5,
     "price": 7500,
     "categoria": "Estética",
-    "src": "/prods/bronzeador.png"
+    "src": "/prods/bronzeador.png",
+    "description": "Bronzeador facial premium",
+    "createdAt": "2026-02-01"
   },
   {
     "id": 2,
     "name": "MATELOT",
     "stock": 4,
+    "minStock": 5,
     "price": 9000,
-    "categoria": "Perfumes"
+    "categoria": "Perfumes",
+    "src": "/prods/perfume.jpg",
+    "description": "Perfume masculino intenso",
+    "createdAt": "2026-02-02"
   },
   {
     "id": 3,
     "name": "Óleo da pele",
     "stock": 10,
+    "minStock": 3,
     "price": 2000,
-    "categoria": "Hidradante",
-    "src": "/prods/oleo.jpg"
+    "categoria": "Hidratante",
+    "src": "/prods/oleo.jpg",
+    "description": "Óleo hidratante corporal",
+    "createdAt": "2026-02-03"
   },
   {
     "id": 4,
     "name": "Batom",
     "stock": 121,
+    "minStock": 10,
     "price": 3500,
-    "categoria": "perfumes",
-    "src": "/prods/batom.jpg"
+    "categoria": "Maquiagem",
+    "src": "/prods/batom.jpg",
+    "description": "Batom matte longa duração",
+    "createdAt": "2026-02-03"
+  },
+  {
+    "id": 5,
+    "name": "Base Líquida",
+    "stock": 8,
+    "minStock": 5,
+    "price": 6500,
+    "categoria": "Maquiagem",
+    "src": "/prods/base.jpg",
+    "description": "Base líquida cobertura média",
+    "createdAt": "2026-02-05"
+  },
+  {
+    "id": 6,
+    "name": "Creme Corporal",
+    "stock": 2,
+    "minStock": 4,
+    "price": 4800,
+    "categoria": "Hidratante",
+    "src": "/prods/creme.jpg",
+    "description": "Creme hidratante corporal",
+    "createdAt": "2026-02-05"
   }
 ]

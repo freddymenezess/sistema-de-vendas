@@ -1,13 +1,8 @@
 import { AlertTriangle } from "lucide-react";
-import { getItem, setItem } from "@services/storage.js";
-import lowProducts from "@data/lowProducts.json";
+import { getItem } from "@services/storage.js";
 import styles from "./LowStock.module.css";
 
 function LowStock({ className }) {
-  if (!getItem("lowProducts")) {
-    setItem("lowProducts", lowProducts);
-  }
-
   const products = getItem("lowProducts").slice(0, 3);
 
   return (

@@ -5,15 +5,17 @@ function Table({ titles, objArray }) {
   return (
     <table className={styles.table}>
       <thead>
-        {
-          titles.map((title) => (
-            <th>{title}</th>
-          ))
-        }
+        <tr>
+          {
+            titles.map((title, index) => (
+              <th key={index}>{title}</th>
+            ))
+          }
+        </tr>
       </thead>
       <tbody>
         {objArray.map((prop) => (
-          <tr>
+          <tr key={prop.id}>
             <td>{prop.name}</td>
             <td>{prop.stock}</td>
             <td>{handleFormatCoin(prop.price)}</td>

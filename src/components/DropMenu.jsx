@@ -67,7 +67,7 @@ export default function DropMenu() {
             fontWeight: 500,
 
             "&:hover": {
-              backgroundColor: "rgba(255, 0, 0, 0.08)",
+              opacity: "0.8",
             },
 
             "& svg": {

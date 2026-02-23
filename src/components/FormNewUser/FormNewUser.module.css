@@ -1,0 +1,78 @@
+.container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row nowrap;
+
+  background: #00000062;
+  overflow-y: auto;
+  box-sizing: border-box;
+  z-index: 4;
+}
+
+.close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  height: 30px;
+  width: 30px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.loginForm {
+  flex: 0 1 360px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 16px;
+  overflow-y: auto;
+}
+
+.inputGroup {
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.inputGroup, 
+.inputGroup label,
+.inputGroup input,
+.inputGroup select {
+  display: block;
+}
+
+.inputGroup input,
+.inputGroup select {
+  width: 100%;
+  font-size: 0.9rem;
+  padding: 10px 6px;
+  border: 2px solid #cccccc7b;
+  border-radius: 8px;
+}
+
+.inputGroup input:focus {
+  border: 2px solid var(--main);
+  outline: none;
+}
+
+.loginButton {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  background-color: var(--main);
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.loginButton:hover {
+  background-color: var(--m-desfoque);
+}
