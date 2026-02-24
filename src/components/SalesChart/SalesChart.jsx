@@ -24,7 +24,7 @@ const SalesChart = ({ className }) => {
   return (
     <BoxShadow className={className}>
       <div className={styles.salesChartContainer}>
-        <h2 className={styles.title}>ESTATÍSTICAS DE VENDAS - 2025</h2>
+        <h2 className={styles.title}>Estatísticas de vendas</h2>
 
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data}>

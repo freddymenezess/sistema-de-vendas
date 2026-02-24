@@ -5,7 +5,7 @@ import DropMenu from "@components/DropMenu";
 import useAuth from "@hooks/useAuth";
 import styles from "./Header.module.css";
 
-function Header() {
+function Header({ className = "" }) {
   const { isOpen, openMenu } = useMenu();
   const { user } = useAuth();
 
@@ -19,7 +19,7 @@ function Header() {
   });
 
   return (
-    <header className={styles.container}>
+    <header className={`${styles.container} ${className}`}>
       {/* LEFT */}
       <div className={styles.left}>
         {!isOpen && <MenuIcon className={styles.menuBtn} onClick={openMenu} />}

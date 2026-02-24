@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "code": "BR059",
     "name": "Bronzeador",
     "stock": 20,
     "minStock": 5,
@@ -12,6 +13,7 @@
   },
   {
     "id": 2,
+    "code": "MTT34",
     "name": "MATELOT",
     "stock": 4,
     "minStock": 5,
@@ -23,6 +25,7 @@
   },
   {
     "id": 3,
+    "code": "OPE43",
     "name": "Óleo da pele",
     "stock": 10,
     "minStock": 3,
@@ -34,6 +37,7 @@
   },
   {
     "id": 4,
+    "code": "",
     "name": "Batom",
     "stock": 121,
     "minStock": 10,
@@ -45,6 +49,7 @@
   },
   {
     "id": 5,
+    "code": "BLI76",
     "name": "Base Líquida",
     "stock": 8,
     "minStock": 5,
@@ -56,6 +61,7 @@
   },
   {
     "id": 6,
+    "code": "CRP12",
     "name": "Creme Corporal",
     "stock": 2,
     "minStock": 4,

@@ -1,7 +1,10 @@
 .dashboard {
-  padding: 32px;
-  background: #f5f7fa;
+  padding: 20px;
   min-height: 100vh;
+}
+
+.title {
+  margin-bottom: 20px;
 }
 
 .grid {

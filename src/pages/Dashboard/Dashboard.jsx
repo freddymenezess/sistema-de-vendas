@@ -9,13 +9,18 @@ function Dashboard() {
   return (
     <section className={styles.dashboard}>
       <section className={styles.title}>
-        <h2>Dashboard</h2>
+        <header>
+          <h2>Dashboard</h2>
+          <p className="subt">
+            Visualize os indicadores e desempenho em tempo real
+          </p>
+        </header>
       </section>
       <div className={styles.grid}>
         <SalesStatistics />
         <LowStock />
-        <SalesChart className={styles.fullWidth} />
         <MostSales className={styles.fullWidth} />
+        <SalesChart className={styles.fullWidth} />
       </div>
     </section>
   );
