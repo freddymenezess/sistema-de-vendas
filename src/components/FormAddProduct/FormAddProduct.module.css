@@ -1,0 +1,36 @@
+.form {
+  padding-top: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px 28px; /* vertical | horizontal */
+}
+
+/* Campos que ocupam linha inteira */
+.fullWidth {
+  grid-column: span 2;
+}
+
+/* Botão */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth {
+    grid-column: span 1;
+  }
+
+  .actions {
+    justify-content: center;
+  }
+}

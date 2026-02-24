@@ -14,7 +14,12 @@ function Vendas() {
 
   return (
     <div className={styles.container}>
-      <h2>Relatório de Vendas</h2>
+      <header>
+        <h2>Relatório de Vendas</h2>
+        <p className="subt">
+          Analise dados detalhados para tomar decisões estratégicas
+        </p>
+      </header>
 
       <div className={styles.kpis}>
         <div className={styles.kpiCard}>

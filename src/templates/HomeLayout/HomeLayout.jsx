@@ -13,7 +13,7 @@ function HomeLayout() {
         <div className={styles.container}>
           <NavBar />
           <main className={styles.main}>
-            <Header />
+            <Header className={styles.header} />
             <section className={styles.outletContainer}>
               <div className={styles.outlet}>
                 <Outlet />

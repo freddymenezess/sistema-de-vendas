@@ -1,48 +1,76 @@
 import { useEffect, useState } from "react";
+import Card from "@components/Card/Card";
+import AddProductButton from "./AddProductButton";
+import { getItem } from "@services/storage";
 import styles from "./EstoqueManager.module.css";
 
-function EstoqueManager() {
+function EstoqueManager({ className }) {
   const [products, setProducts] = useState([]);
 
+  const loadProducts = () => {
+    const data = getItem("products") || [];
+    setProducts(data);
+  };
+
   useEffect(() => {
-    const storedProducts = JSON.parse(localStorage.getItem("products")) || [];
-    setProducts(storedProducts);
+    loadProducts();
+
+    // Atualiza automaticamente se houver alteração no localStorage
+    const handleStorage = () => loadProducts();
+    window.addEventListener("storage", handleStorage);
+
+    return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
   return (
-    <div className={styles.container}>
-      <h2>Gestão de Estoque</h2>
+    <div className={`${styles.container} ${className}`}>
+      <header>
+        <h2>Gestão de Estoque</h2>
+        <p className="subt">
+          Gerencie o estoque e acompanhe a disponibilidade dos produtos
+        </p>
+      </header>
 
       <div className={styles.grid}>
+        {products.length === 0 && (
+          <p className={styles.empty}>Nenhum produto cadastrado.</p>
+        )}
+
         {products.map((product) => {
-          const lowStock = product.stock <= product.minStock;
+          const isLowStock = product.stock <= product.minStock;
 
           return (
-            <div
-              key={product.id}
-              className={`${styles.card} ${lowStock ? styles.lowStock : ""}`}
-            >
-              <img
-                src={product.src || "/prods/default.png"}
-                alt={product.name}
-                className={styles.image}
-              />
+            <Card key={product.id} className={styles.card}>
+              <div className={styles.cardContent}>
+                <div className={styles.imageBox}>
+                  <img src={product.src} alt={product.name} />
+                </div>
 
-              <h3>{product.name}</h3>
-              <p className={styles.category}>{product.categoria}</p>
+                <div className={styles.info}>
+                  <h3>{product.name}</h3>
+                  <p className={styles.code}>Código: {product.code}</p>
+                  <p className={styles.category}>
+                    Categoria: {product.categoria}
+                  </p>
 
-              <p className={styles.price}>
-                {product.price.toLocaleString()} Kz
-              </p>
+                  <div className={styles.stockRow}>
+                    <span
+                      className={`${styles.stock} ${
+                        isLowStock ? styles.lowStock : ""
+                      }`}
+                    >
+                      Stock: {product.stock}
+                    </span>
 
-              <div className={styles.stockInfo}>
-                <span>Estoque: {product.stock}</span>
+                    {isLowStock && (
+                      <span className={styles.warning}>⚠ Stock baixo</span>
+                    )}
+                  </div>
 
-                {lowStock && (
-                  <span className={styles.warning}>Estoque baixo</span>
-                )}
+                  <p className={styles.price}>Preço: {product.price} kz</p>
+                </div>
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>
