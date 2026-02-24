@@ -20,7 +20,7 @@
 }
 
 .menu {
-  flex: 0 0 350px;
+  flex: 0 1 300px;
   position: sticky;
   top: 0;
 }
@@ -32,17 +32,6 @@
   padding: 20px;
 }
 
-.outlet {
-  scrollbar-width: thin;
-  scrollbar-color: #a8a8a850 transparent;
-}
-
-.outlet::-webkit-scrollbar-button {
+.outlet::-webkit-scrollbar {
   display: none;
-  height: 0;
-  width: 0;
-}
-
-.outlet::-webkit-scrollbar-thumb {
-  background: transparent;
 }

@@ -1,32 +1,28 @@
 .card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  padding: 24px;
 }
 
-.card header {
+.header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  color: #d97706;
   margin-bottom: 16px;
 }
 
-.card ul li {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.badge {
-  margin-left: auto;
-  background: #9a8739;
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 12px;
+.list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
 }
-.alerta header,
-.danger {
+
+.list li strong {
   color: #dc2626;
 }

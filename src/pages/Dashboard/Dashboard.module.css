@@ -1,41 +1,15 @@
 .dashboard {
-  display: grid;
-  gap: 12px;
-  max-width: 800px;
-  margin: 0 auto;
+  padding: 32px;
+  background: #f5f7fa;
+  min-height: 100vh;
 }
 
-@media screen and (min-width: 998px) {
-  .dashboard {
-    grid-template-columns: 1.6fr 1fr;
-    grid-template-areas:
-    "dashboard dashboard" 
-    "team vendas"
-    "sales lowstock"
-    "statistics statistics";
-  }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
 
-  .dashboard {
-    grid-area: dashboard;
-  }
-
-  .vendas {
-    grid-area: vendas;
-  }
-
-  .team {
-    grid-area: team;
-  }
-
-  .sales {
-    grid-area: sales;
-  }
-
-  .lowstock {
-    grid-area: lowstock;
-  }
-
-  .statistics {
-    grid-area: statistics;
-  }
+.fullWidth {
+  grid-column: 1 / -1;
 }

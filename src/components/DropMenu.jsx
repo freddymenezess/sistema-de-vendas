@@ -1,11 +1,9 @@
 import * as React from "react";
-import { Box } from "@mui/material";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import { Menu, MenuItem, Divider, ListItemIcon, Box } from "@mui/material";
 import Logout from "@mui/icons-material/Logout";
-import Avatar from "@components/Avatar/Avatar";
+import Settings from "@mui/icons-material/Settings";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Avatar from "@components/Avatar/Avatar";
 import useAuth from "@hooks/useAuth";
 
 export default function DropMenu() {
@@ -15,15 +13,18 @@ export default function DropMenu() {
 
   return (
     <>
-      <Button
+      <Box
         onClick={(e) => setAnchorEl(e.currentTarget)}
-        endIcon={<KeyboardArrowDownIcon />}
         sx={{
-          color: "#000",
-          gap: "6px",
-
+          display: "flex",
+          alignItems: "center",
+          gap: 1.5,
+          padding: "6px 12px",
+          borderRadius: "12px",
+          cursor: "pointer",
+          transition: "0.2s",
           "&:hover": {
-            backgroundColor: "var(--desfoque)",
+            backgroundColor: "#f3f4f6",
           },
         }}
       >
@@ -31,52 +32,59 @@ export default function DropMenu() {
 
         <Box
           sx={{
-            display: {
-              xs: "none", // mobile
-              sm: "flex",
-            },
+            display: { xs: "none", sm: "flex" },
             flexDirection: "column",
-            alignItems: "flex-start",
             lineHeight: 1.2,
           }}
         >
-          <span style={{ fontWeight: "bolder" }}>{user.name}</span>
-          <span style={{ fontSize: 12, opacity: 0.7 }}>{user.role}</span>
+          <span style={{ fontWeight: 600 }}>{user.name}</span>
+          <span
+            style={{
+              fontSize: 12,
+              color: "#9ca3af",
+            }}
+          >
+            {user.role}
+          </span>
         </Box>
-      </Button>
+
+        <KeyboardArrowDownIcon sx={{ color: "#9ca3af" }} />
+      </Box>
+
       <Menu
         anchorEl={anchorEl}
         open={open}
         onClose={() => setAnchorEl(null)}
-        slotProps={{
-          paper: {
-            sx: {
-              backgroundColor: "transparent",
-              boxShadow: "none",
-            },
+        PaperProps={{
+          sx: {
+            borderRadius: "14px",
+            padding: "6px",
+            minWidth: "200px",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.12)",
           },
         }}
       >
+        <MenuItem>
+          <ListItemIcon>
+            <Settings fontSize="small" />
+          </ListItemIcon>
+          Configurações
+        </MenuItem>
+
+        <Divider />
+
         <MenuItem
           onClick={logout}
           sx={{
-            backgroundColor: "#fff",
-            border: "1px solid var(--border)",
-            borderRadius: "4px",
             color: "error.main",
-            fontWeight: 500,
-
-            "&:hover": {
-              opacity: "0.8",
-            },
-
             "& svg": {
               color: "error.main",
-              mr: 1,
             },
           }}
         >
-          <Logout />
+          <ListItemIcon>
+            <Logout fontSize="small" />
+          </ListItemIcon>
           Terminar sessão
         </MenuItem>
       </Menu>

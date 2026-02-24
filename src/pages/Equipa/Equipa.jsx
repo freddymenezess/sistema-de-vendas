@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { getItem, setItem } from "@services/storage";
 import FormNewUser from "@components/FormNewUser/FormNewUser";
 import SimpleAlert from "@components/SimpleAlert";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+
 import styles from "@components/Table/Table.module.css";
 import stylesComponent from "./Equipa.module.css";
 
@@ -13,12 +16,12 @@ function Equipa() {
     message: "",
     severity: "success",
   });
-
-  const titles = ["Nome", "Cargo", "Email", "Telefone", "Ações"];
+  const currentId = getItem("currentUser").id;
 
   useEffect(() => {
     const storedUsers = getItem("users") || [];
-    setUsers(storedUsers);
+    const otherUsers = storedUsers.filter((user) => user.id != currentId);
+    setUsers(otherUsers);
   }, []);
 
   function handleNewUser(newUser) {
@@ -53,70 +56,99 @@ function Equipa() {
     }, 3000);
   }
 
+  function getInitials(name) {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+  }
+
+  function getRoleLabel(role) {
+    if (role === "admin") return "Administrador";
+    if (role === "manager") return "Gerente";
+    return "Caixa";
+  }
+
+  function getRoleClass(role) {
+    if (role === "admin") return stylesComponent.admin;
+    if (role === "manager") return stylesComponent.manager;
+    return stylesComponent.seller;
+  }
+
   return (
-    <div
-      style={{
-        background: "transparent",
-        boxShadow: "none",
-      }}
-      className={styles.container}
-    >
+    <div className={`${styles.container} ${stylesComponent.page}`}>
+      {/* HEADER */}
       <div className={stylesComponent.head}>
-        <h2>Gestão de Equipa</h2>
-        <button
-          type="button"
-          className={stylesComponent.btn}
-          onClick={() => setOpend(true)}
-        >
-          + Novo Funcionário
-        </button>
+        <div>
+          <h2>Gestão de Equipa</h2>
+          <div className={stylesComponent.subtitle}>
+            Gerencie os membros da sua equipa
+          </div>
+        </div>
+
+        <div className={stylesComponent.actionsArea}>
+          <span className={stylesComponent.badgeCount}>
+            {users.length} Funcionários
+          </span>
+
+          <button
+            type="button"
+            className={stylesComponent.btn}
+            onClick={() => setOpend(true)}
+          >
+            <AddIcon fontSize="small" />
+            Novo Funcionário
+          </button>
+        </div>
       </div>
 
-      <div className={styles.users}>
-        <table
-          style={{
-            background: "#fff",
-            marginTop: "0",
-            overflow: "hidden",
-          }}
-          className={`${styles.table} ${stylesComponent.table}`}
-        >
+      {/* TABELA */}
+      <div className={stylesComponent.tableWrapper}>
+        <table className={stylesComponent.table}>
           <thead>
-            <tr style={{ color: "#000" }}>
-              {titles.map((title, index) => (
-                <th key={index}>{title}</th>
-              ))}
+            <tr>
+              <th>Nome</th>
+              <th>Cargo</th>
+              <th>Email</th>
+              <th>Telefone</th>
+              <th></th>
             </tr>
           </thead>
 
           <tbody>
             {users.map((user) => (
               <tr key={user.id}>
-                <td>{user.name}</td>
                 <td>
-                  {user.role === "admin"
-                    ? "Administrador"
-                    : user.role === "manager"
-                      ? "Gerente"
-                      : user.role === "seller"
-                        ? "Caixa"
-                        : null}
+                  <div className={stylesComponent.avatarCell}>
+                    <div className={stylesComponent.avatar}>
+                      {getInitials(user.name)}
+                    </div>
+                    <span className={stylesComponent.userName}>
+                      {user.name}
+                    </span>
+                  </div>
                 </td>
+
+                <td>
+                  <span
+                    className={`${stylesComponent.roleBadge} ${getRoleClass(
+                      user.role,
+                    )}`}
+                  >
+                    {getRoleLabel(user.role)}
+                  </span>
+                </td>
+
                 <td>{user.email}</td>
                 <td>{user.phone}</td>
+
                 <td>
                   <button
+                    className={stylesComponent.actionBtn}
                     onClick={() => handleRemoveUser(user.id)}
-                    style={{
-                      background: "red",
-                      color: "#fff",
-                      border: "none",
-                      padding: "6px 10px",
-                      cursor: "pointer",
-                      borderRadius: "4px",
-                    }}
                   >
-                    Remover
+                    <DeleteOutlineIcon fontSize="small" />
                   </button>
                 </td>
               </tr>
@@ -133,7 +165,12 @@ function Equipa() {
         open={alert.open}
         message={alert.message}
         severity={alert.severity}
-        onClose={() => setAlert((prev) => ({ ...prev, open: false }))}
+        onClose={() =>
+          setAlert((prev) => ({
+            ...prev,
+            open: false,
+          }))
+        }
       />
     </div>
   );

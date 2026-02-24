@@ -1,73 +1,75 @@
 .navbar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-
-  position: fixed;
-  top: 0;
-  height: 100vh;
-  width: 260px;
+  flex: 0 0 200px;
   background: #fff;
-  border-right: 2px solid var(--border);
-  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #f1f1f1;
+  transition: 0.3s ease;
+}
+
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 10px 20px;
+}
+
+.logo {
+  height: 60px;
 }
 
 .close {
   display: none;
 }
 
-div.logoWrapper {
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 0 6px;
-}
-
-.logoWrapper > img {
-  max-width: 80%;
-  object-fit: cover;
-}
-
-.btn:hover {
+.closeBtn {
   cursor: pointer;
+  color: #9ca3af;
 }
 
-.logoDesktop {
-  display: block;
+.navList {
+  display: flex;
+  flex-direction: column;
 }
 
 .navlink {
-  width: 100%;
   text-decoration: none;
 }
 
-.navlink .navItem {
-  flex-direction: row;
-  justify-content: flex-start;
-  column-gap: 12px;
-  padding: 12px;
-}
-
-[title].navlink {
-  border-radius: 8px;
-}
-
-[title].navlink:hover {
-  background: var(--m-desfoque);
-}
-
-.label {
-  display: inline-block;
+.navItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
   color: #6b7280;
-  font-weight: bolder;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.active .label {
-  color: var(--main);
+.navItem:hover {
+  background: #f9fafb;
+}
+
+.active {
+  background: #fdf6ec;
+  color: #d4a373;
+  font-weight: 500;
+}
+
+.activeIndicator {
+  position: absolute;
+  right: 2px;
+  width: 4px;
+  height: 60%;
+  background: #d4a373;
+  border-radius: 4px;
 }
 
 @media screen and (min-width: 1024px) {
   .navbar { position: sticky; }
   .navbar.close { display: flex; }
-  .btn { display: none; }
+  .closeBtn { display: none; }
 }

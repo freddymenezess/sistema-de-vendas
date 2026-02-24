@@ -1,41 +1,45 @@
 import { useSelectedProduct } from "@context/SelectedProductProvider";
 import Card from "@components/Card/Card";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
-import { getItem } from "@services/storage.js"
+import { getItem } from "@services/storage.js";
+import ShoppingCartPlus from "lucide-react/dist/esm/icons/shopping-cart";
 import styles from "./Products.module.css";
 
 function Products() {
   const { selectedId, setSelectedId, handleInc } = useSelectedProduct();
-  const products = getItem("products");
+
+  const products = getItem("products") || [];
 
   return (
     <div className={styles.container}>
       {products.map((prod) => (
         <Card
           key={prod.id}
-          className={`${styles.product} ${selectedId === prod.id ? styles.selected : ""}`}
-          classContainer={styles.max}
+          className={`${styles.product} ${
+            selectedId === prod.id ? styles.selected : ""
+          }`}
+          classContainer={styles.cardWrapper}
           onClick={() => setSelectedId(prod.id)}
         >
-          <div className={styles.flex}>
-            <div className={`${styles.imgContainer} flex`}>
-              <img
-                src={prod.src}
-                alt="Não encontramos a imagem deste produto"
-                className={styles.img}
-              />
-            </div>
-            <div className={styles.desc}>
-              <h5>{prod.name}</h5>
-              <h4>{handleFormatCoin(prod.price)}</h4>
-              <button
-                type="button"
-                className={styles.btnAdd}
-                onClick={handleInc}
-              >
-                Adicionar ao carrinho
-              </button>
-            </div>
+          <div className={styles.imgContainer}>
+            <img src={prod.src} alt={prod.name} className={styles.img} />
+          </div>
+
+          <div className={styles.desc}>
+            <h4>{prod.name}</h4>
+            <p className={styles.price}>{handleFormatCoin(prod.price)}</p>
+
+            <button
+              type="button"
+              className={styles.btnAdd}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleInc();
+              }}
+            >
+              <ShoppingCartPlus size={16} />
+              Adicionar
+            </button>
           </div>
         </Card>
       ))}

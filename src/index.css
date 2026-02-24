@@ -1,5 +1,5 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   font-synthesis: none;
@@ -10,7 +10,7 @@
   /*
     Paleta de cores
   */
-  --bg: #F5EFE6;
+  --bg: #f9f9f9;
   --border: #dcdcdc;
   --main: #D4A373;
   --m-desfoque: #FFEBD2;

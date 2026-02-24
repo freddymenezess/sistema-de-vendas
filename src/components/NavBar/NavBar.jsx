@@ -3,9 +3,8 @@ import {
   User,
   LayoutDashboard,
   ClipboardPlus,
-  UserRoundPlus,
   ShoppingCart,
-  X
+  X,
 } from "lucide-react";
 import { useMenu } from "@context/MenuProvider";
 import { NavLink } from "react-router-dom";
@@ -27,31 +26,28 @@ function NavBar({ className = "" }) {
     <nav
       className={`${styles.navbar} ${!isOpen ? styles.close : ""} ${className}`}
     >
-      <div className={`${styles.logoWrapper} flex`}>
-        <img
-          src={logo_full}
-          alt="Mamev"
-          className={styles.logoDesktop}
-        />
-        <X size={28} color="#6b7280" className={styles.btn} onClick={closeMenu} />
+      <div className={styles.logoWrapper}>
+        <img src={logo_full} alt="Mamev" className={styles.logo} />
+
+        <X size={24} className={styles.closeBtn} onClick={closeMenu} />
       </div>
 
-      {navItems.map(({ to, label, icon: Icon }) => (
-        <NavLink key={to} to={to} title={label} className={styles.navlink}>
-          {({ isActive }) => (
-            <div
-              className={`${styles.navItem} ${isActive ? styles.active : ""} flex`}
-            >
-              <Icon
-                size={24}
-                color={isActive ? "#D4A373" : "#6b7280"}
-                fill={isActive ? "#D4A373" : "none"}
-              />
-              <span className={styles.label}>{label}</span>
-            </div>
-          )}
-        </NavLink>
-      ))}
+      <div className={styles.navList}>
+        {navItems.map(({ to, label, icon: Icon }) => (
+          <NavLink key={to} to={to} className={styles.navlink}>
+            {({ isActive }) => (
+              <div
+                className={`${styles.navItem} ${isActive ? styles.active : ""}`}
+              >
+                <Icon size={20} strokeWidth={1.8} />
+                <span>{label}</span>
+
+                {isActive && <div className={styles.activeIndicator} />}
+              </div>
+            )}
+          </NavLink>
+        ))}
+      </div>
     </nav>
   );
 }

@@ -1,60 +1,166 @@
-header.container {
+/* MOBILE FIRST */
+
+.container {
   position: sticky;
   top: 0;
+  height: 70px;
+  background: #ffffff;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  flex-direction: row;
-  column-gap: 15px;
-  padding: 10px 10px;
-  background: #fff;
-  border-bottom: 2px solid var(--border);
-  z-index: 1;
+  border-bottom: 1px solid #f1f1f1;
+  z-index: 4;
 }
 
-.info {
-  font-weight: bold;
-  color: #0000006b;
+/* LEFT */
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-form.form {
+.menuBtn {
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.userBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.greeting {
+  margin: 0;
+  font-size: 15px;
+}
+
+.date {
+  display: none; /* escondido no mobile */
+}
+
+/* CENTER (desktop only) */
+.center {
+  display: none;
+}
+
+/* RIGHT */
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mobileSearchBtn {
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.notification {
   position: relative;
-  flex-direction: row;
-  position: relative;
-  max-width: 500px;
-}
-
-.form label {
-  flex: 0 1 100%;
-}
-
-.form input {
-  height: 40px;
-  width: 100%;
-  font-size: 1rem;
-  padding: 0 40px 0 12px;
-  outline: none;
-  background: transparent;
-  border-radius: 4px;
-  border: 1.5px solid var(--border);
-}
-
-.form input::placeholder {
-  font-size: 14px;
-}
-
-.btnSearch {
-  position: absolute;
-  right: 0;
-  height: 100%;
-  padding: 0 14px;
-  color: var(--border);
-  background: transparent;
-  border: none;
-}
-
-.btnSearch:hover {
   cursor: pointer;
 }
 
+.dot {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 8px;
+  height: 8px;
+  background: #ef4444;
+  border-radius: 50%;
+}
+
+.dropWrapper {
+  display: none; /* escondido no mobile */
+}
+
+/* MOBILE SEARCH OVERLAY */
+
+.mobileSearch {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 70px;
+  width: 100%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  z-index: 10;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.mobileSearch input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+}
+
+/* ============================= */
+/* TABLET (≥768px) */
+/* ============================= */
+
+@media (min-width: 768px) {
+  .container {
+    height: 80px;
+    padding: 0 24px;
+  }
+
+  .date {
+    display: block;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+
+  .dropWrapper {
+    display: block;
+  }
+
+  .mobileSearchBtn {
+    display: none;
+  }
+}
+
+/* ============================= */
+/* DESKTOP (≥1024px) */
+/* ============================= */
+
+@media (min-width: 1024px) {
+  .center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .searchWrapper {
+    width: 420px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: #f3f4f6;
+    transition: 0.2s;
+  }
+
+  .searchWrapper input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+  }
+
+  .focus {
+    background: #ffffff;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  }
+}
+
 @media screen and (min-width: 1024px) {
-  .btn { display: none; }
+  .menuBtn { display: none; }
 }

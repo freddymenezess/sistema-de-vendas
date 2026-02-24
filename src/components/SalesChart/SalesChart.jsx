@@ -1,6 +1,6 @@
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -25,20 +25,34 @@ const SalesChart = ({ className }) => {
     <BoxShadow className={className}>
       <div className={styles.salesChartContainer}>
         <h2 className={styles.title}>ESTATÍSTICAS DE VENDAS - 2025</h2>
+
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart
-            data={data}
-            margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
-          >
+          <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" />
-            <YAxis />
+            <YAxis
+              dataKey="vendas"
+              tickFormatter={(value) =>
+                value.toLocaleString("pt-AO", {
+                  style: "currency",
+                  currency: "AOA",
+                })
+              }
+            />
             <Tooltip
               formatter={(value) => formatCurrency(value)}
               labelFormatter={(label) => `Mês: ${label}`}
             />
-            <Bar dataKey="vendas" fill="#4CAF50" barSize={40} />
-          </BarChart>
+
+            <Line
+              type="monotone"
+              dataKey="vendas"
+              stroke="#d97706"
+              strokeWidth={3}
+              dot={{ r: 5 }}
+              activeDot={{ r: 7 }}
+            />
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </BoxShadow>

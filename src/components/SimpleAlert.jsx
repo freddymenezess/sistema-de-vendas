@@ -7,6 +7,10 @@ export default function SimpleAlert({
   severity = "success",
   open,
   onClose,
+  top = "",
+  bottom = 20,
+  right = 20,
+  left = ""
 }) {
   if (!open) return null;
 
@@ -14,8 +18,10 @@ export default function SimpleAlert({
     <Stack
       sx={{
         position: "fixed",
-        bottom: 20,
-        right: 20,
+        top,
+        bottom,
+        right,
+        left,
         width: "auto",
         zIndex: 9999,
       }}

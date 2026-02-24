@@ -1,23 +1,62 @@
-.destaque {
-  box-shadow: 0 4px 10px rgba(0,0,0,.06);
-  color: #fff;
+.card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Parte principal */
+.main {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.iconBox {
+  background: var(--m-desfoque);
+  color: var(--main);
+  padding: 16px;
   border-radius: 16px;
-  background: var(--main) url("abstract-bg.png") no-repeat fixed center / cover;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.destaque div {
-  height: 100%;
-  width: 100%;
-  padding: 30px;
-  color: #000;
-  background: transparent;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+.label {
+  font-size: 14px;
+  color: #6b7280;
 }
 
-.price {
-  margin: 0;
-  font-size: 1.6rem;
-  font-weight: bold;
+.value {
+  font-size: 28px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 8px 0 15px 0;
+}
+
+/* Métricas secundárias */
+.metrics {
+  display: flex;
+  justify-content: space-between;
+  flex-flow: column nowrap;
+  gap: 12px;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.smallIcon {
+  font-size: 18px !important;
+  color: #6b7280;
 }

@@ -5,10 +5,6 @@
   background-color: var(--bg);
 }
 
-.nav {
-  flex: 0 0 260px;
-}
-
 .main {
   flex: 1 1 100%;
   min-height: 0;

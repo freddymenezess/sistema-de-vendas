@@ -58,9 +58,9 @@ function Vendas() {
               <tbody>
                 {venda.produtos.map((produto) => (
                   <tr key={produto.id}>
-                    <td>{produto.nome}</td>
+                    <td>{produto.name}</td>
                     <td>{produto.quantidade}</td>
-                    <td>{produto.preço.toLocaleString()} Kz</td>
+                    <td>{produto.preco.toLocaleString()} Kz</td>
                     <td>{produto.preco_pagar.toLocaleString()} Kz</td>
                   </tr>
                 ))}
