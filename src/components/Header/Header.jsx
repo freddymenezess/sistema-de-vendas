@@ -56,11 +56,6 @@ function Header({ className = "" }) {
           )}
         </div>
 
-        <div className={styles.notification}>
-          <Bell size={20} />
-          <span className={styles.dot}></span>
-        </div>
-
         <div className={styles.dropWrapper}>
           <DropMenu />
         </div>
