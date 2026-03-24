@@ -1,7 +1,8 @@
-import { Search, PanelLeftClose, PanelLeft, Bell } from "lucide-react";
+import { Search, PanelLeftClose, PanelLeft } from "lucide-react";
 import { useState } from "react";
 import { useMenu } from "@context/MenuProvider";
 import DropMenu from "@components/DropMenu";
+import Notifications from "@components/Notifications/Notifications";
 import styles from "./Header.module.css";
 
 function Header({ className = "" }) {
@@ -51,10 +52,7 @@ function Header({ className = "" }) {
 
       {/* RIGHT */}
       <div className={styles.right}>
-        <button className={styles.iconBtn} aria-label="Notificações">
-          <Bell size={20} />
-          <span className={styles.notificationBadge}>3</span>
-        </button>
+        <Notifications />
         <div className={styles.divider} />
         <div className={styles.dropWrapper}>
           <DropMenu />
