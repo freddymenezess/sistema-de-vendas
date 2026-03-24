@@ -15,7 +15,7 @@
 
 .outletContainer {
   display: flex;
-  height: 100%;
+  flex: 1;
   padding: 15px;
   overflow-y: hidden;
 }
@@ -24,7 +24,6 @@
   flex: 1;
   overflow-y: scroll;
   min-height: 0;
-  margin: -15px 0;
 }
 
 .outlet::-webkit-scrollbar {

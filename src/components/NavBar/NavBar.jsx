@@ -10,6 +10,8 @@ import { useMenu } from "@context/MenuProvider";
 import useAuth from "@hooks/useAuth";
 import { NavLink } from "react-router-dom";
 import styles from "./NavBar.module.css";
+import logoFull from "/mamev-f.png";
+import logoIcon from "/mamev-icon.png";
 
 // Rotas por role
 const navItemsByRole = {
@@ -37,7 +39,7 @@ const navItemsByRole = {
 };
 
 function NavBar({ className = "" }) {
-  const { isOpen, closeMenu } = useMenu();
+  const { isOpen } = useMenu();
   const { user } = useAuth();
 
   // Obtém as rotas com base no role do usuário, ou usa um array vazio se não estiver autenticado
@@ -45,13 +47,15 @@ function NavBar({ className = "" }) {
 
   return (
     <nav
-      className={`${styles.navbar} ${!isOpen ? styles.close : ""} ${className}`}
+      className={`${styles.navbar} ${!isOpen ? styles.collapsed : ""} ${className}`}
     >
-      {/* <div className={styles.logoWrapper}>
-        <img src={logo_full} alt="Mamev" className={styles.logo} />
-
-        <X size={24} className={styles.closeBtn} onClick={closeMenu} />
-      </div> */}
+      <div className={styles.logoWrapper}>
+        <img 
+          src={isOpen ? logoFull : logoIcon} 
+          alt="Mamev" 
+          className={isOpen ? styles.logo : styles.logoIcon} 
+        />
+      </div>
 
       <div className={styles.navList}>
         {navItems.map(({ to, label, icon: Icon }) => (
@@ -59,9 +63,10 @@ function NavBar({ className = "" }) {
             {({ isActive }) => (
               <div
                 className={`${styles.navItem} ${isActive ? styles.active : ""}`}
+                title={!isOpen ? label : undefined}
               >
                 <Icon size={20} strokeWidth={1.8} />
-                <span>{label}</span>
+                {isOpen && <span>{label}</span>}
 
                 {isActive && <div className={styles.activeIndicator} />}
               </div>

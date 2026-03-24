@@ -3,7 +3,7 @@ import { createContext, useContext, useState, useRef } from "react";
 const MenuContext = createContext(null);
 
 export function MenuProvider({ children }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const navRef = useRef(null);
 
   const openMenu = () => setIsOpen(true);

@@ -1,20 +1,28 @@
-import { Search, Menu as MenuIcon } from "lucide-react";
+import { Search, Menu as MenuIcon, PanelLeftClose, PanelLeft } from "lucide-react";
 import { useState } from "react";
 import { useMenu } from "@context/MenuProvider";
 import DropMenu from "@components/DropMenu";
 import styles from "./Header.module.css";
-import logo_full from "/mamev-f.png";
 
 function Header({ className = "" }) {
-  const { isOpen, openMenu } = useMenu();
+  const { isOpen, toggleMenu } = useMenu();
   const [focus, setFocus] = useState(false);
 
   return (
     <header className={`${styles.container} ${className}`}>
       {/* LEFT */}
       <div className={styles.left}>
-        {!isOpen && <MenuIcon className={styles.menuBtn} onClick={openMenu} />}
-        <img src={logo_full} alt="Mamev" className={styles.logo} />
+        <button 
+          className={styles.menuBtn} 
+          onClick={toggleMenu}
+          aria-label={isOpen ? "Minimizar menu" : "Expandir menu"}
+        >
+          {isOpen ? (
+            <PanelLeftClose size={22} />
+          ) : (
+            <PanelLeft size={22} />
+          )}
+        </button>
       </div>
 
       {/* CENTER (Search) */}

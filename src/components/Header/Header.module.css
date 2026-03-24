@@ -1,9 +1,9 @@
 .container {
   position: sticky;
   top: 0;
-  height: 80px;
+  height: 70px;
   background: #ffffff;
-  padding: 0 15px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -19,14 +19,22 @@
   gap: 14px;
 }
 
-.logo {
-  height: 60px;
-  object-fit: cover;
-}
-
 .menuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
   cursor: pointer;
   color: #6b7280;
+  padding: 8px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.menuBtn:hover {
+  background: #f3f4f6;
+  color: #374151;
 }
 
 /* CENTER */
@@ -45,7 +53,7 @@
   background: #f9fafb;
   border: 1px solid #e5e7eb;
   transition: 0.3s ease;
-  width: 150px; /* largura fixa para mobile */
+  width: 150px;
 }
 
 .searchWrapper input {
@@ -79,11 +87,5 @@
     gap: 12px;
     padding: 12px 20px;
     border-radius: 20px;
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .menuBtn {
-    display: none;
   }
 }
