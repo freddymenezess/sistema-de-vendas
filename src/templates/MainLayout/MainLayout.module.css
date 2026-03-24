@@ -13,11 +13,6 @@
   overflow-y: hidden;
 }
 
-.headerRow {
-  display: flex;
-  align-items: stretch;
-}
-
 .outletContainer {
   display: flex;
   flex: 1;

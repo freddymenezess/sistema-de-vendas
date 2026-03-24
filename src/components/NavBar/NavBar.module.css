@@ -1,14 +1,12 @@
 .navbar {
   width: 220px;
   min-width: 220px;
-  height: 70px;
+  height: 100vh;
   background: #fff;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0 12px;
+  flex-direction: column;
+  padding: 12px;
   border-right: 1px solid #f1f1f1;
-  border-bottom: 1px solid #f1f1f1;
   transition: width 0.3s ease, min-width 0.3s ease;
   overflow: hidden;
 }
@@ -16,30 +14,34 @@
 .navbar.collapsed {
   width: 70px;
   min-width: 70px;
-  justify-content: center;
 }
 
 .logoWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 8px;
+  padding: 16px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #f1f1f1;
 }
 
 .logo {
-  height: 36px;
+  height: 50px;
   max-width: 100%;
   object-fit: contain;
 }
 
 .logoIcon {
-  height: 32px;
-  width: 32px;
+  height: 40px;
+  width: 40px;
   object-fit: contain;
 }
 
 .navList {
-  display: none;
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+  margin-top: 8px;
 }
 
 .navlink {
@@ -89,8 +91,16 @@
 
 /* Mobile styles */
 @media screen and (max-width: 1023px) {
+  .navbar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    transform: translateX(0);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+
   .navbar.collapsed {
-    width: 70px;
-    min-width: 70px;
+    transform: translateX(-100%);
   }
 }
