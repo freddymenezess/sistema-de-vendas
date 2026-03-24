@@ -11,10 +11,10 @@ function HomeLayout() {
     <MenuProvider>
       <SelectedProductProvider>
         <div className={styles.container}>
+          <NavBar />
           <main className={styles.main}>
             <Header className={styles.header} />
             <section className={styles.outletContainer}>
-              <NavBar />
               <div className={styles.outlet}>
                 <Outlet />
               </div>
