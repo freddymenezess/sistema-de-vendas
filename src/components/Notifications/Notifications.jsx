@@ -1,6 +1,13 @@
 import * as React from "react";
 import { Menu, Box, IconButton, Badge, Typography, Chip } from "@mui/material";
-import { Bell, Package, TrendingUp, AlertTriangle, X, Check } from "lucide-react";
+import {
+  Bell,
+  Package,
+  TrendingUp,
+  AlertTriangle,
+  X,
+  Check,
+} from "lucide-react";
 import { products, salesChart } from "@data";
 import { getItem, setItem } from "@services/storage";
 import styles from "./Notifications.module.css";
@@ -32,15 +39,24 @@ function generateNotifications() {
   const recordMonth = salesData.find((s) => s.vendas === maxSales);
   if (recordMonth) {
     const monthNames = {
-      Jan: "Janeiro", Feb: "Fevereiro", Mar: "Março", Apr: "Abril",
-      May: "Maio", Jun: "Junho", Jul: "Julho", Aug: "Agosto",
-      Sep: "Setembro", Oct: "Outubro", Nov: "Novembro", Dec: "Dezembro"
+      Jan: "Janeiro",
+      Feb: "Fevereiro",
+      Mar: "Março",
+      Apr: "Abril",
+      May: "Maio",
+      Jun: "Junho",
+      Jul: "Julho",
+      Aug: "Agosto",
+      Sep: "Setembro",
+      Oct: "Outubro",
+      Nov: "Novembro",
+      Dec: "Dezembro",
     };
     notifications.push({
       id: id++,
       type: "sales-record",
       title: "Recorde de Vendas",
-      message: `${monthNames[recordMonth.month]} registrou o maior faturamento: R$ ${maxSales.toLocaleString("pt-BR")}`,
+      message: `${monthNames[recordMonth.month]} registrou o maior faturamento: ${maxSales.toLocaleString("pt-AO")} KZ`,
       priority: 3,
     });
   }
@@ -48,7 +64,7 @@ function generateNotifications() {
   // 3. Notificações de NOVOS LOTES (produtos adicionados recentemente)
   const now = new Date();
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-  
+
   const recentProducts = products
     .filter((p) => p.createdAt && new Date(p.createdAt) >= thirtyDaysAgo)
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -57,8 +73,13 @@ function generateNotifications() {
   recentProducts.forEach((product) => {
     const createdDate = new Date(product.createdAt);
     const diffDays = Math.floor((now - createdDate) / (1000 * 60 * 60 * 24));
-    const timeAgo = diffDays === 0 ? "Hoje" : diffDays === 1 ? "Ontem" : `Há ${diffDays} dias`;
-    
+    const timeAgo =
+      diffDays === 0
+        ? "Hoje"
+        : diffDays === 1
+          ? "Ontem"
+          : `Há ${diffDays} dias`;
+
     notifications.push({
       id: id++,
       type: "new-batch",
@@ -76,27 +97,27 @@ function generateNotifications() {
 
 const getNotificationIcon = (type) => {
   switch (type) {
-    case "low-stock":
-      return <AlertTriangle size={18} />;
-    case "sales-record":
-      return <TrendingUp size={18} />;
-    case "new-batch":
-      return <Package size={18} />;
-    default:
-      return <Bell size={18} />;
+  case "low-stock":
+    return <AlertTriangle size={18} />;
+  case "sales-record":
+    return <TrendingUp size={18} />;
+  case "new-batch":
+    return <Package size={18} />;
+  default:
+    return <Bell size={18} />;
   }
 };
 
 const getNotificationColor = (type) => {
   switch (type) {
-    case "low-stock":
-      return { bg: "#fef2f2", color: "#ef4444", border: "#fecaca" };
-    case "sales-record":
-      return { bg: "#f0fdf4", color: "#22c55e", border: "#bbf7d0" };
-    case "new-batch":
-      return { bg: "#eff6ff", color: "#3b82f6", border: "#bfdbfe" };
-    default:
-      return { bg: "#f9fafb", color: "#6b7280", border: "#e5e7eb" };
+  case "low-stock":
+    return { bg: "#fef2f2", color: "#ef4444", border: "#fecaca" };
+  case "sales-record":
+    return { bg: "#f0fdf4", color: "#22c55e", border: "#bbf7d0" };
+  case "new-batch":
+    return { bg: "#eff6ff", color: "#3b82f6", border: "#bfdbfe" };
+  default:
+    return { bg: "#f9fafb", color: "#6b7280", border: "#e5e7eb" };
   }
 };
 
@@ -111,9 +132,12 @@ export default function Notifications() {
   const [readIds, setReadIds] = React.useState(() => {
     return getItem(NOTIFICATIONS_KEY) || [];
   });
-  
-  const generatedNotifications = React.useMemo(() => generateNotifications(), []);
-  
+
+  const generatedNotifications = React.useMemo(
+    () => generateNotifications(),
+    [],
+  );
+
   const notifications = generatedNotifications.map((n) => ({
     ...n,
     read: readIds.includes(n.id),

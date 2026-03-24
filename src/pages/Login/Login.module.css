@@ -1,6 +1,6 @@
 /* Container principal - ocupa toda a tela */
 .container {
-  min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
   display: flex;
   align-items: center;
@@ -11,8 +11,8 @@
 /* Wrapper que contém imagem e formulário */
 .loginWrapper {
   display: flex;
+  min-height: 100dvh;
   width: 100%;
-  min-height: 100vh;
 }
 
 /* Container da imagem - escondido em mobile */
@@ -111,10 +111,10 @@
   width: 100%;
   font-size: 1rem;
   padding: 14px 14px 14px 46px;
-  border: 2px solid #e5e7eb;
   border-radius: 12px;
   background-color: #f9fafb;
   transition: all 0.2s ease;
+  outline: none;
 }
 
 .inputGroup input:focus {

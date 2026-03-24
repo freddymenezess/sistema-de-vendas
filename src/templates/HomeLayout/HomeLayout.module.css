@@ -13,10 +13,15 @@
   overflow-y: hidden;
 }
 
+.header {
+  flex: 0 0 70px;
+}
+
 .outletContainer {
   display: flex;
   flex: 1;
   padding: 15px;
+  padding-left: 0;
   overflow-y: hidden;
 }
 

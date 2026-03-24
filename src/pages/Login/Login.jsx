@@ -6,7 +6,6 @@ import { getItem, setItem } from "@services/storage.js";
 import { User, Lock, Eye, EyeOff, LogIn } from "lucide-react";
 import mamev from "/mamev-icon.png";
 import loginImage from "/login-image.jpg";
-import BoxShadow from "@components/BoxShadow/BoxShadow";
 import Spinner from "@components/Spinner/Spinner"
 import styles from "./Login.module.css";
 
