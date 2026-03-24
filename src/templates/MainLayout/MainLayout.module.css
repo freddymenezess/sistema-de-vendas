@@ -6,11 +6,27 @@
 }
 
 .main {
-  flex: 1 1 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   min-height: 0;
-  overflow: auto;
+  overflow-y: hidden;
+}
+
+.outletContainer {
+  display: flex;
+  height: 100%;
+  padding: 15px;
+  overflow-y: hidden;
 }
 
 .outlet {
-  padding: 15px;
+  flex: 1;
+  overflow-y: scroll;
+  min-height: 0;
+  margin: -15px 0;
+}
+
+.outlet::-webkit-scrollbar {
+  display: none;
 }

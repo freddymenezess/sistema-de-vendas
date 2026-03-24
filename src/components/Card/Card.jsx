@@ -6,10 +6,10 @@ function Card({
   className = "",
   classContainer = "",
   icon: Icon = "",
-  color = "#D4A373",
+  color = "var(--main)",
   desc,
   dest,
-  onClick
+  onClick,
 }) {
   return (
     <BoxShadow className={className}>

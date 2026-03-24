@@ -4,15 +4,18 @@ import MainLayout from "@templates/MainLayout/MainLayout";
 import HomeLayout from "@templates/HomeLayout/HomeLayout";
 import Home from "@pages/Home/Home";
 import Login from "@pages/Login/Login";
+import NonAuthorized from "@pages/NonAuthorized/NonAuthorized";
 import Dashboard from "@pages/Dashboard/Dashboard";
 import Equipa from "@pages/Equipa/Equipa";
 import Vendas from "@pages/Vendas/Vendas";
-import EstoqueManager from "@components/EstoqueManager/EstoqueManager";
+import Estoque from "@pages/Estoque/Estoque";
+import Fornecedores from "@pages/Fornecedores/Fornecedores";
 
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/non-authorized" element={<NonAuthorized />} />
 
       <Route
         element={
@@ -27,16 +30,17 @@ function AppRoutes() {
 
       <Route
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiredRoles={["admin", "manager"]}>
             <MainLayout />
           </ProtectedRoute>
         }
       >
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/employees" element={<Equipa />} />
-        <Route path="/stock" element={<EstoqueManager />} />
-        <Route path="/stock" element={<EstoqueManager />} />
-        <Route path="/reports" element={<Vendas />} />
+        <Route path="/funcionarios" element={<Equipa />} />
+        <Route path="/estoque" element={<Estoque />} />
+        <Route path="/vendas" element={<Vendas />} />
+        <Route path="/relatorios" element={<Vendas />} />
+        <Route path="/fornecedores" element={<Fornecedores />} />
       </Route>
     </Routes>
   );

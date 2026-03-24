@@ -1,4 +1,3 @@
-import Card from "@components/Card/Card";
 import { getItem } from "@services/storage.js";
 import styles from "./MostSales.module.css";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
@@ -7,7 +6,6 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import InfoIcon from "@mui/icons-material/Info";
 import Tooltip from "@mui/material/Tooltip";
 
 function MostSales({ className }) {

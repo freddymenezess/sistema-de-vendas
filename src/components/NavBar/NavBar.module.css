@@ -3,21 +3,22 @@
   background: #fff;
   display: flex;
   flex-direction: column;
-  padding: 0 2px;
-  border-right: 1px solid #f1f1f1;
+  padding: 2px;
+  border-radius: 12px;
   transition: 0.3s ease;
 }
 
 .logoWrapper {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  padding: 10px 20px;
+  justify-content: center;
+  margin: 10px 0;
 }
 
 .logo {
-  height: 60px;
+  height: 80px;
+  max-width: 100%;
+  object-fit: cover;
 }
 
 .close {
@@ -32,6 +33,7 @@
 .navList {
   display: flex;
   flex-direction: column;
+  row-gap: 1px;
 }
 
 .navlink {
@@ -56,7 +58,7 @@
 
 .active {
   background: #fdf6ec;
-  color: #d4a373;
+  color: var(--main);
   font-weight: 500;
 }
 
@@ -65,12 +67,18 @@
   right: 2px;
   width: 4px;
   height: 60%;
-  background: #d4a373;
+  background: var(--main);
   border-radius: 4px;
 }
 
 @media screen and (min-width: 1024px) {
-  .navbar { position: sticky; }
-  .navbar.close { display: flex; }
-  .closeBtn { display: none; }
+  .navbar {
+    position: sticky;
+  }
+  .navbar.close {
+    display: flex;
+  }
+  .closeBtn {
+    display: none;
+  }
 }

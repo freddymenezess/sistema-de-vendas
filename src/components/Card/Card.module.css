@@ -1,4 +1,5 @@
 .container {
+  height: 100%;
   background: #fff;
   border-radius: inherit;
 }
@@ -7,7 +8,6 @@ div.header {
   align-items: stretch;
   justify-content: flex-start;
   flex-direction: row;
-  column-gap: 15px;
   border-radius: inherit;
 }
 

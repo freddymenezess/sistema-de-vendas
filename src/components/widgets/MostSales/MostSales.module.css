@@ -41,11 +41,6 @@
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.featured:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-}
-
 .rankBadge {
   display: inline-block;
   background-color: var(--main);
@@ -60,7 +55,6 @@
 .productName {
   font-size: 18px;
   font-weight: 600;
-  margin: 4px 0 12px 0;
   color: #333;
 }
 

@@ -58,13 +58,13 @@ export default function DropMenu() {
         PaperProps={{
           sx: {
             borderRadius: "14px",
-            padding: "6px",
+            padding: "0 8px",
             minWidth: "200px",
             boxShadow: "0 10px 40px rgba(0,0,0,0.12)",
           },
         }}
       >
-        <MenuItem>
+        <MenuItem style={{ borderRadius: "4px" }}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
@@ -75,6 +75,7 @@ export default function DropMenu() {
 
         <MenuItem
           onClick={logout}
+          style={{ borderRadius: "4px" }}
           sx={{
             color: "error.main",
             "& svg": {

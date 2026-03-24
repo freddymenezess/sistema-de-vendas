@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getItem, setItem } from "@services/storage";
 import FormNewUser from "@components/FormNewUser/FormNewUser";
-import SimpleAlert from "@components/SimpleAlert";
+import { showAlert } from "@components/Alerts";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
@@ -11,16 +11,11 @@ import stylesComponent from "./Equipa.module.css";
 function Equipa() {
   const [opend, setOpend] = useState(false);
   const [users, setUsers] = useState([]);
-  const [alert, setAlert] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
   const currentId = getItem("currentUser").id;
 
   useEffect(() => {
     const storedUsers = getItem("users") || [];
-    const otherUsers = storedUsers.filter((user) => user.id != currentId);
+    const otherUsers = storedUsers.filter((user) => user.id !== currentId);
     setUsers(otherUsers);
   }, []);
 
@@ -29,15 +24,7 @@ function Equipa() {
     setUsers(updatedUsers);
     setItem("users", updatedUsers);
 
-    setAlert({
-      open: true,
-      message: "Usuário criado com sucesso!",
-      severity: "success",
-    });
-
-    setTimeout(() => {
-      setAlert((prev) => ({ ...prev, open: false }));
-    }, 3000);
+    showAlert("Usuário criado com sucesso", "success");
   }
 
   function handleRemoveUser(id) {
@@ -45,15 +32,7 @@ function Equipa() {
     setUsers(updatedUsers);
     setItem("users", updatedUsers);
 
-    setAlert({
-      open: true,
-      message: "Usuário removido com sucesso!",
-      severity: "success",
-    });
-
-    setTimeout(() => {
-      setAlert((prev) => ({ ...prev, open: false }));
-    }, 3000);
+    showAlert("Usuário removido com sucesso!", "success");
   }
 
   function getInitials(name) {
@@ -132,9 +111,7 @@ function Equipa() {
 
                 <td>
                   <span
-                    className={`${stylesComponent.roleBadge} ${getRoleClass(
-                      user.role,
-                    )}`}
+                    className={`${stylesComponent.roleBadge} ${getRoleClass(user.role)}`}
                   >
                     {getRoleLabel(user.role)}
                   </span>
@@ -160,18 +137,6 @@ function Equipa() {
       {opend && (
         <FormNewUser setOpend={setOpend} handleNewUser={handleNewUser} />
       )}
-
-      <SimpleAlert
-        open={alert.open}
-        message={alert.message}
-        severity={alert.severity}
-        onClose={() =>
-          setAlert((prev) => ({
-            ...prev,
-            open: false,
-          }))
-        }
-      />
     </div>
   );
 }

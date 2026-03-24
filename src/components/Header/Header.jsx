@@ -1,44 +1,29 @@
-import { Search, Bell, Menu as MenuIcon, X } from "lucide-react";
+import { Search, Menu as MenuIcon } from "lucide-react";
 import { useState } from "react";
 import { useMenu } from "@context/MenuProvider";
 import DropMenu from "@components/DropMenu";
-import useAuth from "@hooks/useAuth";
 import styles from "./Header.module.css";
+import logo_full from "/mamev-f.png";
 
 function Header({ className = "" }) {
   const { isOpen, openMenu } = useMenu();
-  const { user } = useAuth();
-
   const [focus, setFocus] = useState(false);
-  const [mobileSearch, setMobileSearch] = useState(false);
-
-  const today = new Date().toLocaleDateString("pt-PT", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
 
   return (
     <header className={`${styles.container} ${className}`}>
       {/* LEFT */}
       <div className={styles.left}>
         {!isOpen && <MenuIcon className={styles.menuBtn} onClick={openMenu} />}
-
-        {!mobileSearch && (
-          <div className={styles.userBlock}>
-            <h4 className={styles.greeting}>Olá, {user.name.split(" ")[0]}</h4>
-            <span className={styles.date}>{today}</span>
-          </div>
-        )}
+        <img src={logo_full} alt="Mamev" className={styles.logo} />
       </div>
 
-      {/* CENTER (Search Desktop) */}
+      {/* CENTER (Search) */}
       <div className={styles.center}>
         <div className={`${styles.searchWrapper} ${focus ? styles.focus : ""}`}>
           <Search size={18} />
           <input
             type="search"
-            placeholder="Pesquisar produtos, vendas..."
+            placeholder="Pesquisar por alguma coisa..."
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}
           />
@@ -47,27 +32,10 @@ function Header({ className = "" }) {
 
       {/* RIGHT */}
       <div className={styles.right}>
-        {/* Mobile Search Toggle */}
-        <div className={styles.mobileSearchBtn}>
-          {mobileSearch ? (
-            <X size={20} onClick={() => setMobileSearch(false)} />
-          ) : (
-            <Search size={20} onClick={() => setMobileSearch(true)} />
-          )}
-        </div>
-
         <div className={styles.dropWrapper}>
           <DropMenu />
         </div>
       </div>
-
-      {/* Mobile Search Overlay */}
-      {mobileSearch && (
-        <div className={styles.mobileSearch}>
-          <Search size={18} />
-          <input type="search" placeholder="Pesquisar..." autoFocus />
-        </div>
-      )}
     </header>
   );
 }

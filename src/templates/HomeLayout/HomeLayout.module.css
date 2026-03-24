@@ -13,19 +13,14 @@
   overflow-y: hidden;
 }
 
-.main .header {
-  flex-grow: 0;
-  flex-shrink: 0;
-}
-
 .outletContainer {
   display: flex;
   height: 100%;
+  padding: 15px;
   overflow-y: hidden;
 }
 
 .menu {
-  flex: 0 1 300px;
   position: sticky;
   top: 0;
 }
@@ -34,7 +29,7 @@
   flex: 1;
   overflow-y: scroll;
   min-height: 0;
-  padding: 15px;
+  margin: -15px 0;
 }
 
 .outlet::-webkit-scrollbar {

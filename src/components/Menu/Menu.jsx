@@ -1,68 +1,39 @@
 import { useSelectedProduct } from "@context/SelectedProductProvider";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getItem, setItem } from "@services/storage.js";
+import { handleFormatCoin } from "@utils/handleFormatCoin";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import SimpleAlert from "@components/SimpleAlert";
+import { showAlert } from "@components/Alerts"; // <- import do showAlert
 
 import styles from "./Menu.module.css";
 
 function Menu({ className = "" }) {
-  const {
-    products,
-    selectedId,
-    qtd,
-    setQtd,
-    handleInc,
-    handleDec
-  } = useSelectedProduct();
-  const [alert, setAlert] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
+  const { products, setProducts, selectedId, handleInc, handleDec } =
+    useSelectedProduct();
+
   const prod = products.find((prod) => prod.id == selectedId);
   const [venda, setVenda] = useState([]);
 
   useEffect(() => {
-    const existingItem = venda.find((item) => item.id === selectedId);
-    setQtd(existingItem ? existingItem.quantidade : 0);
-  }, [selectedId]);
+    const newVenda = products
+      .filter((p) => (p.quantity || 0) > 0)
+      .map((p) => ({
+        id: p.id,
+        name: p.name,
+        preco: p.price,
+        quantidade: p.quantity,
+        preco_pagar: p.price * p.quantity,
+      }));
+    setVenda(newVenda);
+  }, [products]);
 
-  useEffect(() => {
-    if (!prod) return;
-
-    setVenda((prevVenda) => {
-      const vendaArray = Array.isArray(prevVenda) ? prevVenda : [];
-      const existingIndex = vendaArray.findIndex((item) => item.id === prod.id);
-
-      if (qtd === 0) {
-        return vendaArray.filter((item) => item.id !== prod.id);
-      }
-
-      const newItem = {
-        id: prod.id,
-        name: prod.name,
-        preco: prod.price,
-        quantidade: qtd,
-        preco_pagar: prod.price * qtd,
-      };
-
-      if (existingIndex !== -1) {
-        const updated = [...vendaArray];
-        updated[existingIndex] = newItem;
-        return updated;
-      } else {
-        return [...vendaArray, newItem];
-      }
-    });
-  }, [prod, qtd]);
-
-  function handleReset() {
-    setQtd(0);
-    setVenda((prevVenda) => prevVenda.filter((item) => item.id !== prod?.id));
+  function handleRemove(id) {
+    setProducts((prevProducts) =>
+      prevProducts.map((p) => (p.id === id ? { ...p, quantity: 0 } : p)),
+    );
   }
 
   function handleFinalize() {
@@ -77,20 +48,57 @@ function Menu({ className = "" }) {
       total: venda.reduce((acc, item) => acc + item.preco_pagar, 0),
     };
 
-    setItem("compras", [...comprasAnteriores, novaCompra]);
+    const verStock = venda.reduce((acc, vend) => {
+      const prod = products.find((p) => p.id === vend.id);
 
-    setVenda([]);
-    setQtd(1);
+      if (prod && prod.stock < vend.quantidade) {
+        acc.push({
+          id: prod.id,
+          name: prod.name,
+          quantidade: vend.quantidade,
+          stock: prod.stock,
+        });
+      }
 
-    setAlert({
-      open: true,
-      message: "Compra finalizada com sucesso!",
-      severity: "success",
+      return acc;
+    }, []);
+
+    if (verStock.length > 0) {
+      verStock.forEach((item) => {
+        showAlert(
+          `${item.name}: Solicitado ${item.quantidade}, Disponível ${item.stock}`,
+          "error",
+        );
+      });
+      return;
+    }
+
+    const newProds = products.map((prod) => {
+      const vendido = venda.find((vend) => vend.id === prod.id);
+
+      if (vendido) {
+        return {
+          ...prod,
+          stock: prod.stock - vendido.quantidade,
+        };
+      }
+
+      return prod;
     });
 
-    setTimeout(() => {
-      setAlert((prev) => ({ ...prev, open: false }));
-    }, 3000);
+    setItem("products", newProds);
+    setProducts(newProds);
+    setItem("compras", [...comprasAnteriores, novaCompra]);
+
+    // Resetar quantities após finalizar
+    setProducts((prevProducts) =>
+      prevProducts.map((p) => ({ ...p, quantity: 0 })),
+    );
+
+    setVenda([]);
+    // Remover setQtd(1), pois quantity é por produto
+
+    showAlert("Compra finalizada com sucesso!", "success");
   }
 
   const finalPrice = venda.reduce((acc, item) => acc + item.preco_pagar, 0);
@@ -105,20 +113,27 @@ function Menu({ className = "" }) {
 
         <div className={styles.productInfo}>
           <h3>{prod.name}</h3>
-          <p className={styles.price}>Kz {prod.price}</p>
+          <p className={styles.price}>{handleFormatCoin(prod.price)}</p>
 
           <div className={styles.qtdControl}>
-            <button onClick={handleDec}>
+            <button onClick={() => handleDec(prod.id)}>
               <RemoveIcon fontSize="small" />
             </button>
 
             <input
               type="number"
-              value={qtd}
-              onChange={(e) => setQtd(Number(e.target.value))}
+              value={prod.quantity || 0}
+              onChange={(e) => {
+                const newQtd = Number(e.target.value);
+                setProducts((prevProducts) =>
+                  prevProducts.map((p) =>
+                    p.id === prod.id ? { ...p, quantity: newQtd } : p,
+                  ),
+                );
+              }}
             />
 
-            <button onClick={handleInc}>
+            <button onClick={() => handleInc(prod.id)}>
               <AddIcon fontSize="small" />
             </button>
           </div>
@@ -145,7 +160,7 @@ function Menu({ className = "" }) {
                 <span>Kz {item.preco_pagar}</span>
                 <DeleteOutlineIcon
                   className={styles.removeIcon}
-                  onClick={handleReset}
+                  onClick={() => handleRemove(item.id)}
                 />
               </div>
             </div>
@@ -158,29 +173,16 @@ function Menu({ className = "" }) {
         </div>
 
         <div className={styles.actions}>
-          <button className={styles.reset} onClick={handleReset}>
+          <button className={styles.reset} >
             Resetar
           </button>
 
           <button className={styles.finalize} onClick={handleFinalize}>
             <ShoppingCartCheckoutIcon fontSize="small" />
-            Finalizar Compra
+            Finalizar
           </button>
         </div>
       </div>
-      <SimpleAlert
-        left={20}
-        right={""}
-        open={alert.open}
-        message={alert.message}
-        severity={alert.severity}
-        onClose={() =>
-          setAlert((prev) => ({
-            ...prev,
-            open: false,
-          }))
-        }
-      />
     </div>
   );
 }

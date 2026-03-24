@@ -2,30 +2,42 @@ import { createContext, useState, useContext } from "react";
 import { getItem, setItem } from "@services/storage.js";
 import prodsStorage from "@data/products.json";
 
-setItem("products", prodsStorage);
+const storedProducts = getItem("products");
+
+if (!storedProducts) {
+  setItem("products", prodsStorage);
+}
 
 const SelectedProductContext = createContext();
-const products = getItem("products");
 
 export const SelectedProductProvider = ({ children }) => {
+  const [products, setProducts] = useState(getItem("products") || prodsStorage);
   const [selectedId, setSelectedId] = useState(1);
-  const [qtd, setQtd] = useState(0);
 
-  function handleInc() {
-    setQtd(qtd + 1);
+  function handleInc(id) {
+    setProducts((prevProducts) =>
+      prevProducts.map((prod) =>
+        prod.id === id ? { ...prod, quantity: (prod.quantity || 0) + 1 } : prod,
+      ),
+    );
   }
 
-  function handleDec() {
-    if (qtd > 0) setQtd(qtd - 1);
+  function handleDec(id) {
+    setProducts((prevProducts) =>
+      prevProducts.map((prod) =>
+        prod.id === id && (prod.quantity || 0) > 0
+          ? { ...prod, quantity: prod.quantity - 1 }
+          : prod,
+      ),
+    );
   }
   return (
     <SelectedProductContext.Provider
       value={{
         products,
+        setProducts,
         selectedId,
         setSelectedId,
-        qtd,
-        setQtd,
         handleInc,
         handleDec,
       }}
