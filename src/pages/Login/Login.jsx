@@ -63,7 +63,7 @@ function Login() {
   }
 
   return (
-    <div className={styles.container}>
+    <>
       <div className={styles.loginWrapper}>
         <div className={styles.imageContainer}>
           <img src={loginImage} alt="Cosmetics" className={styles.loginImage} />
@@ -131,7 +131,7 @@ function Login() {
           </form>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
