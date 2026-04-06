@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
+import { Users, UserPlus, Trash2 } from "lucide-react";
 import { getItem, setItem } from "@services/storage";
 import FormNewUser from "@components/FormNewUser/FormNewUser";
 import { showAlert } from "@components/Alerts";
 import MessageBox from "@components/MessageBox/MessageBox";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-import styles from "@components/Table/Table.module.css";
-import stylesComponent from "./Equipa.module.css";
+import styles from "./Equipa.module.css";
 
 function Equipa() {
   const [opend, setOpend] = useState(false);
@@ -16,8 +14,12 @@ function Equipa() {
   const [clickDelete, setClickDelete] = useState(false);
   const currentId = getItem("currentUser").id;
   const message = (
-    <p>Tem a certeza que pretende eliminar <strong style={{color: "#000"}}>{currentUser.name}</strong> do sistema? Esta acção é irreversível.</p>
-  )
+    <p>
+      Tem a certeza que pretende eliminar{" "}
+      <strong style={{ color: "#000" }}>{currentUser.name}</strong> do sistema?
+      Esta accao e irreversivel.
+    </p>
+  );
 
   useEffect(() => {
     const storedUsers = getItem("users") || [];
@@ -30,7 +32,7 @@ function Equipa() {
     setUsers(updatedUsers);
     setItem("users", updatedUsers);
 
-    showAlert("Novo usuário criado", "success");
+    showAlert("Novo usuario criado", "success");
   }
 
   function handleClick(user) {
@@ -44,7 +46,7 @@ function Equipa() {
     setItem("users", updatedUsers);
     setClickDelete(false);
 
-    showAlert("Usuário removido.", "success");
+    showAlert("Usuario removido.", "success");
   }
 
   function getInitials(name) {
@@ -52,7 +54,8 @@ function Equipa() {
       .split(" ")
       .map((n) => n[0])
       .join("")
-      .toUpperCase();
+      .toUpperCase()
+      .slice(0, 2);
   }
 
   function getRoleLabel(role) {
@@ -62,96 +65,106 @@ function Equipa() {
   }
 
   function getRoleClass(role) {
-    if (role === "admin") return stylesComponent.admin;
-    if (role === "manager") return stylesComponent.manager;
-    return stylesComponent.seller;
+    if (role === "admin") return styles.admin;
+    if (role === "manager") return styles.manager;
+    return styles.seller;
   }
 
   return (
-    <div className={`${styles.container} ${stylesComponent.page}`}>
-      {/* HEADER */}
-      <div className={stylesComponent.head}>
-        <div>
-          <h2>Gestão de Equipa</h2>
-          <div className={stylesComponent.subtitle}>
-            Gerencie os membros da sua equipa
+    <div className={styles.container}>
+      {/* Header Section */}
+      <header className={styles.header}>
+        <div className={styles.headerContent}>
+          <div className={styles.titleArea}>
+            <div className={styles.iconWrapper}>
+              <Users size={24} />
+            </div>
+            <div>
+              <h1>Gestao de Equipa</h1>
+              <p>Gerencie os membros da sua equipa</p>
+            </div>
+          </div>
+
+          <div className={styles.headerActions}>
+            <span className={styles.badge}>{users.length} Funcionarios</span>
+            <button
+              type="button"
+              className={styles.addBtn}
+              onClick={() => setOpend(true)}
+            >
+              <UserPlus size={18} />
+              Novo Funcionario
+            </button>
           </div>
         </div>
+      </header>
 
-        <div className={stylesComponent.actionsArea}>
-          <span className={stylesComponent.badgeCount}>
-            {users.length} Funcionários
-          </span>
+      {/* Table Section */}
+      <section className={styles.tableSection}>
+        {users.length === 0 ? (
+          <div className={styles.emptyState}>
+            <Users size={64} />
+            <h3>Nenhum funcionario encontrado</h3>
+            <p>Adicione funcionarios para comecar a gerenciar sua equipa</p>
+          </div>
+        ) : (
+          <div className={styles.tableWrapper}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Cargo</th>
+                  <th>Email</th>
+                  <th>Telefone</th>
+                  <th></th>
+                </tr>
+              </thead>
 
-          <button
-            type="button"
-            className={stylesComponent.btn}
-            onClick={() => setOpend(true)}
-          >
-            <AddIcon fontSize="small" />
-            Novo Funcionário
-          </button>
-        </div>
-      </div>
+              <tbody>
+                {users.map((user) => (
+                  <tr key={user.id}>
+                    <td>
+                      <div className={styles.userCell}>
+                        <div className={styles.avatar}>
+                          {getInitials(user.name)}
+                        </div>
+                        <span className={styles.userName}>{user.name}</span>
+                      </div>
+                    </td>
 
-      {/* TABELA */}
-      <div className={stylesComponent.tableWrapper}>
-        <table className={stylesComponent.table}>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Cargo</th>
-              <th>Email</th>
-              <th>Telefone</th>
-              <th></th>
-            </tr>
-          </thead>
+                    <td>
+                      <span
+                        className={`${styles.roleBadge} ${getRoleClass(user.role)}`}
+                      >
+                        {getRoleLabel(user.role)}
+                      </span>
+                    </td>
 
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td>
-                  <div className={stylesComponent.avatarCell}>
-                    <div className={stylesComponent.avatar}>
-                      {getInitials(user.name)}
-                    </div>
-                    <span className={stylesComponent.userName}>
-                      {user.name}
-                    </span>
-                  </div>
-                </td>
+                    <td className={styles.emailCell}>{user.email}</td>
+                    <td>{user.phone}</td>
 
-                <td>
-                  <span
-                    className={`${stylesComponent.roleBadge} ${getRoleClass(user.role)}`}
-                  >
-                    {getRoleLabel(user.role)}
-                  </span>
-                </td>
-
-                <td>{user.email}</td>
-                <td>{user.phone}</td>
-
-                <td>
-                  <button
-                    className={stylesComponent.actionBtn}
-                    onClick={() => handleClick(user)}
-                  >
-                    <DeleteOutlineIcon fontSize="small" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                    <td>
+                      <button
+                        className={styles.deleteBtn}
+                        onClick={() => handleClick(user)}
+                        title="Remover funcionario"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
 
       {opend && (
         <FormNewUser setOpend={setOpend} handleNewUser={handleNewUser} />
       )}
 
-      {clickDelete &&
-        currentUser && (
+      {clickDelete && currentUser && (
         <MessageBox
           message={message}
           btnTxt={"Eliminar"}

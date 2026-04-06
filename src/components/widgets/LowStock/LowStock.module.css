@@ -1,28 +1,146 @@
+/* ===========================
+   LowStock Widget - Modern Design
+   =========================== */
+
 .card {
+  background: white;
+  border-radius: 20px;
   padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
+/* Header */
 .header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #d97706;
-  margin-bottom: 16px;
+  gap: 14px;
 }
 
+.iconWrapper {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 2px 0 0 0;
+}
+
+.badge {
+  margin-left: auto;
+  background: #fef3c7;
+  color: #d97706;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Empty State */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  text-align: center;
+  color: #d1d5db;
+}
+
+.emptyState p {
+  margin: 12px 0 0 0;
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+/* List */
 .list {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.list li {
+.item {
   display: flex;
   justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
+  align-items: center;
+  padding: 14px 16px;
+  background: #fffbeb;
+  border-radius: 12px;
+  border-left: 3px solid #f59e0b;
+  transition: all 0.2s ease;
 }
 
-.list li strong {
-  color: #dc2626;
+.item:hover {
+  transform: translateX(2px);
+  background: #fef3c7;
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.productName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.productCategory {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.stockInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.stockCount {
+  font-size: 14px;
+  font-weight: 700;
+  color: #d97706;
+}
+
+.stockBar {
+  width: 60px;
+  height: 4px;
+  background: #fde68a;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.stockProgress {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+  border-radius: 2px;
+  transition: width 0.3s ease;
 }

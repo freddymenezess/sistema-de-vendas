@@ -1,3 +1,4 @@
+import { LayoutDashboard } from "lucide-react";
 import SalesStatistics from "@widgets/SalesStatistics/SalesStatistics";
 import SalesChart from "@components/SalesChart/SalesChart";
 import LowStock from "@widgets/LowStock/LowStock";
@@ -7,22 +8,32 @@ import styles from "./Dashboard.module.css";
 
 function Dashboard() {
   return (
-    <section className={styles.dashboard}>
-      <section className={styles.title}>
-        <header>
-          <h2>Dashboard</h2>
-          <p className="subt">
-            Visualize os indicadores e desempenho em tempo real
-          </p>
-        </header>
-      </section>
-      <div className={styles.grid}>
+    <div className={styles.container}>
+      {/* Header Section */}
+      <header className={styles.header}>
+        <div className={styles.titleArea}>
+          <div className={styles.iconWrapper}>
+            <LayoutDashboard size={24} />
+          </div>
+          <div>
+            <h1>Dashboard</h1>
+            <p>Visualize os indicadores e desempenho em tempo real</p>
+          </div>
+        </div>
+      </header>
+
+      {/* Stats Grid */}
+      <section className={styles.statsGrid}>
         <SalesStatistics />
         <LowStock />
-        <MostSales className={styles.fullWidth} />
-        <SalesChart className={styles.fullWidth} />
-      </div>
-    </section>
+      </section>
+
+      {/* Main Content */}
+      <section className={styles.mainGrid}>
+        <MostSales className={styles.mostSales} />
+        <SalesChart className={styles.chart} />
+      </section>
+    </div>
   );
 }
 
