@@ -1,140 +1,589 @@
+/* ===========================
+   Vendas Page - Modern Design
+   =========================== */
+
 .container {
-  padding: 15px;
-}
-
-.kpis {
-  display: flex;
-  gap: 15px;
-  margin: 20px 0;
-}
-
-.kpiCard {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  flex: 1;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-}
-
-.kpiCard span {
-  font-size: 14px;
-  color: #888;
-}
-
-.kpiCard strong {
-  font-size: 22px;
-  margin-top: 8px;
-}
-
-.salesList {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.saleCard {
-  background: white;
-  border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
 }
 
-.saleHeader {
+/* Header Section */
+.header {
+  margin-bottom: 24px;
+}
+
+.headerContent {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
-.total {
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table th {
-  text-align: left;
-  font-size: 14px;
-  color: #666;
-  padding-bottom: 8px;
-}
-
-.table td {
-  padding: 8px 0;
-  border-top: 1px solid #eee;
-}
-
-.empty {
-  text-align: center;
-  color: #888;
-  margin-top: 30px;
-}
-
-.group {
+.titleArea {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-bottom: 30px;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.iconWrapper {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--main), var(--sec));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.iconWrapper svg {
+  font-size: 24px;
+}
+
+.titleArea h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 4px 0;
+}
+
+.titleArea p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.exportBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--main), var(--sec));
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(212, 163, 115, 0.3);
+}
+
+.exportBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 163, 115, 0.4);
+}
+
+.exportBtn svg {
+  font-size: 20px;
+}
+
+/* Controls Section */
+.controls {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.searchBox {
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
+}
+
+.searchBox input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.searchBox input:focus {
+  outline: none;
+  border-color: var(--main);
+  box-shadow: 0 0 0 3px rgba(212, 163, 115, 0.15);
+}
+
+.searchBox input::placeholder {
+  color: #9ca3af;
 }
 
 .groupToggle {
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  background: white;
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .groupToggle button {
-  padding: 8px 16px;
-  border: 1px solid #ccc;
-  background: white;
-  color: #666;
-  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: 0.2s;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.groupToggle button svg {
+  font-size: 18px;
+}
+
+.groupToggle button:hover {
+  color: #374151;
+  background: #f9fafb;
 }
 
 .groupToggle button.active {
-  background: #666;
+  background: var(--main);
   color: white;
+  box-shadow: 0 2px 8px rgba(212, 163, 115, 0.3);
+}
+
+/* KPI Section */
+.kpiSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpiCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.kpiIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kpiIcon svg {
+  font-size: 24px;
+  color: white;
+}
+
+.kpiIcon[data-color="primary"] {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+}
+
+.kpiIcon[data-color="success"] {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.kpiIcon[data-color="info"] {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.kpiIcon[data-color="warning"] {
+  background: linear-gradient(135deg, var(--main), var(--sec));
+}
+
+.kpiInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpiInfo span {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.kpiInfo strong {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+/* Sales Section */
+.salesSection {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.emptyState svg {
+  font-size: 64px;
+  color: #d1d5db;
+  margin-bottom: 16px;
+}
+
+.emptyState h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 8px 0;
+}
+
+.emptyState p {
+  font-size: 14px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* Group List */
+.groupList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.group {
+  border: 1px solid #f3f4f6;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.group:hover {
+  border-color: #e5e7eb;
 }
 
 .groupHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
-  padding: 10px 0;
-  border-bottom: 2px solid #f1f1f1;
+  padding: 16px 20px;
+  background: #fafbfc;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-.groupHeader h3 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: #333;
+.groupHeader:hover {
+  background: #f5f6f7;
 }
 
-.groupHeader span {
-  font-weight: bold;
+.groupInfo {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.groupDate {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.groupDate svg {
+  font-size: 20px;
   color: var(--main);
 }
 
-.printBtn {
-  padding: 8px 16px;
-  background: #666;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.groupDate h3 {
+  font-size: 16px;
   font-weight: 600;
-  transition: 0.2s;
+  color: #1a1a2e;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.groupMeta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.salesCount {
+  font-size: 13px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.groupTotal {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--main);
+}
+
+.groupActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.printBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: white;
+  color: var(--main);
+  border: 2px solid var(--main);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.printBtn svg {
+  font-size: 18px;
 }
 
 .printBtn:hover {
-  background: #333;
+  background: var(--main);
+  color: white;
+}
+
+.expandBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.expandBtn:hover {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.expandBtn svg {
+  font-size: 24px;
+}
+
+/* Sales List */
+.salesList {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: white;
+}
+
+.saleCard {
+  border: 1px solid #f3f4f6;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.saleCard:hover {
+  border-color: #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.saleHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.saleInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.saleId {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.saleDate {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.saleTotal {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--main);
+}
+
+/* Products List */
+.productsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.productItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: #fafbfc;
+  border-radius: 8px;
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.productName {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.productQty {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.productTotal {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .headerContent {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .exportBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .searchBox {
+    max-width: none;
+    width: 100%;
+  }
+
+  .groupToggle {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .kpiSection {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .kpiCard {
+    padding: 16px;
+  }
+
+  .kpiIcon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .kpiInfo strong {
+    font-size: 18px;
+  }
+
+  .salesSection {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .groupInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .groupHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .groupActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .printBtn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .saleHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .saleTotal {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .titleArea {
+    flex-direction: column;
+  }
+
+  .kpiSection {
+    grid-template-columns: 1fr;
+  }
+
+  .groupMeta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
 }
