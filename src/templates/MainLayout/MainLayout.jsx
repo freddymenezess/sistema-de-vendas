@@ -8,11 +8,13 @@ function MainLayout() {
   return (
     <MenuProvider>
       <div className={styles.container}>
-        <NavBar className={styles.nav} />
+        <NavBar />
         <main className={styles.main}>
           <Header />
-          <section className={styles.outlet}>
-            <Outlet />
+          <section className={styles.outletContainer}>
+            <div className={styles.outlet}>
+              <Outlet />
+            </div>
           </section>
         </main>
       </div>

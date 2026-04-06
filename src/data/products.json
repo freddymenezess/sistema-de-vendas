@@ -8,19 +8,19 @@
     "price": 7500,
     "categoria": "Estética",
     "src": "/prods/bronzeador.png",
-    "description": "Bronzeador facial premium",
+    "description": "Bronzeador facial",
     "createdAt": "2026-02-01"
   },
   {
     "id": 2,
     "code": "MTT34",
-    "name": "MATELOT",
+    "name": "Perfume",
     "stock": 4,
     "minStock": 5,
     "price": 9000,
     "categoria": "Perfumes",
-    "src": "/prods/perfume.jpg",
-    "description": "Perfume masculino intenso",
+    "src": "/prods/perfume.png",
+    "description": "Perfume masculino",
     "createdAt": "2026-02-02"
   },
   {
@@ -28,7 +28,7 @@
     "code": "OPE43",
     "name": "Óleo da pele",
     "stock": 10,
-    "minStock": 3,
+    "minStock": 6,
     "price": 2000,
     "categoria": "Hidratante",
     "src": "/prods/oleo.jpg",
@@ -37,13 +37,13 @@
   },
   {
     "id": 4,
-    "code": "",
+    "code": "BT11L",
     "name": "Batom",
     "stock": 121,
     "minStock": 10,
     "price": 3500,
     "categoria": "Maquiagem",
-    "src": "/prods/batom.jpg",
+    "src": "/prods/batom.webp",
     "description": "Batom matte longa duração",
     "createdAt": "2026-02-03"
   },

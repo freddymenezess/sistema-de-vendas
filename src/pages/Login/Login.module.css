@@ -1,74 +1,318 @@
-.loginForm {
-  max-width: 360px;
-  padding: 40px 20px;
+/* Container principal - ocupa toda a tela */
+.container {
+  min-height: 100dvh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: #fff;
-  border-radius: 16px;
+}
+
+/* Wrapper que contém imagem e formulário */
+.loginWrapper {
+  display: flex;
+  min-height: 100dvh;
+  width: 100%;
+}
+
+/* Container da imagem - escondido em mobile */
+.imageContainer {
+  display: none;
+}
+
+.loginImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Container do formulário */
+.formContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #fff;
+}
+
+.loginForm {
+  width: 100%;
+  max-width: 380px;
+  padding: 40px 24px;
+  background-color: #fff;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .logoContainer {
-  height: 100px;
+  height: 90px;
   text-align: center;
+  margin-bottom: 16px;
 }
 
 .logoContainer img {
   height: 100%;
   max-width: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .desc {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
+}
+
+.desc p {
+  color: #6b7280;
+  font-size: 0.938rem;
+  line-height: 1.6;
+}
+
+.desc strong {
+  color: var(--main);
+  font-weight: 600;
 }
 
 .inputGroup {
   width: 100%;
-}
-
-.inputGroup, 
-.inputGroup label,
-.inputGroup input {
-  display: block;
+  margin-bottom: 16px;
 }
 
 .inputGroup label {
-  margin-bottom: 6px;
-  
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 14px;
+  color: #9ca3af;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.inputWrapper:focus-within .inputIcon {
+  color: var(--main);
 }
 
 .inputGroup input {
   width: 100%;
   font-size: 1rem;
-  padding: 12px 6px;
-  border: 2px solid #cccccc7b;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  padding: 14px 14px 14px 46px;
+  border-radius: 12px;
+  background-color: #f9fafb;
+  transition: all 0.2s ease;
+  outline: none;
 }
 
 .inputGroup input:focus {
-  border: 2px solid var(--main);
+  border-color: var(--main);
+  background-color: #fff;
   outline: none;
+}
+
+.inputGroup input::placeholder {
+  font-family: inherit;
+  color: #9ca3af;
+}
+
+.togglePassword {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.togglePassword:hover {
+  color: #6b7280;
 }
 
 .loginButton {
   width: 100%;
-  padding: 12px;
-  margin-top: 12px;
+  padding: 14px 24px;
+  margin-top: 8px;
   background-color: var(--main);
   color: white;
   font-size: 1rem;
+  font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
 }
 
 .loginButton:hover {
-  background-color: var(--m-desfoque);
+  opacity: 0.6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(var(--main-rgb, 59, 130, 246), 0.3);
+}
+
+.loginButton:active {
+  transform: translateY(0);
 }
 
 .errorMessage {
-  color: red;
-  margin-top: 10px;
+  color: #dc2626;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 16px;
   text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* ========================================
+   RESPONSIVIDADE - Telas médias (768px+)
+   Imagem como fundo, formulário centralizado
+   ======================================== */
+@media (min-width: 768px) {
+  .container {
+    position: relative;
+    background-color: transparent;
+  }
+
+  .loginWrapper {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Imagem ocupa toda a tela como fundo */
+  .imageContainer {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .loginImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Overlay escuro para melhor contraste */
+  .imageContainer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  /* Formulário centralizado sobre a imagem */
+  .formContainer {
+    position: relative;
+    z-index: 2;
+    flex: none;
+    width: auto;
+    padding: 20px;
+    background-color: transparent;
+  }
+
+  .loginForm {
+    max-width: 420px;
+    padding: 45px 40px;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+  }
+
+  .logoContainer {
+    height: 100px;
+  }
+}
+
+/* ========================================
+   RESPONSIVIDADE - Telas grandes (1280px+)
+   Imagem na esquerda, formulário na direita
+   ======================================== */
+@media (min-width: 1280px) {
+  .container {
+    position: static;
+    background-color: #f5f5f5;
+  }
+
+  .loginWrapper {
+    position: static;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  /* Imagem ocupa metade da tela - lado esquerdo */
+  .imageContainer {
+    position: relative;
+    flex: 0 0 60%;
+    min-height: 100vh;
+  }
+
+  .imageContainer::after {
+    display: none;
+  }
+
+  .loginImage {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    object-position: left;
+  }
+
+  /* Formulário ocupa metade da tela - lado direito */
+  .formContainer {
+    position: static;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background-color: #fff;
+    z-index: auto;
+  }
+
+  .loginForm {
+    max-width: 440px;
+    padding: 50px 45px;
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    backdrop-filter: none;
+  }
+
+  .logoContainer {
+    height: 120px;
+  }
 }

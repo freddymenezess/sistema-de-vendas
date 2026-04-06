@@ -25,8 +25,6 @@ export default defineConfig([
     rules: {
       indent: ["error", 2],
       "no-unused-vars": ["error", { varsIgnorePattern: "^[A-Z_]" }],
-      quotes: ["error", "double", { avoidEscape: true }],
-      "jsx-quotes": ["error", "prefer-double"],
     },
   },
 ]);

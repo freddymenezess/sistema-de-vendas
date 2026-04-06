@@ -8,6 +8,38 @@
   color: #374151;
 }
 
+.groupToggle {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.groupToggle button {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #374151;
+  transition: background 0.15s ease;
+}
+
+.groupToggle button:hover {
+  background: #e5e7eb;
+}
+
+.groupToggle button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.25);
+}
+
+.active {
+  background: #d97706;
+  color: #fff;
+  border-color: #d97706;
+}
+
 .months {
   display: flex;
   justify-content: space-between;
@@ -17,4 +49,17 @@
 .month {
   font-weight: bold;
   color: #333;
+}
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 240px;
+  color: #6b7280;
+  background: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
 }

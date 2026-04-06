@@ -2,7 +2,7 @@
   position: relative;
   display: flex;
   background-color: var(--bg);
-  height: 100%;
+  height: 100vh;
 }
 
 .main {
@@ -13,19 +13,19 @@
   overflow-y: hidden;
 }
 
-.main .header {
-  flex-grow: 0;
-  flex-shrink: 0;
+.header {
+  flex: 0 0 70px;
 }
 
 .outletContainer {
   display: flex;
-  height: 100%;
+  flex: 1;
+  padding: 15px;
+  padding-left: 0;
   overflow-y: hidden;
 }
 
 .menu {
-  flex: 0 1 300px;
   position: sticky;
   top: 0;
 }
@@ -34,7 +34,7 @@
   flex: 1;
   overflow-y: scroll;
   min-height: 0;
-  padding: 15px;
+  margin: -15px 0;
 }
 
 .outlet::-webkit-scrollbar {

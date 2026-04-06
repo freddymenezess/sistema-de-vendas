@@ -1,44 +1,49 @@
-import { Search, Bell, Menu as MenuIcon, X } from "lucide-react";
+import { Search, PanelLeftClose, PanelLeft } from "lucide-react";
 import { useState } from "react";
 import { useMenu } from "@context/MenuProvider";
 import DropMenu from "@components/DropMenu";
-import useAuth from "@hooks/useAuth";
+import Notifications from "@components/Notifications/Notifications";
 import styles from "./Header.module.css";
 
 function Header({ className = "" }) {
-  const { isOpen, openMenu } = useMenu();
-  const { user } = useAuth();
-
+  const { isOpen, toggleMenu } = useMenu();
   const [focus, setFocus] = useState(false);
-  const [mobileSearch, setMobileSearch] = useState(false);
 
-  const today = new Date().toLocaleDateString("pt-PT", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Bom dia";
+    if (hour < 18) return "Boa tarde";
+    return "Boa noite";
+  };
 
   return (
     <header className={`${styles.container} ${className}`}>
       {/* LEFT */}
       <div className={styles.left}>
-        {!isOpen && <MenuIcon className={styles.menuBtn} onClick={openMenu} />}
-
-        {!mobileSearch && (
-          <div className={styles.userBlock}>
-            <h4 className={styles.greeting}>Olá, {user.name.split(" ")[0]}</h4>
-            <span className={styles.date}>{today}</span>
-          </div>
-        )}
+        <button 
+          className={styles.menuBtn} 
+          onClick={toggleMenu}
+          aria-label={isOpen ? "Minimizar menu" : "Expandir menu"}
+        >
+          {isOpen ? (
+            <PanelLeftClose size={20} />
+          ) : (
+            <PanelLeft size={20} />
+          )}
+        </button>
+        <div className={styles.greeting}>
+          <span className={styles.greetingText}>{getGreeting()}</span>
+          <span className={styles.greetingName}>Administrador</span>
+        </div>
       </div>
 
-      {/* CENTER (Search Desktop) */}
+      {/* CENTER (Search) */}
       <div className={styles.center}>
         <div className={`${styles.searchWrapper} ${focus ? styles.focus : ""}`}>
-          <Search size={18} />
+          <Search size={18} className={styles.searchIcon} />
           <input
             type="search"
-            placeholder="Pesquisar produtos, vendas..."
+            placeholder="Pesquisar produtos, fornecedores..."
             onFocus={() => setFocus(true)}
             onBlur={() => setFocus(false)}
           />
@@ -47,27 +52,12 @@ function Header({ className = "" }) {
 
       {/* RIGHT */}
       <div className={styles.right}>
-        {/* Mobile Search Toggle */}
-        <div className={styles.mobileSearchBtn}>
-          {mobileSearch ? (
-            <X size={20} onClick={() => setMobileSearch(false)} />
-          ) : (
-            <Search size={20} onClick={() => setMobileSearch(true)} />
-          )}
-        </div>
-
+        <Notifications />
+        <div className={styles.divider} />
         <div className={styles.dropWrapper}>
           <DropMenu />
         </div>
       </div>
-
-      {/* Mobile Search Overlay */}
-      {mobileSearch && (
-        <div className={styles.mobileSearch}>
-          <Search size={18} />
-          <input type="search" placeholder="Pesquisar..." autoFocus />
-        </div>
-      )}
     </header>
   );
 }

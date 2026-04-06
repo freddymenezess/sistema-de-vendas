@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "nome": "Cosméticos Bella",
+    "contato": "+244 923 456 789",
+    "endereco": "Rua das Flores, 123, Luanda"
+  },
+  {
+    "id": 2,
+    "nome": "Fornecedor Glamour",
+    "contato": "+244 912 345 678",
+    "endereco": "Avenida Central, 456, Benguela"
+  },
+  {
+    "id": 3,
+    "nome": "Beleza Natural Ltda",
+    "contato": "+244 934 567 890",
+    "endereco": "Praça da Beleza, 789, Huambo"
+  }
+]

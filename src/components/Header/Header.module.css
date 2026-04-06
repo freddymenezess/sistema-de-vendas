@@ -3,157 +3,191 @@
   top: 0;
   height: 70px;
   background: #ffffff;
-  padding: 0 16px;
+  padding: 0 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #f1f1f1;
+  border-bottom: 1px solid #e8e8e8;
   z-index: 4;
+  gap: 16px;
 }
 
 /* LEFT */
-
 .left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
 .menuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
   cursor: pointer;
   color: #6b7280;
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
 }
 
-.userBlock {
-  display: flex;
-  flex-direction: column;
+.menuBtn:hover {
+  background: var(--m-desfoque);
+  color: var(--sec);
 }
 
 .greeting {
-  margin: 0;
-  font-size: 1.2rem;
-}
-
-.date {
-  display: none; /* escondido no mobile */
-}
-
-/* CENTER (desktop only) */
-.center {
   display: none;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.greetingText {
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.greetingName {
+  font-size: 14px;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+/* CENTER */
+.center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 500px;
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1.5px solid #e5e7eb;
+  transition: all 0.25s ease;
+  width: 100%;
+}
+
+.searchWrapper:hover {
+  border-color: #d1d5db;
+  background: #ffffff;
+}
+
+.searchIcon {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.searchWrapper input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 14px;
+  color: #374151;
+}
+
+.searchWrapper input::placeholder {
+  color: #9ca3af;
+}
+
+.focus {
+  background: #ffffff;
+  border-color: var(--main);
+  box-shadow: 0 0 0 3px var(--m-desfoque);
+}
+
+.focus .searchIcon {
+  color: var(--main);
 }
 
 /* RIGHT */
-
 .right {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 8px;
 }
 
-.mobileSearchBtn {
+.iconBtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
   cursor: pointer;
   color: #6b7280;
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
 }
 
-.dot {
+.iconBtn:hover {
+  background: var(--m-desfoque);
+  color: var(--sec);
+}
+
+.notificationBadge {
   position: absolute;
-  top: -3px;
-  right: -3px;
-  width: 8px;
-  height: 8px;
-  background: #ef4444;
+  top: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  background: var(--main);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+}
+
+.divider {
+  width: 1px;
+  height: 32px;
+  background: #e5e7eb;
+  margin: 0 8px;
 }
 
 .dropWrapper {
-  display: none; /* escondido no mobile */
+  display: block;
 }
-
-/* MOBILE SEARCH OVERLAY */
-
-.mobileSearch {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 70px;
-  width: 100%;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 16px;
-  z-index: 10;
-  border-bottom: 1px solid #f1f1f1;
-}
-
-.mobileSearch input {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 14px;
-}
-
-/* ============================= */
-/* TABLET (≥768px) */
-/* ============================= */
 
 @media (min-width: 768px) {
-  .container {
-    height: 80px;
-    padding: 0 24px;
-  }
-
-  .date {
-    display: block;
-    font-size: 12px;
-    color: #9ca3af;
-  }
-
-  .dropWrapper {
-    display: block;
-  }
-
-  .mobileSearchBtn {
-    display: none;
+  .greeting {
+    display: flex;
   }
 }
 
-/* ============================= */
-/* DESKTOP (≥1024px) */
-/* ============================= */
-
 @media (min-width: 1024px) {
+  .container {
+    gap: 24px;
+  }
+
+  .left {
+    gap: 20px;
+  }
+
   .center {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+    max-width: 550px;
   }
 
   .searchWrapper {
-    width: 420px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
-    border-radius: 12px;
-    background: #f3f4f6;
-    transition: 0.2s;
+    padding: 12px 20px;
+    border-radius: 14px;
+    gap: 12px;
   }
 
-  .searchWrapper input {
-    border: none;
-    outline: none;
-    background: transparent;
-    width: 100%;
+  .right {
+    gap: 12px;
   }
-
-  .focus {
-    background: #ffffff;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .menuBtn { display: none; }
 }

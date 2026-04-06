@@ -1,26 +1,28 @@
 .menu {
-  flex: 0 1 300px;
+  flex: 0 1 280px;
   display: flex;
   flex-flow: column nowrap;
   row-gap: 10px;
-  padding: 20px;
+  padding-left: 0;
 }
 
-/* PRODUTO */
 .productCard {
-  flex: 1;
+  flex: 0 1 auto;
   background: #fff;
   border-radius: 14px;
-  padding: 20px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
 }
 
 .img {
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
+  height: 100%;
+  max-width: 120px;
+  object-fit: cover;
+}
+
+.productInfo {
+  padding: 15px 0;
 }
 
 .productInfo h3 {
@@ -32,18 +34,18 @@
   font-size: 18px;
   color: #b5835a;
   font-weight: 600;
-  margin: 8px 0;
+  margin: 0px 0 8px 0;
 }
 
 .qtdControl {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 10px;
 }
 
 .qtdControl button {
-  width: 36px;
   height: 36px;
+  padding: auto;
   border-radius: 8px;
   border: none;
   background: #f1f1f1;
@@ -63,9 +65,13 @@
   border: 1px solid #ddd;
 }
 
+.qtdControl input:focus {
+  outline: none;
+}
+
 /* RESUMO */
 .summary {
-  flex: 0 1 350px;
+  flex: 1 1 auto;
   background: #fff;
   border-radius: 14px;
   padding: 20px;
@@ -82,6 +88,7 @@
   flex: 1;
   margin-top: 16px;
   overflow-y: auto;
+  overflow: hidden;
 }
 
 .empty {

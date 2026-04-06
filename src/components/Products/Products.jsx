@@ -2,7 +2,11 @@ import { useSelectedProduct } from "@context/SelectedProductProvider";
 import Card from "@components/Card/Card";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import { getItem } from "@services/storage.js";
-import ShoppingCartPlus from "lucide-react/dist/esm/icons/shopping-cart";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart"; // Substitui ShoppingCartPlus
+import InventoryIcon from "@mui/icons-material/Inventory";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CategoryIcon from "@mui/icons-material/Category";
+import WarningIcon from "@mui/icons-material/Warning";
 import styles from "./Products.module.css";
 
 function Products() {
@@ -12,37 +16,72 @@ function Products() {
 
   return (
     <div className={styles.container}>
-      {products.map((prod) => (
-        <Card
-          key={prod.id}
-          className={`${styles.product} ${
-            selectedId === prod.id ? styles.selected : ""
-          }`}
-          classContainer={styles.cardWrapper}
-          onClick={() => setSelectedId(prod.id)}
-        >
-          <div className={styles.imgContainer}>
-            <img src={prod.src} alt={prod.name} className={styles.img} />
-          </div>
+      {products.map((prod) => {
+        const isLowStock = prod.stock <= prod.minStock;
 
-          <div className={styles.desc}>
-            <h4>{prod.name}</h4>
-            <p className={styles.price}>{handleFormatCoin(prod.price)}</p>
+        return (
+          <Card
+            key={prod.id}
+            className={`${styles.product} ${
+              selectedId === prod.id ? styles.selected : ""
+            }`}
+            onClick={() => setSelectedId(prod.id)}
+          >
+            <div className={styles.imgContainer}>
+              <img src={prod.src} alt={prod.name} className={styles.img} />
+            </div>
 
-            <button
-              type="button"
-              className={styles.btnAdd}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleInc();
-              }}
-            >
-              <ShoppingCartPlus size={16} />
-              Adicionar
-            </button>
-          </div>
-        </Card>
-      ))}
+            <div className={styles.desc}>
+              <div className={styles.titleRow}>
+                <h4>{prod.name}</h4>
+                <span className={styles.badge}>
+                  <CategoryIcon fontSize="small" />
+                  {prod.categoria}
+                </span>
+              </div>
+
+              <p className={styles.description}>{prod.description}</p>
+
+              <div className={styles.meta}>
+                <span className={styles.metaItem}>
+                  <InventoryIcon fontSize="small" />
+                  {prod.stock} em estoque
+                </span>
+
+                {isLowStock ? (
+                  <span className={styles.lowStock}>
+                    <WarningIcon fontSize="small" />
+                    Estoque baixo
+                  </span>
+                ) : (
+                  <span className={styles.metaItem}>
+                    <CheckCircleIcon fontSize="small" />
+                    Mínimo {prod.minStock}
+                  </span>
+                )}
+              </div>
+
+              <div className={styles.footer}>
+                <span className={styles.price}>
+                  {handleFormatCoin(prod.price)}
+                </span>
+
+                <button
+                  type="button"
+                  className={styles.btnAdd}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleInc(prod.id);
+                  }}
+                >
+                  <AddShoppingCartIcon fontSize="small" />
+                  Adicionar
+                </button>
+              </div>
+            </div>
+          </Card>
+        );
+      })}
     </div>
   );
 }

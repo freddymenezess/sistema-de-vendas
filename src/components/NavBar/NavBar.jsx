@@ -2,34 +2,59 @@ import {
   Home,
   User,
   LayoutDashboard,
-  ClipboardPlus,
   ShoppingCart,
-  X,
+  TrendingUp,
+  Users,
 } from "lucide-react";
 import { useMenu } from "@context/MenuProvider";
+import useAuth from "@hooks/useAuth";
 import { NavLink } from "react-router-dom";
-import logo_full from "/mamev-full.png";
 import styles from "./NavBar.module.css";
+import logoFull from "/mamev-f.png";
+import logoIcon from "/mamev-icon.png";
 
-const navItems = [
-  { to: "/", label: "Home", icon: Home },
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/reports", label: "Relatórios", icon: ClipboardPlus },
-  { to: "/stock", label: "Estoque", icon: ShoppingCart },
-  { to: "/employees", label: "Equipa", icon: User },
-];
+// Rotas por role
+const navItemsByRole = {
+  admin: [
+    { to: "/", label: "Home", icon: Home },
+    { to: "/dashboard", label: "Painel Admin", icon: LayoutDashboard },
+    { to: "/vendas", label: "Vendas", icon: TrendingUp },
+    { to: "/estoque", label: "Estoque", icon: ShoppingCart },
+    { to: "/funcionarios", label: "Equipa", icon: User },
+    { to: "/fornecedores", label: "Fornecedores", icon: Users },
+  ],
+  manager: [
+    { to: "/", label: "Home", icon: Home },
+    { to: "/dashboard", label: "Painel Admin", icon: LayoutDashboard },
+    { to: "/vendas", label: "Vendas", icon: TrendingUp },
+    { to: "/estoque", label: "Estoque", icon: ShoppingCart },
+    { to: "/funcionarios", label: "Equipa", icon: User },
+    { to: "/fornecedores", label: "Fornecedores", icon: Users },
+  ],
+  seller: [
+    { to: "/", label: "Home", icon: Home },
+    { to: "/estoque", label: "Estoque", icon: ShoppingCart },
+    { to: "/vendas", label: "Vendas", icon: TrendingUp },
+  ],
+};
 
 function NavBar({ className = "" }) {
-  const { isOpen, closeMenu } = useMenu();
+  const { isOpen } = useMenu();
+  const { user } = useAuth();
+
+  // Obtém as rotas com base no role do usuário, ou usa um array vazio se não estiver autenticado
+  const navItems = user?.role ? navItemsByRole[user.role] || [] : [];
 
   return (
     <nav
-      className={`${styles.navbar} ${!isOpen ? styles.close : ""} ${className}`}
+      className={`${styles.navbar} ${!isOpen ? styles.collapsed : ""} ${className}`}
     >
       <div className={styles.logoWrapper}>
-        <img src={logo_full} alt="Mamev" className={styles.logo} />
-
-        <X size={24} className={styles.closeBtn} onClick={closeMenu} />
+        <img 
+          src={isOpen ? logoFull : logoIcon} 
+          alt="Mamev" 
+          className={isOpen ? styles.logo : styles.logoIcon} 
+        />
       </div>
 
       <div className={styles.navList}>
@@ -38,9 +63,10 @@ function NavBar({ className = "" }) {
             {({ isActive }) => (
               <div
                 className={`${styles.navItem} ${isActive ? styles.active : ""}`}
+                title={!isOpen ? label : undefined}
               >
                 <Icon size={20} strokeWidth={1.8} />
-                <span>{label}</span>
+                {isOpen && <span>{label}</span>}
 
                 {isActive && <div className={styles.activeIndicator} />}
               </div>

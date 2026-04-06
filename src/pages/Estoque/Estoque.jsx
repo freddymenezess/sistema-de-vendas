@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import Card from "@components/Card/Card";
-import AddProductButton from "./AddProductButton";
 import { getItem } from "@services/storage";
-import styles from "./EstoqueManager.module.css";
+import styles from "./Estoque.module.css";
 
-function EstoqueManager({ className }) {
+function Estoque({ className }) {
   const [products, setProducts] = useState([]);
 
   const loadProducts = () => {
@@ -25,9 +24,9 @@ function EstoqueManager({ className }) {
   return (
     <div className={`${styles.container} ${className}`}>
       <header>
-        <h2>Gestão de Estoque</h2>
+        <h2>Estoque</h2>
         <p className="subt">
-          Gerencie o estoque e acompanhe a disponibilidade dos produtos
+          Acompanhe a disponibilidade dos produtos
         </p>
       </header>
 
@@ -78,4 +77,4 @@ function EstoqueManager({ className }) {
   );
 }
 
-export default EstoqueManager;
+export default Estoque;

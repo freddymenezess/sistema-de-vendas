@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { getItem, setItem, removeItem } from "@services/storage.js";
-import { users, products, lowProducts, salesChart } from "@data";
+import { users, products, lowProducts } from "@data";
 
 export const AuthContext = createContext();
 
@@ -19,7 +19,6 @@ function AuthProvider({ children }) {
     setItem("users", users);
     setItem("products", products);
     setItem("lowProducts", lowProducts);
-    setItem("salesChart", salesChart);
     setUser(userData);
   };
 

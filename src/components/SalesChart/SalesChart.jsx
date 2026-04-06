@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import {
   LineChart,
   Line,
@@ -19,41 +20,102 @@ const formatCurrency = (value) =>
   });
 
 const SalesChart = ({ className }) => {
-  const data = getItem("salesChart");
+  const [groupBy, setGroupBy] = useState("month");
+  const vendas = getItem("compras") || [];
+
+  const chartData = useMemo(() => {
+    if (!vendas || vendas.length === 0) return [];
+
+    const grouped = vendas.reduce((acc, venda) => {
+      const date = new Date(venda.data);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
+      let isoKey;
+      let label;
+
+      if (groupBy === "day") {
+        isoKey = `${year}-${month}-${day}`;
+        label = date.toLocaleDateString("pt-PT");
+      } else if (groupBy === "month") {
+        isoKey = `${year}-${month}`;
+        label = `${month}/${year}`;
+      } else {
+        isoKey = `${year}`;
+        label = `${year}`;
+      }
+
+      if (!acc[isoKey]) acc[isoKey] = { vendas: 0, label };
+      acc[isoKey].vendas += venda.total;
+      return acc;
+    }, {});
+
+    return Object.entries(grouped)
+      .map(([isoKey, { vendas, label }]) => ({ isoKey, vendas, label }))
+      .sort((a, b) => (a.isoKey > b.isoKey ? 1 : -1));
+  }, [vendas, groupBy]);
 
   return (
     <BoxShadow className={className}>
       <div className={styles.salesChartContainer}>
         <h2 className={styles.title}>Estatísticas de vendas</h2>
 
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis
-              dataKey="vendas"
-              tickFormatter={(value) =>
-                value.toLocaleString("pt-AO", {
-                  style: "currency",
-                  currency: "AOA",
-                })
-              }
-            />
-            <Tooltip
-              formatter={(value) => formatCurrency(value)}
-              labelFormatter={(label) => `Mês: ${label}`}
-            />
+        <div className={styles.groupToggle}>
+          <button
+            className={groupBy === "day" ? styles.active : ""}
+            onClick={() => setGroupBy("day")}
+          >
+            Dia
+          </button>
+          <button
+            className={groupBy === "month" ? styles.active : ""}
+            onClick={() => setGroupBy("month")}
+          >
+            Mês
+          </button>
+          <button
+            className={groupBy === "year" ? styles.active : ""}
+            onClick={() => setGroupBy("year")}
+          >
+            Ano
+          </button>
+        </div>
 
-            <Line
-              type="monotone"
-              dataKey="vendas"
-              stroke="#d97706"
-              strokeWidth={3}
-              dot={{ r: 5 }}
-              activeDot={{ r: 7 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        {chartData.length === 0 ? (
+          <div className={styles.emptyState}>
+            <p>Sem vendas registradas para mostrar no gráfico.</p>
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="label" />
+              <YAxis dataKey="vendas" />
+              <Tooltip
+                formatter={(value) => formatCurrency(value)}
+                labelFormatter={(label) => {
+                  const prefix =
+                    groupBy === "day"
+                      ? "Dia"
+                      : groupBy === "month"
+                        ? "Mês"
+                        : "Ano";
+                  return `${prefix}: ${label}`;
+                }}
+              />
+
+              <Line
+                type="monotone"
+                dataKey="vendas"
+                stroke="#d97706"
+                strokeWidth={3}
+                dot={{ r: 5 }}
+                activeDot={{ r: 7 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
       </div>
     </BoxShadow>
   );
