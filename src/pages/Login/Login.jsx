@@ -21,9 +21,9 @@ function Login() {
   useEffect(() => {
     if (user) {
       if (user.role === "admin" || user.role === "manager") {
-        navigate("/dashboard", { replace: true });
+        navigate("/painel", { replace: true });
       } else {
-        navigate("/home", { replace: true });
+        navigate("/carrinho", { replace: true });
       }
     }
   }, [user, navigate]);
@@ -112,7 +112,7 @@ function Login() {
                   type="button"
                   className={styles.togglePassword}
                   onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                  title={showPassword ? "Ocultar senha" : "Mostrar senha"}
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>

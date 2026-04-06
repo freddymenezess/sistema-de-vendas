@@ -51,12 +51,12 @@ function Menu({ className = "" }) {
     const verStock = venda.reduce((acc, vend) => {
       const prod = products.find((p) => p.id === vend.id);
 
-      if (prod && prod.stock < vend.quantidade) {
+      if (prod && (prod.stock - vend.quantidade < prod.minStock)) {
         acc.push({
           id: prod.id,
           name: prod.name,
           quantidade: vend.quantidade,
-          stock: prod.stock,
+          minStock: prod.minStock,
         });
       }
 
@@ -66,7 +66,7 @@ function Menu({ className = "" }) {
     if (verStock.length > 0) {
       verStock.forEach((item) => {
         showAlert(
-          `${item.name}: Solicitado ${item.quantidade}, Disponível ${item.stock}`,
+          `${item.name}: Solicitado ${item.quantidade}, Estoque mínimo ${item.minStock}`,
           "error",
         );
       });
@@ -99,6 +99,14 @@ function Menu({ className = "" }) {
     // Remover setQtd(1), pois quantity é por produto
 
     showAlert("Compra finalizada com sucesso!", "success");
+  }
+
+  function handleReset() {
+    setProducts((prevProducts) =>
+      prevProducts.map((p) => ({ ...p, quantity: 0 })),
+    );
+
+    setVenda([]);
   }
 
   const finalPrice = venda.reduce((acc, item) => acc + item.preco_pagar, 0);
@@ -157,7 +165,8 @@ function Menu({ className = "" }) {
 
               <div className={styles.itemRight}>
                 <span>{item.quantidade}x</span>
-                <span>Kz {item.preco_pagar}</span>
+                <span>-</span>
+                <span>{handleFormatCoin(item.preco_pagar)}</span>
                 <DeleteOutlineIcon
                   className={styles.removeIcon}
                   onClick={() => handleRemove(item.id)}
@@ -169,11 +178,11 @@ function Menu({ className = "" }) {
 
         <div className={styles.total}>
           <span>Total</span>
-          <strong>Kz {finalPrice}</strong>
+          <strong>{handleFormatCoin(finalPrice)}</strong>
         </div>
 
         <div className={styles.actions}>
-          <button className={styles.reset} >
+          <button className={styles.reset} onClick={() => handleReset()}>
             Resetar
           </button>
 

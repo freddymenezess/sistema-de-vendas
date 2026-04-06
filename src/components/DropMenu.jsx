@@ -24,11 +24,17 @@ export default function DropMenu() {
           cursor: "pointer",
           transition: "0.2s",
           "&:hover": {
-            backgroundColor: "#f3f4f6",
+            backgroundColor: "#f9fafb",
           },
         }}
       >
-        <Avatar name={user.name} />
+        <Avatar
+          style={{
+            flex: "0 1 40px",
+            aspectRatio: "1/1",
+          }}
+          name={user.name}
+        />
 
         <Box
           sx={{
@@ -37,7 +43,7 @@ export default function DropMenu() {
             lineHeight: 1.2,
           }}
         >
-          <span style={{ fontWeight: 600 }}>{user.name}</span>
+          <span style={{ fontSize: "0.80rem", fontWeight: 600 }}>{user.name}</span>
           <span
             style={{
               fontSize: 12,

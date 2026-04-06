@@ -103,8 +103,8 @@
   padding: 14px 14px 14px 46px;
   border-radius: 12px;
   background-color: #f9fafb;
+  border: 2px solid var(--border);
   transition: all 0.2s ease;
-  outline: none;
 }
 
 .inputGroup input:focus {

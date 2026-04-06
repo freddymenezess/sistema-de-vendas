@@ -1,17 +1,16 @@
 .container {
   padding: 15px;
-  padding-right: 0;
 }
 
 .kpis {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   margin: 20px 0;
 }
 
 .kpiCard {
   background: white;
-  padding: 20px;
+  padding: 15px;
   border-radius: 12px;
   flex: 1;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
@@ -32,7 +31,7 @@
 .salesList {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 .saleCard {

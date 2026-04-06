@@ -1,28 +1,28 @@
 [
   {
     "id": 1,
-    "name": "Melísia Almeida",
+    "name": "Vanessa Neto",
     "role": "admin",
     "password": "admin",
-    "email": "melisia.almeida@mamev.com",
+    "email": "vanessa.neto@mamev.com",
     "phone": "912345678"
   },
   {
     "id": 2,
-    "name": "João Garcia",
+    "name": "Edvânia Francisco",
     "role": "manager",
     "password": "1234",
     "nif": "123456780LA059",
-    "email": "joao.garcia@mamev.com",
+    "email": "edvania.francisco@mamev.com",
     "phone": "923456789"
   },
   {
     "id": 3,
-    "name": "Maria Silva",
+    "name": "Marcelo Epalanga",
     "role": "seller",
     "password": "1234",
     "nif": "123456781LA059",
-    "email": "maria.silva@mamev.com",
+    "email": "marcelo.epalanga@mamev.com",
     "phone": "934567890"
   },
   {

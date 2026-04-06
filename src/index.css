@@ -16,6 +16,8 @@
   --desfoque: #dcdcdc48;
   --sec: #B37C5F;
   --txt-opaco: #00000062;
+  --error: #e6373a;
+  --error-bg: #ff4d4f26;
 }
 
 * {

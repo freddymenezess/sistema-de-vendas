@@ -1,8 +1,7 @@
 import { useSelectedProduct } from "@context/SelectedProductProvider";
-import Card from "@components/Card/Card";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import { getItem } from "@services/storage.js";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart"; // Substitui ShoppingCartPlus
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -20,7 +19,7 @@ function Products() {
         const isLowStock = prod.stock <= prod.minStock;
 
         return (
-          <Card
+          <div
             key={prod.id}
             className={`${styles.product} ${
               selectedId === prod.id ? styles.selected : ""
@@ -79,7 +78,7 @@ function Products() {
                 </button>
               </div>
             </div>
-          </Card>
+          </div>
         );
       })}
     </div>
