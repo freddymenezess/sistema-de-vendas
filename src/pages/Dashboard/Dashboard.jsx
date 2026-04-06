@@ -1,8 +1,8 @@
 import { LayoutDashboard } from "lucide-react";
-import SalesStatistics from "@widgets/SalesStatistics/SalesStatistics";
-import SalesChart from "@components/SalesChart/SalesChart";
-import LowStock from "@widgets/LowStock/LowStock";
-import MostSales from "@widgets/MostSales/MostSales";
+import SalesStatistics from "../../components/widgets/SalesStatistics/SalesStatistics";
+import SalesChart from "../../components/SalesChart/SalesChart";
+import LowStock from "../../components/widgets/LowStock/LowStock";
+import MostSales from "../../components/widgets/MostSales/MostSales";
 
 import styles from "./Dashboard.module.css";
 

@@ -1,12 +1,12 @@
-import useAuth from "@hooks/useAuth";
-import usersStorage from "@data/users.json";
+import useAuth from "../../hooks/useAuth";
+import usersStorage from "../../data/users.json";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getItem, setItem } from "@services/storage.js";
+import { getItem, setItem } from "../../services/storage";
 import { User, Lock, Eye, EyeOff, LogIn } from "lucide-react";
 import mamev from "/mamev-icon.png";
 import loginImage from "/login-image.jpg";
-import Spinner from "@components/Spinner/Spinner"
+import Spinner from "../../components/Spinner/Spinner";
 import styles from "./Login.module.css";
 
 function Login() {

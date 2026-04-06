@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { ShoppingCart, Receipt, TrendingUp } from "lucide-react";
-import { getItem } from "@services/storage";
-import { handleFormatCoin } from "@utils/handleFormatCoin";
+import { getItem } from "../../../services/storage";
+import { handleFormatCoin } from "../../../utils/handleFormatCoin";
 import styles from "./SalesStatistics.module.css";
 
 function SalesStatistics({ className }) {

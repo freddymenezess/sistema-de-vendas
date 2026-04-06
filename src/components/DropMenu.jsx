@@ -3,8 +3,8 @@ import { Menu, MenuItem, Divider, ListItemIcon, Box } from "@mui/material";
 import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import Avatar from "@components/Avatar/Avatar";
-import useAuth from "@hooks/useAuth";
+import Avatar from "./Avatar/Avatar";
+import useAuth from "../hooks/useAuth";
 
 export default function DropMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);

@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { getItem } from "@services/storage";
+import { getItem } from "../../services/storage";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import {

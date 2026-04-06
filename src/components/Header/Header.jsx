@@ -1,8 +1,8 @@
 import { Search, PanelLeftClose, PanelLeft } from "lucide-react";
 import { useState } from "react";
-import { useMenu } from "@context/MenuProvider";
-import DropMenu from "@components/DropMenu";
-import Notifications from "@components/Notifications/Notifications";
+import { useMenu } from "../../context/MenuProvider";
+import DropMenu from "../DropMenu";
+import Notifications from "../Notifications/Notifications";
 import styles from "./Header.module.css";
 
 function Header({ className = "" }) {

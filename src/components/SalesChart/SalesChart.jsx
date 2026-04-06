@@ -9,7 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { getItem } from "@services/storage";
+import { getItem } from "../../services/storage";
 import styles from "./SalesChart.module.css";
 
 const formatCurrency = (value) =>

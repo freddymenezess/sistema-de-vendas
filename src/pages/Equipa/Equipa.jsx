@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Users, UserPlus, Trash2 } from "lucide-react";
-import { getItem, setItem } from "@services/storage";
-import FormNewUser from "@components/FormNewUser/FormNewUser";
-import { showAlert } from "@components/Alerts";
-import MessageBox from "@components/MessageBox/MessageBox";
+import { getItem, setItem } from "../../services/storage";
+import FormNewUser from "../../components/FormNewUser/FormNewUser";
+import { showAlert } from "../../components/Alerts";
+import MessageBox from "../../components/MessageBox/MessageBox";
 
 import styles from "./Equipa.module.css";
 

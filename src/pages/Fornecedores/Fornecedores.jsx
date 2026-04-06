@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Users, UserPlus, Trash2, Phone, MapPin } from "lucide-react";
-import { getItem, setItem } from "@services/storage";
-import { showAlert } from "@components/Alerts";
-import FormAddSupplier from "@components/FormAddSupplier/FormAddSupplier";
-import fornecedoresData from "@data/fornecedores.json";
+import { getItem, setItem } from "../../services/storage";
+import { showAlert } from "../../components/Alerts";
+import FormAddSupplier from "../../components/FormAddSupplier/FormAddSupplier";
+import fornecedoresData from "../../data/fornecedores.json";
 
 import styles from "./Fornecedores.module.css";
 

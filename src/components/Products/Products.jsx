@@ -1,6 +1,6 @@
-import { useSelectedProduct } from "@context/SelectedProductProvider";
-import { handleFormatCoin } from "@utils/handleFormatCoin";
-import { getItem } from "@services/storage.js";
+import { useSelectedProduct } from "../../context/SelectedProductProvider";
+import { handleFormatCoin } from "../../utils/handleFormatCoin";
+import { getItem } from "../../services/storage";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";

@@ -1,12 +1,12 @@
-import { useSelectedProduct } from "@context/SelectedProductProvider";
+import { useSelectedProduct } from "../../context/SelectedProductProvider";
 import { useEffect, useState } from "react";
-import { getItem, setItem } from "@services/storage.js";
-import { handleFormatCoin } from "@utils/handleFormatCoin";
+import { getItem, setItem } from "../../services/storage";
+import { handleFormatCoin } from "../../utils/handleFormatCoin";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import { showAlert } from "@components/Alerts"; // <- import do showAlert
+import { showAlert } from "../Alerts";
 
 import styles from "./Menu.module.css";
 

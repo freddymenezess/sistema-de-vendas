@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TextField, Button } from "@mui/material";
-import { handleAddProduct } from "@services/productService";
-import { showAlert } from "@components/Alerts"; // <- showAlert global
+import { handleAddProduct } from "../../services/productService";
+import { showAlert } from "../Alerts";
 import styles from "./FormAddProduct.module.css";
 
 function FormAddProduct({ onClose, onProductAdded }) {

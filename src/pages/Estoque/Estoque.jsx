@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Package, Search, AlertTriangle } from "lucide-react";
-import { getItem } from "@services/storage";
+import { getItem } from "../../services/storage";
 import styles from "./Estoque.module.css";
 
 function Estoque({ className }) {

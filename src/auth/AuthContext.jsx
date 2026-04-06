@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
-import { getItem, setItem, removeItem } from "@services/storage.js";
-import { users, products, lowProducts } from "@data";
+import { getItem, setItem, removeItem } from "../services/storage";
+import { users, products, lowProducts } from "../data";
 
 export const AuthContext = createContext();
 

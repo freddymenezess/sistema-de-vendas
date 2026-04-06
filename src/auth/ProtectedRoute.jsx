@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
-import useAuth from "@hooks/useAuth";
-import Spinner from "@components/Spinner/Spinner";
+import useAuth from "../hooks/useAuth";
+import Spinner from "../components/Spinner/Spinner";
 
 function ProtectedRoute({ children, requiredRoles }) {
   const { user, loading } = useAuth();

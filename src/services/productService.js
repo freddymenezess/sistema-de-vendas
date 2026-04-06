@@ -1,4 +1,4 @@
-import { getItem, setItem } from "@services/storage";
+import { getItem, setItem } from "./storage";
 
 export function handleAddProduct(newProduct) {
   const products = getItem("products") || [];

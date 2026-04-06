@@ -1,5 +1,5 @@
 import { TrendingUp, ShoppingBag, DollarSign, Package } from "lucide-react";
-import { getItem } from "@services/storage";
+import { getItem } from "../../../services/storage";
 import styles from "./MostSales.module.css";
 
 function MostSales({ className }) {

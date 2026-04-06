@@ -1,6 +1,6 @@
 import { createContext, useState, useContext } from "react";
-import { getItem, setItem } from "@services/storage.js";
-import prodsStorage from "@data/products.json";
+import { getItem, setItem } from "../services/storage";
+import prodsStorage from "../data/products.json";
 
 const storedProducts = getItem("products");
 

@@ -8,8 +8,8 @@ import {
   X,
   Check,
 } from "lucide-react";
-import { products, salesChart } from "@data";
-import { getItem, setItem } from "@services/storage";
+import { products, salesChart } from "../../data";
+import { getItem, setItem } from "../../services/storage";
 import styles from "./Notifications.module.css";
 
 const NOTIFICATIONS_KEY = "app_notifications_read";

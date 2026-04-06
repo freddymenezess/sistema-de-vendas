@@ -1,4 +1,4 @@
-import BoxShadow from "@components/BoxShadow/BoxShadow";
+import BoxShadow from "../BoxShadow/BoxShadow";
 import styles from "./Card.module.css";
 
 function Card({

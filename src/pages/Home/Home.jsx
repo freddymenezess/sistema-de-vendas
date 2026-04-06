@@ -1,4 +1,4 @@
-import Products from "@components/Products/Products";
+import Products from "../../components/Products/Products";
 import styles from "./Home.module.css";
 
 function Home() {

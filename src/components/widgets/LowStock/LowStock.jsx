@@ -1,5 +1,5 @@
 import { AlertTriangle, Package } from "lucide-react";
-import { getItem } from "@services/storage";
+import { getItem } from "../../../services/storage";
 import styles from "./LowStock.module.css";
 
 function LowStock({ className }) {

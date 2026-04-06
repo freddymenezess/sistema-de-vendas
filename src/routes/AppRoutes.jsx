@@ -1,15 +1,15 @@
 import { Routes, Route } from "react-router-dom";
-import ProtectedRoute from "@auth/ProtectedRoute";
-import MainLayout from "@templates/MainLayout/MainLayout";
-import HomeLayout from "@templates/HomeLayout/HomeLayout";
-import Home from "@pages/Home/Home";
-import Login from "@pages/Login/Login";
-import NonAuthorized from "@pages/NonAuthorized/NonAuthorized";
-import Dashboard from "@pages/Dashboard/Dashboard";
-import Equipa from "@pages/Equipa/Equipa";
-import Vendas from "@pages/Vendas/Vendas";
-import Estoque from "@pages/Estoque/Estoque";
-import Fornecedores from "@pages/Fornecedores/Fornecedores";
+import ProtectedRoute from "../auth/ProtectedRoute";
+import MainLayout from "../templates/MainLayout/MainLayout";
+import HomeLayout from "../templates/HomeLayout/HomeLayout";
+import Home from "../pages/Home/Home";
+import Login from "../pages/Login/Login";
+import NonAuthorized from "../pages/NonAuthorized/NonAuthorized";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import Equipa from "../pages/Equipa/Equipa";
+import Vendas from "../pages/Vendas/Vendas";
+import Estoque from "../pages/Estoque/Estoque";
+import Fornecedores from "../pages/Fornecedores/Fornecedores";
 
 function AppRoutes() {
   return (

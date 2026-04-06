@@ -9,8 +9,8 @@ import {
   ChevronLeft,
   LogOut,
 } from "lucide-react";
-import { useMenu } from "@context/MenuProvider";
-import useAuth from "@hooks/useAuth";
+import { useMenu } from "../../context/MenuProvider";
+import useAuth from "../../hooks/useAuth";
 import { NavLink } from "react-router-dom";
 import styles from "./NavBar.module.css";
 import logoFull from "/mamev-f.png";
