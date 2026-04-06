@@ -1,75 +1,105 @@
+/* ===========================
+   NavBar - Modern Elegant Design
+   =========================== */
+
 .navbar {
-  width: 220px;
-  min-width: 220px;
+  position: relative;
+  width: 260px;
+  min-width: 260px;
   height: 100vh;
-  background: #fff;
+  background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
   display: flex;
   flex-direction: column;
-  padding: 2px;
-  border-right: 1px solid #f1f1f1;
-  transition: all 0.3s ease;
+  border-right: 1px solid #f0f0f0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 
 .navbar.collapsed {
-  width: 50px;
-  min-width: 50px;
+  width: 80px;
+  min-width: 80px;
 }
 
-.navbar.collapsed .logoWrapper {
-  align-items: stretch;
-  justify-content: center;
-}
-
-.logoWrapper {
+/* Logo Area */
+.logoArea {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 8px 4px;
-  border-bottom: 1px solid #f1f1f1;
+  justify-content: center;
+  padding: 24px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  min-height: 80px;
 }
 
-.logo {
-  width: 120px;
+.logoFull {
+  width: 140px;
   object-fit: contain;
+  transition: opacity 0.2s ease;
 }
 
-.menu,
-.menuBtn {
+.logoIcon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  transition: opacity 0.2s ease;
+}
+
+/* Toggle Button */
+.toggleBtn {
+  position: absolute;
+  top: 28px;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: none;
   cursor: pointer;
   color: #6b7280;
-  padding: 10px;
-  border-radius: 10px;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 10;
 }
 
-.menu:hover,
-.menuBtn:hover {
-  background: #f9fafb; 
+.toggleBtn:hover {
+  background: var(--main);
+  color: white;
+  border-color: var(--main);
+  transform: scale(1.05);
 }
 
-.box2 {
+/* Navigation Content */
+.navContent {
   display: flex;
-  flex-flow: column nowrap;
-  flex: 0 1 100%;
-  align-items: stretch;
+  flex-direction: column;
+  flex: 1;
   justify-content: space-between;
-  padding: 0 8px;
+  padding: 20px 12px;
+  overflow-y: auto;
 }
 
-.navbar.collapsed .box2 {
-  padding: 0;
+.navSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #9ca3af;
+  padding: 0 12px;
+  margin-bottom: 8px;
 }
 
 .navList {
   display: flex;
   flex-direction: column;
-  margin-top: 8px;
+  gap: 4px;
 }
 
 .navlink {
@@ -77,16 +107,15 @@
 }
 
 .navItem {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   padding: 12px 14px;
-  border-radius: 10px;
+  border-radius: 12px;
   color: #6b7280;
   cursor: pointer;
-  transition: 0.2s;
-  white-space: nowrap;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
 .collapsed .navItem {
@@ -94,37 +123,131 @@
   padding: 12px;
 }
 
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
 .navItem:hover {
   background: #f9fafb;
 }
 
-.active {
-  background: #fdf6ec;
+.navItem:hover .iconWrapper {
+  background: var(--m-desfoque);
   color: var(--main);
+}
+
+.navItem.active {
+  background: linear-gradient(135deg, var(--m-desfoque) 0%, #fff5eb 100%);
+}
+
+.navItem.active .iconWrapper {
+  background: linear-gradient(135deg, var(--main), var(--sec));
+  color: white;
+  box-shadow: 0 4px 12px rgba(212, 163, 115, 0.35);
+}
+
+.navItem.active .navLabel {
+  color: #1a1a2e;
+  font-weight: 600;
+}
+
+.navLabel {
+  font-size: 14px;
   font-weight: 500;
+  white-space: nowrap;
+  color: #374151;
 }
 
-.activeIndicator {
-  position: absolute;
-  left: -7px;
-  width: 4px;
-  height: 60%;
-  background: var(--main);
-  border-radius: 4px;
-}
-.collapsed .activeIndicator {
-  left: 0;
+/* User Section */
+.userSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 16px;
 }
 
-.logout {
-  font-size: inherit;
-  background-color: transparent;
-  margin-bottom: 8px;
-  border: none;
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 12px;
 }
 
-.logout:hover {
-  background: var(--error-bg);
+.userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--main), var(--sec));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(212, 163, 115, 0.3);
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userRole {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Logout Button */
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: transparent;
+  border: 1px solid #fee2e2;
+  border-radius: 12px;
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logoutBtn:hover {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.collapsed .logoutBtn {
+  padding: 12px;
+}
+
+.collapsed .logoutBtn span {
+  display: none;
 }
 
 /* Mobile styles */
@@ -133,12 +256,34 @@
     position: fixed;
     left: 0;
     top: 0;
-    z-index: 5;
+    z-index: 100;
     transform: translateX(0);
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
   }
 
   .navbar.collapsed {
     transform: translateX(-100%);
   }
+
+  .toggleBtn {
+    display: none;
+  }
+}
+
+/* Scrollbar styling */
+.navContent::-webkit-scrollbar {
+  width: 4px;
+}
+
+.navContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.navContent::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 4px;
+}
+
+.navContent::-webkit-scrollbar-thumb:hover {
+  background: #d1d5db;
 }

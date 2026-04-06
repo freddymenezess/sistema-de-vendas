@@ -1,82 +1,137 @@
-.page {
-  padding: 15px;
-  background: transparent;
-  box-shadow: none;
+/* ===========================
+   Equipa Page - Modern Design
+   =========================== */
+
+.container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+>>>>>>> da6d7a0 (refactor: update application design to modern style)
 }
 
-/* HEADER */
+/* Header Section */
+.header {
+  margin-bottom: 24px;
+}
 
-.head {
+.headerContent {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-.head h2 {
-  font-size: 28px;
-  font-weight: 600;
-  color: #1f1f1f;
+.titleArea {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.iconWrapper {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--main), var(--sec));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.titleArea h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 4px 0;
+}
+
+.titleArea p {
+  font-size: 14px;
+  color: #6b7280;
   margin: 0;
 }
 
-.subtitle {
-  font-size: 14px;
-  color: #8a8a8a;
-  margin-top: 6px;
-}
-
-.actionsArea {
+/* Header Actions */
+.headerActions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 16px;
 }
 
-.badgeCount {
+.badge {
   background: #f1f5f9;
   color: #475569;
-  padding: 6px 14px;
-  border-radius: 30px;
+  padding: 8px 16px;
+  border-radius: 20px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-/* BOTÃO */
-
-.btn {
+.addBtn {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, #c89b6d, #b5835a);
-  color: #fff;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--main), var(--sec));
+  color: white;
   border: none;
-  padding: 10px 18px;
   border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
-  font-weight: 500;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(212, 163, 115, 0.3);
 }
 
-.btn:hover {
+.addBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(200, 155, 109, 0.3);
+  box-shadow: 0 6px 20px rgba(212, 163, 115, 0.4);
 }
 
-/* TABELA */
+/* Table Section */
+.tableSection {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
 
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #d1d5db;
+}
+
+.emptyState h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  margin: 16px 0 8px 0;
+}
+
+.emptyState p {
+  font-size: 14px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* Table */
 .tableWrapper {
-  background: #ffffff;
-  border-radius: 18px;
   overflow-x: auto;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.04);
-  border: 1px solid #f3f3f3;
 }
 
 .table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  min-width: 750px;
+  min-width: 700px;
 }
 
 .table thead {
@@ -85,20 +140,20 @@
 
 .table th {
   text-align: left;
-  padding: 20px;
+  padding: 16px 20px;
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: #94a3b8;
-  border-bottom: 1px solid #f1f1f1;
+  color: #9ca3af;
+  border-bottom: 1px solid #f3f4f6;
 }
 
 .table td {
-  padding: 20px;
+  padding: 16px 20px;
   font-size: 14px;
-  color: #333;
-  border-bottom: 1px solid #f5f5f5;
+  color: #374151;
+  border-bottom: 1px solid #f3f4f6;
 }
 
 .table tbody tr {
@@ -109,9 +164,12 @@
   background: #fdf9f6;
 }
 
-/* AVATAR */
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
 
-.avatarCell {
+/* User Cell */
+.userCell {
   display: flex;
   align-items: center;
   gap: 14px;
@@ -121,83 +179,93 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #c89b6d, #b5835a);
+  background: linear-gradient(135deg, var(--main), var(--sec));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: white;
   font-weight: 600;
   font-size: 14px;
-  box-shadow: 0 6px 14px rgba(200, 155, 109, 0.3);
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(212, 163, 115, 0.3);
 }
 
 .userName {
-  font-weight: 500;
-  color: #1f2937;
+  font-weight: 600;
+  color: #1a1a2e;
 }
 
-/* BADGES */
+.emailCell {
+  color: #6b7280;
+}
 
+/* Role Badges */
 .roleBadge {
   padding: 6px 14px;
-  border-radius: 30px;
+  border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
   display: inline-block;
 }
 
 .admin {
-  background: rgba(217, 48, 37, 0.1);
-  color: #d93025;
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 .manager {
-  background: rgba(26, 115, 232, 0.1);
-  color: #1a73e8;
+  background: #eff6ff;
+  color: #2563eb;
 }
 
 .seller {
-  background: #1880381a;
-  color: #188038;
+  background: #f0fdf4;
+  color: #16a34a;
 }
 
-/* BOTÃO AÇÃO */
-
-.actionBtn {
+/* Delete Button */
+.deleteBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
   background: transparent;
   border: none;
-  color: #94a3b8;
-  padding: 6px;
+  color: #9ca3af;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.actionBtn:hover {
-  background: rgba(217, 48, 37, 0.1);
-  color: #d93025;
+.deleteBtn:hover {
+  background: #fef2f2;
+  color: #dc2626;
 }
 
-/* RESPONSIVO */
-
+/* Responsive Design */
 @media (max-width: 768px) {
-  .head {
+  .container {
+    padding: 16px;
+  }
+
+  .headerContent {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
+    align-items: stretch;
   }
 
-  .actionsArea {
-    width: 100%;
-    justify-content: space-between;
+  .headerActions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
   }
 
-  .btn {
-    flex: 1;
+  .addBtn {
     justify-content: center;
   }
 
-  .table {
-    min-width: 600px;
+  .tableSection {
+    padding: 16px;
+    border-radius: 16px;
   }
 }

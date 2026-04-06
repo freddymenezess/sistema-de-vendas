@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { BarChart3 } from "lucide-react";
 import {
   LineChart,
   Line,
@@ -8,7 +9,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import BoxShadow from "@components/BoxShadow/BoxShadow";
 import { getItem } from "@services/storage.js";
 import styles from "./SalesChart.module.css";
 
@@ -57,9 +57,18 @@ const SalesChart = ({ className }) => {
   }, [vendas, groupBy]);
 
   return (
-    <BoxShadow className={className}>
-      <div className={styles.salesChartContainer}>
-        <h2 className={styles.title}>Estatísticas de vendas</h2>
+    <div className={`${styles.card} ${className || ""}`}>
+      {/* Header */}
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
+          <div className={styles.iconWrapper}>
+            <BarChart3 size={24} />
+          </div>
+          <div>
+            <span className={styles.subtitle}>Analise</span>
+            <h3 className={styles.title}>Grafico de Vendas</h3>
+          </div>
+        </div>
 
         <div className={styles.groupToggle}>
           <button
@@ -72,7 +81,7 @@ const SalesChart = ({ className }) => {
             className={groupBy === "month" ? styles.active : ""}
             onClick={() => setGroupBy("month")}
           >
-            Mês
+            Mes
           </button>
           <button
             className={groupBy === "year" ? styles.active : ""}
@@ -81,17 +90,32 @@ const SalesChart = ({ className }) => {
             Ano
           </button>
         </div>
+      </div>
 
+      {/* Chart */}
+      <div className={styles.chartArea}>
         {chartData.length === 0 ? (
           <div className={styles.emptyState}>
-            <p>Sem vendas registradas para mostrar no gráfico.</p>
+            <BarChart3 size={48} />
+            <p>Sem vendas registradas para mostrar no grafico</p>
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="label" />
-              <YAxis dataKey="vendas" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+              <XAxis 
+                dataKey="label" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#9ca3af', fontSize: 12 }}
+              />
+              <YAxis 
+                dataKey="vendas" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#9ca3af', fontSize: 12 }}
+                tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+              />
               <Tooltip
                 formatter={(value) => formatCurrency(value)}
                 labelFormatter={(label) => {
@@ -99,25 +123,33 @@ const SalesChart = ({ className }) => {
                     groupBy === "day"
                       ? "Dia"
                       : groupBy === "month"
-                        ? "Mês"
+                        ? "Mes"
                         : "Ano";
                   return `${prefix}: ${label}`;
                 }}
+                contentStyle={{
+                  background: 'white',
+                  border: 'none',
+                  borderRadius: '12px',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                  padding: '12px 16px',
+                }}
+                labelStyle={{ fontWeight: 600, color: '#1a1a2e' }}
               />
 
               <Line
                 type="monotone"
                 dataKey="vendas"
-                stroke="#d97706"
+                stroke="#D4A373"
                 strokeWidth={3}
-                dot={{ r: 5 }}
-                activeDot={{ r: 7 }}
+                dot={{ r: 5, fill: '#D4A373', strokeWidth: 2, stroke: 'white' }}
+                activeDot={{ r: 8, fill: '#D4A373', strokeWidth: 3, stroke: 'white' }}
               />
             </LineChart>
           </ResponsiveContainer>
         )}
       </div>
-    </BoxShadow>
+    </div>
   );
 };
 

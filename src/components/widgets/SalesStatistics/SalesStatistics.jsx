@@ -1,8 +1,5 @@
 import { useMemo } from "react";
-import Card from "@components/Card/Card";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import { ShoppingCart, Receipt, TrendingUp } from "lucide-react";
 import { getItem } from "@services/storage";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import styles from "./SalesStatistics.module.css";
@@ -22,32 +19,44 @@ function SalesStatistics({ className }) {
   }, [compras]);
 
   return (
-    <Card className={`${styles.card} ${className}`}>
-      <div className={styles.main}>
-        <div className={styles.iconBox}>
-          <ShoppingCartIcon />
+    <div className={`${styles.card} ${className || ""}`}>
+      <div className={styles.header}>
+        <div className={styles.iconWrapper}>
+          <ShoppingCart size={24} />
         </div>
-
         <div>
-          <p className={styles.label}>Total faturado</p>
-          <h2 className={styles.value}>{handleFormatCoin(totalVendido)}</h2>
+          <span className={styles.subtitle}>Resumo</span>
+          <h3 className={styles.title}>Estatisticas de Vendas</h3>
         </div>
       </div>
 
-      <div className={styles.divider} />
+      <div className={styles.mainValue}>
+        <span className={styles.label}>Total Faturado</span>
+        <h2 className={styles.value}>{handleFormatCoin(totalVendido)}</h2>
+      </div>
 
       <div className={styles.metrics}>
         <div className={styles.metric}>
-          <ReceiptLongIcon className={styles.smallIcon} />
-          <span>{totalVendas} vendas</span>
+          <div className={styles.metricIcon} data-color="primary">
+            <Receipt size={18} />
+          </div>
+          <div className={styles.metricInfo}>
+            <span className={styles.metricLabel}>Vendas</span>
+            <strong>{totalVendas}</strong>
+          </div>
         </div>
 
         <div className={styles.metric}>
-          <TrendingUpIcon className={styles.smallIcon} />
-          <span>Ticket médio: {handleFormatCoin(ticketMedio)}</span>
+          <div className={styles.metricIcon} data-color="success">
+            <TrendingUp size={18} />
+          </div>
+          <div className={styles.metricInfo}>
+            <span className={styles.metricLabel}>Ticket Medio</span>
+            <strong>{handleFormatCoin(ticketMedio)}</strong>
+          </div>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
 
