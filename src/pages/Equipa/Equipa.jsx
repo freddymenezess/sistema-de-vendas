@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getItem, setItem } from "@services/storage";
 import FormNewUser from "@components/FormNewUser/FormNewUser";
 import { showAlert } from "@components/Alerts";
+import MessageBox from "@components/MessageBox/MessageBox";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
@@ -11,7 +12,12 @@ import stylesComponent from "./Equipa.module.css";
 function Equipa() {
   const [opend, setOpend] = useState(false);
   const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState({});
+  const [clickDelete, setClickDelete] = useState(false);
   const currentId = getItem("currentUser").id;
+  const message = (
+    <p>Tem a certeza que pretende eliminar <strong style={{color: "#000"}}>{currentUser.name}</strong> do sistema? Esta acção é irreversível.</p>
+  )
 
   useEffect(() => {
     const storedUsers = getItem("users") || [];
@@ -24,15 +30,21 @@ function Equipa() {
     setUsers(updatedUsers);
     setItem("users", updatedUsers);
 
-    showAlert("Usuário criado com sucesso", "success");
+    showAlert("Novo usuário criado", "success");
   }
 
-  function handleRemoveUser(id) {
-    const updatedUsers = users.filter((user) => user.id !== id);
+  function handleClick(user) {
+    setCurrentUser(user);
+    setClickDelete(true);
+  }
+
+  function handleRemoveUser() {
+    const updatedUsers = users.filter((user) => user.id !== currentUser.id);
     setUsers(updatedUsers);
     setItem("users", updatedUsers);
+    setClickDelete(false);
 
-    showAlert("Usuário removido com sucesso!", "success");
+    showAlert("Usuário removido.", "success");
   }
 
   function getInitials(name) {
@@ -123,7 +135,7 @@ function Equipa() {
                 <td>
                   <button
                     className={stylesComponent.actionBtn}
-                    onClick={() => handleRemoveUser(user.id)}
+                    onClick={() => handleClick(user)}
                   >
                     <DeleteOutlineIcon fontSize="small" />
                   </button>
@@ -136,6 +148,17 @@ function Equipa() {
 
       {opend && (
         <FormNewUser setOpend={setOpend} handleNewUser={handleNewUser} />
+      )}
+
+      {clickDelete &&
+        currentUser && (
+        <MessageBox
+          message={message}
+          btnTxt={"Eliminar"}
+          role={"not"}
+          funcCancel={() => setClickDelete(false)}
+          funcAgree={handleRemoveUser}
+        />
       )}
     </div>
   );

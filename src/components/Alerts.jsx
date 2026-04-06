@@ -35,8 +35,8 @@ export default function Alerts() {
 
   // cores baseadas na paleta do seu site
   const colors = {
-    success: "#B37C5F", // cor principal suave
-    error: "#D45C5C", // vermelho suave
+    success: "##188038", // cor principal suave
+    error: "#f33d3dd3", // vermelho suave
     warning: "var(--main)", // tom de destaque
     info: "#F9F9F9", // neutro
   };
@@ -60,6 +60,7 @@ export default function Alerts() {
             variant="filled"
             onClose={() => removeAlert(alert.id)}
             sx={{
+              maxWidth: "400px",
               backgroundColor: colors[alert.severity] || colors.info,
               color: "#fff",
               borderRadius: "12px",

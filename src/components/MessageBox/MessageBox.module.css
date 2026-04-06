@@ -1,0 +1,53 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: row nowrap;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: #00000080;
+  z-index: 12;
+}
+
+.box {
+  flex: 0 1 500px;
+  background: #fff;
+  padding: 20px;
+  color: #6b7280;
+  border-radius: 12px;
+}
+
+.message {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #37383a;
+}
+
+.btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: row nowrap;
+  gap: 8px;
+}
+
+.btns button {
+  flex: 1 1 50%;
+  border: none;
+  cursor: pointer;
+  padding: 10px 0;
+  border-radius: 4px;
+}
+
+.btnCancelar {
+  background-color: lightgray;
+}
+
+.btnConfirmar {
+  color: #fff;
+}

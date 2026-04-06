@@ -16,7 +16,7 @@
 .outletContainer {
   display: flex;
   flex: 1;
-  padding: 15px;
+  padding: 0;
   overflow-y: hidden;
 }
 

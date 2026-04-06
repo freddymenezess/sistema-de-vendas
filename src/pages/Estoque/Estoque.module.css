@@ -1,9 +1,15 @@
+.card {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 10px;
+  padding: 15px;
+}
+
 .container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 15px;
   padding: 15px;
-  padding-right: 0;
 }
 
 .header {
@@ -15,11 +21,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.card {
-  padding: 16px;
+  gap: 15px;
 }
 
 .cardContent {
@@ -53,8 +55,8 @@
 
 .stockRow {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-flow: column nowrap;
+  align-items: flex-start;
 }
 
 .stock {
@@ -67,7 +69,7 @@
 
 .warning {
   font-size: 12px;
-  background: rgba(255, 77, 79, 0.15);
+  background: #ff4d4f26;
   padding: 2px 6px;
   border-radius: 6px;
   color: #ff4d4f;

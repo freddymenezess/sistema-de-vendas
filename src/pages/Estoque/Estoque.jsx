@@ -24,10 +24,8 @@ function Estoque({ className }) {
   return (
     <div className={`${styles.container} ${className}`}>
       <header>
-        <h2>Estoque</h2>
-        <p className="subt">
-          Acompanhe a disponibilidade dos produtos
-        </p>
+        <h2>Stock</h2>
+        <p className="subt">Acompanhe a disponibilidade dos produtos</p>
       </header>
 
       <div className={styles.grid}>
@@ -39,7 +37,7 @@ function Estoque({ className }) {
           const isLowStock = product.stock <= product.minStock;
 
           return (
-            <Card key={product.id} className={styles.card}>
+            <Card key={product.id} classContainer={styles.card}>
               <div className={styles.cardContent}>
                 <div className={styles.imageBox}>
                   <img src={product.src} alt={product.name} />
@@ -51,23 +49,24 @@ function Estoque({ className }) {
                   <p className={styles.category}>
                     Categoria: {product.categoria}
                   </p>
-
-                  <div className={styles.stockRow}>
-                    <span
-                      className={`${styles.stock} ${
-                        isLowStock ? styles.lowStock : ""
-                      }`}
-                    >
-                      Stock: {product.stock}
-                    </span>
-
-                    {isLowStock && (
-                      <span className={styles.warning}>⚠ Stock baixo</span>
-                    )}
-                  </div>
-
-                  <p className={styles.price}>Preço: {product.price} kz</p>
+                  <p className={styles.category}>
+                    Estoque mínimo: {product.minStock}
+                  </p>
                 </div>
+              </div>
+
+              <div className={styles.stockRow}>
+                <p className={styles.price}>Preço: {product.price} kz</p>
+                <span
+                  className={`${styles.stock} ${
+                    isLowStock ? styles.lowStock : ""
+                  }`}
+                >
+                  Estoque atual: {product.stock}{" "}
+                  {isLowStock && (
+                    <span className={styles.warning}>⚠ Stock baixo</span>
+                  )}
+                </span>
               </div>
             </Card>
           );

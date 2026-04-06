@@ -1,5 +1,6 @@
 import { BrowserRouter, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { MenuProvider } from "@context/MenuProvider";
 import AuthProvider from "@auth/AuthContext";
 import AppRoutes from "@routes/AppRoutes";
 import Alerts from "@components/Alerts"; // ajuste o caminho
@@ -11,7 +12,7 @@ function PageTitleSetter() {
     const pathTitles = {
       "/": "Home | MAMEV",
       "/dashboard": "Dashboard | MAMEV",
-      "/estoque": "Estoque | MAMEV",
+      "/stock": "Stock | MAMEV",
       "/vendas": "Vendas | MAMEV",
       "/funcionarios": "Equipa | MAMEV",
       "/relatorios": "Relatórios | MAMEV",
@@ -30,8 +31,10 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <PageTitleSetter />
-        <Alerts /> {/* <- renderiza aqui, apenas uma vez */}
-        <AppRoutes />
+        <Alerts />
+        <MenuProvider>
+          <AppRoutes />
+        </MenuProvider>
       </AuthProvider>
     </BrowserRouter>
   );

@@ -28,7 +28,7 @@
 .actionsArea {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 15px;
 }
 
 .badgeCount {
@@ -156,7 +156,7 @@
 }
 
 .seller {
-  background: rgba(24, 128, 56, 0.1);
+  background: #1880381a;
   color: #188038;
 }
 

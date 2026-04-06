@@ -14,6 +14,7 @@ import Fornecedores from "@pages/Fornecedores/Fornecedores";
 function AppRoutes() {
   return (
     <Routes>
+      <Route path="*" element={<Login />} />
       <Route path="/login" element={<Login />} />
       <Route path="/non-authorized" element={<NonAuthorized />} />
 
@@ -24,8 +25,18 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       >
-        <Route path="*" element={<Home />} />
-        <Route path="/" element={<Home />} />
+        <Route path="/carrinho" element={<Home />} />
+      </Route>
+
+      <Route
+        element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route path="/stock" element={<Estoque />} />
+        <Route path="/vendas" element={<Vendas />} />
       </Route>
 
       <Route
@@ -35,11 +46,8 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       >
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/painel" element={<Dashboard />} />
         <Route path="/funcionarios" element={<Equipa />} />
-        <Route path="/estoque" element={<Estoque />} />
-        <Route path="/vendas" element={<Vendas />} />
-        <Route path="/relatorios" element={<Vendas />} />
         <Route path="/fornecedores" element={<Fornecedores />} />
       </Route>
     </Routes>

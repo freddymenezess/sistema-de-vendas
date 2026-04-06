@@ -39,8 +39,6 @@ function FormNewUser({ setOpend, handleNewUser }) {
 
   return createPortal(
     <div className={styles.container}>
-      <X className={styles.close} onClick={() => setOpend(false)} />
-
       <form className={styles.loginForm} onSubmit={handleSubmit}>
         <h3 style={{ marginBottom: "20px", textAlign: "center" }}>
           Cadastre um novo funcionário
@@ -120,8 +118,18 @@ function FormNewUser({ setOpend, handleNewUser }) {
           />
         </div>
 
-        <button type="submit" className={styles.loginButton}>
+        <button type="submit" className={styles.btn}>
           Cadastrar
+        </button>
+        <button
+          style={{
+            background: "#666",
+          }}
+          type="submit"
+          className={styles.btn}
+          onClick={() => setOpend(false)}
+        >
+          Fechar
         </button>
       </form>
     </div>,

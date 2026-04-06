@@ -1,6 +1,5 @@
 .dashboard {
   padding: 15px;
-  padding-right: 0;
   min-height: 100vh;
 }
 
@@ -11,7 +10,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 15px;
 }
 
 .fullWidth {

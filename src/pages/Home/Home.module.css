@@ -13,7 +13,11 @@
 }
 
 .produtos header {
-  margin-bottom: 20px;
+  margin: 15px 0 5px;
+}
+
+.produtos header h2 {
+  margin: 0;
 }
 
 .card {
