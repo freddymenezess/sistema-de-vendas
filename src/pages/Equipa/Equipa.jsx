@@ -14,8 +14,8 @@ function Equipa() {
   const [clickDelete, setClickDelete] = useState(false);
   const currentId = getItem("currentUser").id;
   const message = (
-    <p>Tem a certeza que pretende eliminar <strong style={{color: "#000"}}>{currentUser.name}</strong> do sistema? Esta acção é irreversível.</p>
-  )
+    <p>Tem a certeza que pretende eliminar <strong style={{ color: "#000" }}>{currentUser.name}</strong> do sistema? Esta acção é irreversível.</p>
+  );
 
   useEffect(() => {
     const storedUsers = getItem("users") || [];

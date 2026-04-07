@@ -16,7 +16,7 @@ function AppRoutes() {
     <Routes>
       <Route path="*" element={<Login />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/non-authorized" element={<NonAuthorized />} />
+      <Route path="/nao-autorizado" element={<NonAuthorized />} />
 
       <Route
         element={
