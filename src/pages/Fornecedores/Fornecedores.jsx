@@ -5,9 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import FormAddSupplier from "@components/FormAddSupplier/FormAddSupplier";
 import fornecedoresData from "@data/fornecedores.json";
-
-import styles from "@components/Table/Table.module.css";
-import stylesComponent from "./Fornecedores.module.css";
+import styles from "./Fornecedores.module.css";
 
 function Fornecedores() {
   const [open, setOpen] = useState(false);
@@ -38,23 +36,23 @@ function Fornecedores() {
   }
 
   return (
-    <div className={`${styles.container} ${stylesComponent.page}`}>
-      <div className={stylesComponent.head}>
+    <div className={styles.page}>
+      <div className={styles.head}>
         <div>
           <h2>Fornecedores</h2>
-          <div className={stylesComponent.subtitle}>
+          <div className={styles.subtitle}>
             Gerencie os fornecedores da sua empresa
           </div>
         </div>
 
-        <div className={stylesComponent.actionsArea}>
-          <span className={stylesComponent.badgeCount}>
+        <div className={styles.actionsArea}>
+          <span className={styles.badgeCount}>
             {fornecedores.length} Fornecedores
           </span>
 
           <button
             type="button"
-            className={stylesComponent.btn}
+            className={styles.btn}
             onClick={() => setOpen(true)}
           >
             <AddIcon fontSize="small" />
@@ -63,8 +61,8 @@ function Fornecedores() {
         </div>
       </div>
 
-      <div className={stylesComponent.tableWrapper}>
-        <table className={stylesComponent.table}>
+      <div className={styles.tableWrapper}>
+        <table className={styles.table}>
           <thead>
             <tr>
               <th>Nome</th>
@@ -84,7 +82,7 @@ function Fornecedores() {
 
                 <td>
                   <button
-                    className={stylesComponent.actionBtn}
+                    className={styles.actionBtn}
                     onClick={() => handleRemoveSupplier(fornecedor.id)}
                   >
                     <DeleteOutlineIcon fontSize="small" />

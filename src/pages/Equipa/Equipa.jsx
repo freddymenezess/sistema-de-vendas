@@ -5,9 +5,7 @@ import { showAlert } from "@components/Alerts";
 import MessageBox from "@components/MessageBox/MessageBox";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-
-import styles from "@components/Table/Table.module.css";
-import stylesComponent from "./Equipa.module.css";
+import styles from "./Equipa.module.css";
 
 function Equipa() {
   const [opend, setOpend] = useState(false);
@@ -62,30 +60,30 @@ function Equipa() {
   }
 
   function getRoleClass(role) {
-    if (role === "admin") return stylesComponent.admin;
-    if (role === "manager") return stylesComponent.manager;
-    return stylesComponent.seller;
+    if (role === "admin") return styles.admin;
+    if (role === "manager") return styles.manager;
+    return styles.seller;
   }
 
   return (
-    <div className={`${styles.container} ${stylesComponent.page}`}>
+    <div className={styles.page}>
       {/* HEADER */}
-      <div className={stylesComponent.head}>
+      <div className={styles.head}>
         <div>
           <h2>Gestão de Equipa</h2>
-          <div className={stylesComponent.subtitle}>
+          <div className={styles.subtitle}>
             Gerencie os membros da sua equipa
           </div>
         </div>
 
-        <div className={stylesComponent.actionsArea}>
-          <span className={stylesComponent.badgeCount}>
+        <div className={styles.actionsArea}>
+          <span className={styles.badgeCount}>
             {users.length} Funcionários
           </span>
 
           <button
             type="button"
-            className={stylesComponent.btn}
+            className={styles.btn}
             onClick={() => setOpend(true)}
           >
             <AddIcon fontSize="small" />
@@ -95,8 +93,8 @@ function Equipa() {
       </div>
 
       {/* TABELA */}
-      <div className={stylesComponent.tableWrapper}>
-        <table className={stylesComponent.table}>
+      <div className={styles.tableWrapper}>
+        <table className={styles.table}>
           <thead>
             <tr>
               <th>Nome</th>
@@ -111,11 +109,11 @@ function Equipa() {
             {users.map((user) => (
               <tr key={user.id}>
                 <td>
-                  <div className={stylesComponent.avatarCell}>
-                    <div className={stylesComponent.avatar}>
+                  <div className={styles.avatarCell}>
+                    <div className={styles.avatar}>
                       {getInitials(user.name)}
                     </div>
-                    <span className={stylesComponent.userName}>
+                    <span className={styles.userName}>
                       {user.name}
                     </span>
                   </div>
@@ -123,7 +121,7 @@ function Equipa() {
 
                 <td>
                   <span
-                    className={`${stylesComponent.roleBadge} ${getRoleClass(user.role)}`}
+                    className={`${styles.roleBadge} ${getRoleClass(user.role)}`}
                   >
                     {getRoleLabel(user.role)}
                   </span>
@@ -134,7 +132,7 @@ function Equipa() {
 
                 <td>
                   <button
-                    className={stylesComponent.actionBtn}
+                    className={styles.actionBtn}
                     onClick={() => handleClick(user)}
                   >
                     <DeleteOutlineIcon fontSize="small" />
