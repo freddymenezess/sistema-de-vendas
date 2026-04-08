@@ -1,13 +1,35 @@
+import { useState } from "react";
 import { SelectedProductProvider } from "@context/SelectedProductProvider";
-import { Outlet } from "react-router-dom";
-import NavBar from "@components/NavBar/NavBar";
+import { Outlet, useLocation } from "react-router-dom";
+import { Menu } from "lucide-react";
+import Sidebar from "@components/Sidebar/Sidebar";
 import styles from "./HomeLayout.module.css";
 
+const pageTitles = {
+  "/carrinho": "Carrinho",
+};
+
 function HomeLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const pageTitle = pageTitles[location.pathname] || "Mamev";
+
   return (
     <SelectedProductProvider>
-      <div className={styles.container}>
-        <NavBar />
+      <div className={styles.layout}>
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+        <div className={styles.header}>
+          <button
+            className={styles.menuButton}
+            onClick={() => setSidebarOpen(true)}
+          >
+            <Menu size={24} />
+          </button>
+          <h1 className={styles.pageTitle}>{pageTitle}</h1>
+          <div className={styles.headerRight} />
+        </div>
+
         <main className={styles.main}>
           <Outlet />
         </main>

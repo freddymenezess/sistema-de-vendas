@@ -4,9 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import useAuth from "@hooks/useAuth";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
-import { User, Lock, Eye, EyeOff, LogIn } from "lucide-react";
-import mamev from "/mamev-icon.png";
-import loginImage from "/login-image.jpg";
+import { Mail, Lock, Eye, EyeOff, LogIn, Heart } from "lucide-react";
 import Spinner from "@components/Spinner/Spinner";
 import styles from "./Login.module.css";
 
@@ -43,27 +41,24 @@ function Login() {
     setLoading(true);
 
     try {
-      // 1️⃣ Login no Firebase Auth
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
-        password,
+        password
       );
       const firebaseUser = userCredential.user;
 
-      // 2️⃣ Pegar dados extras do Firestore
       const docRef = doc(db, "users", firebaseUser.uid);
       const docSnap = await getDoc(docRef);
       const data = docSnap.data();
       const essentialUser = {
         uid: firebaseUser.uid,
         email: firebaseUser.email,
-        role: data?.role || "", // default caso não exista
+        role: data?.role || "",
         nome: data?.nome || "",
         tel: data?.tel || null,
       };
 
-      // Guardar no contexto
       login(essentialUser);
     } catch (error) {
       console.error(error);
@@ -77,75 +72,69 @@ function Login() {
   }
 
   return (
-    <>
-      <div className={styles.loginWrapper}>
-        <div className={styles.imageContainer}>
-          <img src={loginImage} alt="Cosmetics" className={styles.loginImage} />
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.logo}>
+          <div className={styles.logoIcon}>
+            <Heart size={32} />
+          </div>
+          <h1 className={styles.title}>Mamev Cosmeticos</h1>
+          <p className={styles.subtitle}>Sistema de Gestao</p>
         </div>
-        <div className={styles.formContainer}>
-          <form className={styles.loginForm} onSubmit={handleSubmit}>
-            <div className={styles.logoContainer}>
-              <img src={mamev} alt="Logo MAMEV" />
+
+        <form onSubmit={handleSubmit} className={styles.form}>
+          {!correctData && (
+            <div className={styles.error}>
+              Email ou senha incorretos. Em caso de perda ou esquecimento, contacte a direcao.
             </div>
-            <div className={styles.desc}>
-              <p>
-                Bem-vindo ao sistema de gestão da{" "}
-                <strong>MAMEV Cosméticos</strong>! Por favor, inicie sessão para
-                continuar.
-              </p>
+          )}
+
+          <div className={styles.field}>
+            <label className={styles.label}>Email</label>
+            <div className={styles.inputWrapper}>
+              <Mail size={20} className={styles.inputIcon} />
+              <input
+                type="email"
+                value={email}
+                onChange={handleSetEmail}
+                onFocus={handleSetCorrectData}
+                className={styles.input}
+                placeholder="seu@email.com"
+                required
+              />
             </div>
-            <div className={styles.inputGroup}>
-              <label htmlFor="email">Digite o seu email</label>
-              <div className={styles.inputWrapper}>
-                <User className={styles.inputIcon} size={20} />
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="example@gmail.com"
-                  onChange={handleSetEmail}
-                  onFocus={handleSetCorrectData}
-                  required
-                />
-              </div>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>Senha</label>
+            <div className={styles.inputWrapper}>
+              <Lock size={20} className={styles.inputIcon} />
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={handlePasswordChange}
+                onFocus={handleSetCorrectData}
+                className={styles.input}
+                placeholder="********"
+                required
+              />
+              <button
+                type="button"
+                className={styles.togglePassword}
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
-            <div className={styles.inputGroup}>
-              <label htmlFor="password">Palavra-passe</label>
-              <div className={styles.inputWrapper}>
-                <Lock className={styles.inputIcon} size={20} />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  name="password"
-                  placeholder="Palavra-passe"
-                  onChange={handlePasswordChange}
-                  onFocus={handleSetCorrectData}
-                  required
-                />
-                <button
-                  type="button"
-                  className={styles.togglePassword}
-                  onClick={() => setShowPassword(!showPassword)}
-                  title={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
-            </div>
-            <button type="submit" className={styles.loginButton}>
-              <LogIn size={20} />
-              <span>Iniciar Sessao</span>
-            </button>
-            {!correctData && (
-              <p className={styles.errorMessage}>
-                Dados inválidos. Em caso de perda ou esquecimento dos seus dados
-                de acesso, contacte a direção da empresa.
-              </p>
-            )}
-          </form>
-        </div>
+          </div>
+
+          <button type="submit" className={styles.button} disabled={loading}>
+            <LogIn size={20} />
+            {loading ? "Entrando..." : "Entrar"}
+          </button>
+        </form>
       </div>
-    </>
+    </div>
   );
 }
 

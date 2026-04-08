@@ -1,10 +1,22 @@
 import { useEffect, useState } from "react";
-import Card from "@components/Card/Card";
+import { Package } from "lucide-react";
 import { getItem } from "@services/storage";
+import { handleFormatCoin } from "@utils/handleFormatCoin";
 import styles from "./Estoque.module.css";
 
-function Estoque({ className }) {
+const CATEGORIAS = [
+  "Perfumes",
+  "Cremes",
+  "Maquiagem",
+  "Cabelos",
+  "Corpo",
+  "Outros",
+];
+
+function Estoque() {
   const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
+  const [categoria, setCategoria] = useState("");
 
   const loadProducts = () => {
     const data = getItem("products") || [];
@@ -13,64 +25,90 @@ function Estoque({ className }) {
 
   useEffect(() => {
     loadProducts();
-
-    // Atualiza automaticamente se houver alteração no localStorage
     const handleStorage = () => loadProducts();
     window.addEventListener("storage", handleStorage);
-
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
+  const filteredProducts = products.filter((p) => {
+    const matchSearch =
+      p.name?.toLowerCase().includes(search.toLowerCase()) ||
+      p.code?.includes(search);
+    const matchCategoria = !categoria || p.categoria === categoria;
+    return matchSearch && matchCategoria;
+  });
+
   return (
-    <div className={`${styles.container} ${className}`}>
-      <header>
-        <h2>Stock</h2>
-        <p className="subt">Acompanhe a disponibilidade dos produtos</p>
-      </header>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div>
+          <h1 className={styles.title}>Estoque</h1>
+          <p className={styles.subtitle}>Acompanhe a disponibilidade dos produtos</p>
+        </div>
+        <div className={styles.actions}>
+          <input
+            type="text"
+            placeholder="Buscar produto..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className={styles.searchInput}
+          />
+          <select
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="">Todas categorias</option>
+            {CATEGORIAS.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       <div className={styles.grid}>
-        {products.length === 0 && (
-          <p className={styles.empty}>Nenhum produto cadastrado.</p>
-        )}
+        {filteredProducts.length === 0 ? (
+          <div className={styles.emptyState}>
+            <Package size={48} style={{ margin: "0 auto 1rem", color: "#d1d5db" }} />
+            <p>Nenhum produto encontrado</p>
+          </div>
+        ) : (
+          filteredProducts.map((product) => {
+            const isLowStock = product.stock <= product.minStock;
 
-        {products.map((product) => {
-          const isLowStock = product.stock <= product.minStock;
-
-          return (
-            <Card key={product.id} classContainer={styles.card}>
-              <div className={styles.cardContent}>
-                <div className={styles.imageBox}>
-                  <img src={product.src} alt={product.name} />
-                </div>
-
-                <div className={styles.info}>
-                  <h3>{product.name}</h3>
-                  <p className={styles.code}>Código: {product.code}</p>
-                  <p className={styles.category}>
-                    Categoria: {product.categoria}
-                  </p>
-                  <p className={styles.category}>
-                    Estoque mínimo: {product.minStock}
-                  </p>
-                </div>
-              </div>
-
-              <div className={styles.stockRow}>
-                <p className={styles.price}>Preço: {product.price} kz</p>
-                <span
-                  className={`${styles.stock} ${
-                    isLowStock ? styles.lowStock : ""
-                  }`}
-                >
-                  Estoque atual: {product.stock}{" "}
-                  {isLowStock && (
-                    <span className={styles.warning}>⚠ Stock baixo</span>
+            return (
+              <div key={product.id} className={styles.productCard}>
+                <div className={styles.productImage}>
+                  {product.src ? (
+                    <img src={product.src} alt={product.name} />
+                  ) : (
+                    <Package size={48} />
                   )}
-                </span>
+                </div>
+                <div className={styles.productContent}>
+                  <div className={styles.productCategory}>
+                    {product.categoria || "Sem categoria"}
+                  </div>
+                  <h3 className={styles.productName}>{product.name}</h3>
+                  <div className={styles.productMeta}>
+                    <span className={styles.productPrice}>
+                      {handleFormatCoin(product.price || 0)}
+                    </span>
+                    <span
+                      className={`${styles.productStock} ${
+                        isLowStock ? styles.stockLow : ""
+                      }`}
+                    >
+                      {product.stock || 0} un.
+                    </span>
+                  </div>
+                </div>
               </div>
-            </Card>
-          );
-        })}
+            );
+          })
+        )}
       </div>
     </div>
   );

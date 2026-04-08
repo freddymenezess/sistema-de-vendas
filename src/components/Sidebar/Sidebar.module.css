@@ -49,11 +49,6 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-}
-
-.logoIcon svg {
-  width: 20px;
-  height: 20px;
   color: white;
 }
 
@@ -110,12 +105,6 @@
   background: #fdf2f8;
   color: #be185d;
   font-weight: 500;
-}
-
-.navItem svg {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
 }
 
 .userSection {

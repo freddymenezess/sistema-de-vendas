@@ -1,82 +1,67 @@
-/* Wrapper que contém imagem e formulário */
-.loginWrapper {
-  display: flex;
-  min-height: 0;
-  width: 100%;
-  overflow-y: auto;
-}
-
-/* Container da imagem - escondido em mobile */
-.imageContainer {
-  display: none;
-}
-
-.loginImage {
-  width: 100%;
-  object-fit: cover;
-}
-
-/* Container do formulário */
-.formContainer {
-  flex: 1;
+.container {
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  background-color: #fff;
+  padding: 1rem;
+  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbcfe8 100%);
 }
 
-.loginForm {
+.card {
   width: 100%;
-  max-width: 380px;
-  padding: 40px 24px;
-  background-color: #fff;
-  border-radius: 20px;
+  max-width: 400px;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logoIcon {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  color: white;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.form {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 1.25rem;
 }
 
-.logoContainer {
-  height: 90px;
-  text-align: center;
-  margin-bottom: 16px;
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.logoContainer img {
-  height: 100%;
-  max-width: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.desc {
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-.desc p {
-  color: #6b7280;
-  font-size: 0.938rem;
-  line-height: 1.6;
-}
-
-.desc strong {
-  color: var(--main);
-  font-weight: 600;
-}
-
-.inputGroup {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.inputGroup label {
-  display: block;
+.label {
   font-size: 0.875rem;
   font-weight: 500;
   color: #374151;
-  margin-bottom: 8px;
 }
 
 .inputWrapper {
@@ -87,224 +72,100 @@
 
 .inputIcon {
   position: absolute;
-  left: 14px;
+  left: 1rem;
   color: #9ca3af;
   pointer-events: none;
-  transition: color 0.2s ease;
+  transition: color 0.2s;
 }
 
 .inputWrapper:focus-within .inputIcon {
-  color: var(--main);
+  color: #ec4899;
 }
 
-.inputGroup input {
+.input {
   width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
   font-size: 1rem;
-  padding: 14px 14px 14px 46px;
-  border-radius: 12px;
-  background-color: #f9fafb;
-  border: 2px solid var(--border);
-  transition: all 0.2s ease;
+  transition: all 0.2s;
+  background: #f9fafb;
 }
 
-.inputGroup input:focus {
-  border-color: var(--main);
-  background-color: #fff;
+.input:focus {
   outline: none;
+  border-color: #ec4899;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+  background: white;
 }
 
-.inputGroup input::placeholder {
-  font-family: inherit;
+.input::placeholder {
   color: #9ca3af;
 }
 
 .togglePassword {
   position: absolute;
-  right: 14px;
+  right: 0.75rem;
   background: none;
   border: none;
   cursor: pointer;
   color: #9ca3af;
-  padding: 4px;
+  padding: 0.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s ease;
+  transition: color 0.2s;
 }
 
 .togglePassword:hover {
   color: #6b7280;
 }
 
-.loginButton {
+.button {
   width: 100%;
-  padding: 14px 24px;
-  margin-top: 8px;
-  background-color: var(--main);
+  padding: 0.875rem;
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
   color: white;
+  border: none;
+  border-radius: 0.5rem;
   font-size: 1rem;
   font-weight: 600;
-  border: none;
-  border-radius: 12px;
   cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  transition: all 0.2s ease;
+  gap: 0.5rem;
 }
 
-.loginButton:hover {
-  opacity: 0.6;
-  box-shadow: 0 4px 14px rgba(var(--main-rgb, 59, 130, 246), 0.3);
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
 }
 
-.loginButton:active {
-  transform: translateY(0);
+.button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
 }
 
-.errorMessage {
+.error {
+  background: #fef2f2;
   color: #dc2626;
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 10px;
-  padding: 12px 16px;
-  margin-top: 16px;
-  text-align: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
   font-size: 0.875rem;
-  line-height: 1.5;
+  text-align: center;
+  border: 1px solid #fecaca;
 }
 
-/* ========================================
-   RESPONSIVIDADE - Telas médias (768px+)
-   Imagem como fundo, formulário centralizado
-   ======================================== */
-@media (min-width: 768px) {
-  .container {
-    position: relative;
-    background-color: transparent;
+@media (max-width: 480px) {
+  .card {
+    padding: 1.5rem;
   }
-
-  .loginWrapper {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-block: 0;
-  }
-
-  /* Imagem ocupa toda a tela como fundo */
-  .imageContainer {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 1;
-  }
-
-  .loginImage {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Overlay escuro para melhor contraste */
-  .imageContainer::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-
-  /* Formulário centralizado sobre a imagem */
-  .formContainer {
-    position: relative;
-    z-index: 2;
-    flex: none;
-    width: auto;
-    padding: 20px;
-    background-color: transparent;
-  }
-
-  .loginForm {
-    max-width: 420px;
-    padding: 45px 40px;
-    background-color: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-  }
-
-  .logoContainer {
-    height: 100px;
-  }
-}
-
-/* ========================================
-   RESPONSIVIDADE - Telas grandes (1280px+)
-   Imagem na esquerda, formulário na direita
-   ======================================== */
-@media (min-width: 1280px) {
-  .container {
-    position: static;
-    background-color: #f5f5f5;
-  }
-
-  .loginWrapper {
-    position: static;
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    justify-content: flex-start;
-  }
-
-  /* Imagem ocupa metade da tela - lado esquerdo */
-  .imageContainer {
-    position: relative;
-    flex: 0 0 60%;
-    min-height: 100vh;
-  }
-
-  .imageContainer::after {
-    display: none;
-  }
-
-  .loginImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: left;
-  }
-
-  /* Formulário ocupa metade da tela - lado direito */
-  .formContainer {
-    position: static;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-    background-color: #fff;
-    overflow-y: auto;
-    z-index: auto;
-  }
-
-  .loginForm {
-    max-width: 440px;
-    padding: 50px 45px;
-    background-color: #fff;
-    box-shadow: none;
-    backdrop-filter: none;
-  }
-
-  .logoContainer {
-    height: 120px;
+  
+  .title {
+    font-size: 1.25rem;
   }
 }

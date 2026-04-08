@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
+import { Plus, Trash2 } from "lucide-react";
 import { getItem, setItem } from "@services/storage";
 import { showAlert } from "@components/Alerts";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import FormAddSupplier from "@components/FormAddSupplier/FormAddSupplier";
 import fornecedoresData from "@data/fornecedores.json";
 import styles from "./Fornecedores.module.css";
@@ -55,7 +54,7 @@ function Fornecedores() {
             className={styles.btn}
             onClick={() => setOpen(true)}
           >
-            <AddIcon fontSize="small" />
+            <Plus size={18} />
             Novo Fornecedor
           </button>
         </div>
@@ -67,7 +66,7 @@ function Fornecedores() {
             <tr>
               <th>Nome</th>
               <th>Contato</th>
-              <th>Endereço</th>
+              <th>Endereco</th>
               <th></th>
             </tr>
           </thead>
@@ -76,16 +75,14 @@ function Fornecedores() {
             {fornecedores.map((fornecedor) => (
               <tr key={fornecedor.id}>
                 <td>{fornecedor.nome}</td>
-
                 <td>{fornecedor.contato}</td>
                 <td>{fornecedor.endereco}</td>
-
                 <td>
                   <button
                     className={styles.actionBtn}
                     onClick={() => handleRemoveSupplier(fornecedor.id)}
                   >
-                    <DeleteOutlineIcon fontSize="small" />
+                    <Trash2 size={18} />
                   </button>
                 </td>
               </tr>

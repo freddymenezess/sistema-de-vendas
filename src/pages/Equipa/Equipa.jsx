@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
+import { Plus, Trash2 } from "lucide-react";
 import { getItem, setItem } from "@services/storage";
 import FormNewUser from "@components/FormNewUser/FormNewUser";
 import { showAlert } from "@components/Alerts";
 import MessageBox from "@components/MessageBox/MessageBox";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import styles from "./Equipa.module.css";
 
 function Equipa() {
@@ -14,7 +13,7 @@ function Equipa() {
   const [clickDelete, setClickDelete] = useState(false);
   const currentId = getItem("currentUser").id;
   const message = (
-    <p>Tem a certeza que pretende eliminar <strong style={{ color: "#000" }}>{currentUser.name}</strong> do sistema? Esta acção é irreversível.</p>
+    <p>Tem a certeza que pretende eliminar <strong style={{ color: "#000" }}>{currentUser.name}</strong> do sistema? Esta accao e irreversivel.</p>
   );
 
   useEffect(() => {
@@ -28,7 +27,7 @@ function Equipa() {
     setUsers(updatedUsers);
     setItem("users", updatedUsers);
 
-    showAlert("Novo usuário criado", "success");
+    showAlert("Novo usuario criado", "success");
   }
 
   function handleClick(user) {
@@ -42,7 +41,7 @@ function Equipa() {
     setItem("users", updatedUsers);
     setClickDelete(false);
 
-    showAlert("Usuário removido.", "success");
+    showAlert("Usuario removido.", "success");
   }
 
   function getInitials(name) {
@@ -67,10 +66,9 @@ function Equipa() {
 
   return (
     <div className={styles.page}>
-      {/* HEADER */}
       <div className={styles.head}>
         <div>
-          <h2>Gestão de Equipa</h2>
+          <h2>Gestao de Equipa</h2>
           <div className={styles.subtitle}>
             Gerencie os membros da sua equipa
           </div>
@@ -78,7 +76,7 @@ function Equipa() {
 
         <div className={styles.actionsArea}>
           <span className={styles.badgeCount}>
-            {users.length} Funcionários
+            {users.length} Funcionarios
           </span>
 
           <button
@@ -86,13 +84,12 @@ function Equipa() {
             className={styles.btn}
             onClick={() => setOpend(true)}
           >
-            <AddIcon fontSize="small" />
-            Novo Funcionário
+            <Plus size={18} />
+            Novo Funcionario
           </button>
         </div>
       </div>
 
-      {/* TABELA */}
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
           <thead>
@@ -135,7 +132,7 @@ function Equipa() {
                     className={styles.actionBtn}
                     onClick={() => handleClick(user)}
                   >
-                    <DeleteOutlineIcon fontSize="small" />
+                    <Trash2 size={18} />
                   </button>
                 </td>
               </tr>

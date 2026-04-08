@@ -5,14 +5,14 @@ import "jspdf-autotable";
 import {
   TrendingUp,
   Receipt,
-  CalendarToday,
-  CalendarMonth,
-  FileDownload,
+  Calendar,
+  CalendarDays,
+  Download,
   ShoppingCart,
-  AttachMoney,
-  ExpandMore,
-  ExpandLess,
-} from "@mui/icons-material";
+  DollarSign,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import styles from "./Vendas.module.css";
 
 function Vendas() {
@@ -82,23 +82,20 @@ function Vendas() {
     const doc = new jsPDF();
     const groupTotal = sales.reduce((acc, v) => acc + v.total, 0);
 
-    // Header
-    doc.setFillColor(212, 163, 115);
+    doc.setFillColor(236, 72, 153);
     doc.rect(0, 0, 220, 45, "F");
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
-    doc.text("Relatório de Vendas", 14, 22);
+    doc.text("Relatorio de Vendas", 14, 22);
 
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
-    doc.text(`Período: ${groupKey}`, 14, 32);
+    doc.text(`Periodo: ${groupKey}`, 14, 32);
 
-    // Reset colors
     doc.setTextColor(0, 0, 0);
 
-    // Summary box
     doc.setFillColor(245, 245, 245);
     doc.roundedRect(14, 55, 182, 30, 3, 3, "F");
 
@@ -106,7 +103,7 @@ function Vendas() {
     doc.setTextColor(100, 100, 100);
     doc.text("Total de Vendas", 24, 66);
     doc.text("Faturamento", 90, 66);
-    doc.text("Data do Relatório", 150, 66);
+    doc.text("Data do Relatorio", 150, 66);
 
     doc.setFontSize(14);
     doc.setTextColor(30, 30, 30);
@@ -115,16 +112,14 @@ function Vendas() {
     doc.text(`${groupTotal.toLocaleString()} Kz`, 90, 78);
     doc.text(new Date().toLocaleDateString("pt-PT"), 150, 78);
 
-    // Sales table
     let yPosition = 100;
 
-    sales.forEach((venda, index) => {
+    sales.forEach((venda) => {
       if (yPosition > 250) {
         doc.addPage();
         yPosition = 20;
       }
 
-      // Sale header
       doc.setFillColor(250, 250, 250);
       doc.roundedRect(14, yPosition, 182, 12, 2, 2, "F");
 
@@ -142,12 +137,11 @@ function Vendas() {
       );
 
       doc.setFont("helvetica", "bold");
-      doc.setTextColor(212, 163, 115);
+      doc.setTextColor(236, 72, 153);
       doc.text(`${venda.total.toLocaleString()} Kz`, 160, yPosition + 8);
 
       yPosition += 16;
 
-      // Products table
       const tableData = venda.produtos.map((p) => [
         p.name,
         p.quantidade.toString(),
@@ -157,7 +151,7 @@ function Vendas() {
 
       doc.autoTable({
         startY: yPosition,
-        head: [["Produto", "Qtd", "Preço Unit.", "Subtotal"]],
+        head: [["Produto", "Qtd", "Preco Unit.", "Subtotal"]],
         body: tableData,
         margin: { left: 14, right: 14 },
         styles: {
@@ -165,7 +159,7 @@ function Vendas() {
           cellPadding: 4,
         },
         headStyles: {
-          fillColor: [212, 163, 115],
+          fillColor: [236, 72, 153],
           textColor: [255, 255, 255],
           fontStyle: "bold",
         },
@@ -183,14 +177,13 @@ function Vendas() {
       yPosition = doc.lastAutoTable.finalY + 15;
     });
 
-    // Footer
     const pageCount = doc.internal.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(8);
       doc.setTextColor(150, 150, 150);
       doc.text(
-        `Página ${i} de ${pageCount} | Gerado automaticamente pelo sistema`,
+        `Pagina ${i} de ${pageCount} | Gerado automaticamente pelo sistema`,
         14,
         doc.internal.pageSize.height - 10
       );
@@ -202,23 +195,20 @@ function Vendas() {
   const generateFullReport = () => {
     const doc = new jsPDF();
 
-    // Header
-    doc.setFillColor(212, 163, 115);
+    doc.setFillColor(236, 72, 153);
     doc.rect(0, 0, 220, 50, "F");
 
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(26);
     doc.setFont("helvetica", "bold");
-    doc.text("Relatório Completo de Vendas", 14, 24);
+    doc.text("Relatorio Completo de Vendas", 14, 24);
 
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
     doc.text(`Gerado em: ${new Date().toLocaleString("pt-PT")}`, 14, 36);
 
-    // Reset colors
     doc.setTextColor(0, 0, 0);
 
-    // Stats cards
     doc.setFillColor(245, 245, 245);
     doc.roundedRect(14, 60, 55, 35, 3, 3, "F");
     doc.roundedRect(77, 60, 55, 35, 3, 3, "F");
@@ -228,7 +218,7 @@ function Vendas() {
     doc.setTextColor(100, 100, 100);
     doc.text("Total de Vendas", 20, 72);
     doc.text("Faturamento Total", 83, 72);
-    doc.text("Ticket Médio", 146, 72);
+    doc.text("Ticket Medio", 146, 72);
 
     doc.setFontSize(16);
     doc.setTextColor(30, 30, 30);
@@ -237,7 +227,6 @@ function Vendas() {
     doc.text(`${stats.totalGeral.toLocaleString()} Kz`, 83, 86);
     doc.text(`${Math.round(stats.ticketMedio).toLocaleString()} Kz`, 146, 86);
 
-    // All sales table
     const allTableData = vendas.map((v) => [
       `#${v.idCompra}`,
       new Date(v.data).toLocaleDateString("pt-PT"),
@@ -255,7 +244,7 @@ function Vendas() {
         cellPadding: 5,
       },
       headStyles: {
-        fillColor: [212, 163, 115],
+        fillColor: [236, 72, 153],
         textColor: [255, 255, 255],
         fontStyle: "bold",
       },
@@ -264,14 +253,13 @@ function Vendas() {
       },
     });
 
-    // Footer
     const pageCount = doc.internal.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(8);
       doc.setTextColor(150, 150, 150);
       doc.text(
-        `Página ${i} de ${pageCount} | Gerado automaticamente pelo sistema`,
+        `Pagina ${i} de ${pageCount} | Gerado automaticamente pelo sistema`,
         14,
         doc.internal.pageSize.height - 10
       );
@@ -282,23 +270,21 @@ function Vendas() {
 
   return (
     <div className={styles.container}>
-      {/* Header Section */}
       <header className={styles.header}>
         <div className={styles.headerContent}>
           <div className={styles.titleArea}>
             <div>
-              <h1>Relatório de Vendas</h1>
-              <p>Analise dados detalhados para tomar decisões estratégicas</p>
+              <h1>Relatorio de Vendas</h1>
+              <p>Analise dados detalhados para tomar decisoes estrategicas</p>
             </div>
           </div>
 
           <button className={styles.exportBtn} onClick={generateFullReport}>
-            <FileDownload />
+            <Download size={20} />
             Exportar Completo
           </button>
         </div>
 
-        {/* Controls */}
         <div className={styles.controls}>
           <div className={styles.searchBox}>
             <input
@@ -314,25 +300,24 @@ function Vendas() {
               className={groupBy === "day" ? styles.active : ""}
               onClick={() => setGroupBy("day")}
             >
-              <CalendarToday />
+              <Calendar size={18} />
               Por Dia
             </button>
             <button
               className={groupBy === "month" ? styles.active : ""}
               onClick={() => setGroupBy("month")}
             >
-              <CalendarMonth />
-              Por Mês
+              <CalendarDays size={18} />
+              Por Mes
             </button>
           </div>
         </div>
       </header>
 
-      {/* KPI Cards */}
       <section className={styles.kpiSection}>
         <div className={styles.kpiCard}>
           <div className={styles.kpiIcon} data-color="primary">
-            <ShoppingCart />
+            <ShoppingCart size={24} />
           </div>
           <div className={styles.kpiInfo}>
             <span>Total de Vendas</span>
@@ -342,7 +327,7 @@ function Vendas() {
 
         <div className={styles.kpiCard}>
           <div className={styles.kpiIcon} data-color="success">
-            <AttachMoney />
+            <DollarSign size={24} />
           </div>
           <div className={styles.kpiInfo}>
             <span>Faturamento Total</span>
@@ -352,17 +337,17 @@ function Vendas() {
 
         <div className={styles.kpiCard}>
           <div className={styles.kpiIcon} data-color="info">
-            <Receipt />
+            <Receipt size={24} />
           </div>
           <div className={styles.kpiInfo}>
-            <span>Ticket Médio</span>
+            <span>Ticket Medio</span>
             <strong>{Math.round(stats.ticketMedio).toLocaleString()} Kz</strong>
           </div>
         </div>
 
         <div className={styles.kpiCard}>
           <div className={styles.kpiIcon} data-color="warning">
-            <TrendingUp />
+            <TrendingUp size={24} />
           </div>
           <div className={styles.kpiInfo}>
             <span>Itens Vendidos</span>
@@ -371,16 +356,15 @@ function Vendas() {
         </div>
       </section>
 
-      {/* Sales List */}
       <section className={styles.salesSection}>
         {filteredVendas.length === 0 ? (
           <div className={styles.emptyState}>
-            <Receipt />
+            <Receipt size={48} />
             <h3>Nenhuma venda encontrada</h3>
             <p>
               {searchTerm
                 ? "Tente ajustar os filtros de pesquisa"
-                : "As vendas realizadas aparecerão aqui"}
+                : "As vendas realizadas aparecerao aqui"}
             </p>
           </div>
         ) : (
@@ -397,7 +381,7 @@ function Vendas() {
                   >
                     <div className={styles.groupInfo}>
                       <div className={styles.groupDate}>
-                        {groupBy === "day" ? <CalendarToday /> : <CalendarMonth />}
+                        {groupBy === "day" ? <Calendar size={20} /> : <CalendarDays size={20} />}
                         <h3>{groupKey}</h3>
                       </div>
                       <div className={styles.groupMeta}>
@@ -418,11 +402,11 @@ function Vendas() {
                           generatePDF(groupKey, sales);
                         }}
                       >
-                        <FileDownload />
+                        <Download size={16} />
                         PDF
                       </button>
                       <button className={styles.expandBtn}>
-                        {isExpanded ? <ExpandLess /> : <ExpandMore />}
+                        {isExpanded ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
                       </button>
                     </div>
                   </div>
