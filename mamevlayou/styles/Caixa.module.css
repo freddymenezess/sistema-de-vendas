@@ -1,0 +1,323 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.5rem;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+.statusCard {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.statusHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.statusBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.statusOpen {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.statusClosed {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.caixaInfo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.infoItem {
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 0.5rem;
+}
+
+.infoLabel {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.infoValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.caixaActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.openButton {
+  flex: 1;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.openButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+}
+
+.closeButton {
+  flex: 1;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.closeButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+.section {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.sectionHeader {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.sectionContent {
+  padding: 1.25rem;
+}
+
+.movimentacaoList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.movimentacaoItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #f9fafb;
+  border-radius: 0.5rem;
+}
+
+.movimentacaoIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.movimentacaoIn {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.movimentacaoOut {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.movimentacaoIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.movimentacaoInfo {
+  flex: 1;
+}
+
+.movimentacaoDesc {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.movimentacaoTime {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.movimentacaoValue {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.valuePositive {
+  color: #059669;
+}
+
+.valueNegative {
+  color: #dc2626;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modalOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modalContent {
+  position: relative;
+  background: white;
+  border-radius: 0.75rem;
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem;
+}
+
+.modalTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 1rem;
+}
+
+.modalField {
+  margin-bottom: 1rem;
+}
+
+.modalLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.modalInput {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.modalInput:focus {
+  outline: none;
+  border-color: #ec4899;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+}
+
+.modalActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.modalCancel {
+  flex: 1;
+  padding: 0.75rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.modalCancel:hover {
+  background: #f9fafb;
+}
+
+.modalConfirm {
+  flex: 1;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.modalConfirm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+}
+
+@media (min-width: 640px) {
+  .caixaInfo {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
