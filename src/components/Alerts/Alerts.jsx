@@ -33,12 +33,12 @@ export default function Alerts() {
 
   if (!alerts.length) return null;
 
-  // cores baseadas na paleta do seu site
+  // cores baseadas na paleta do mamevlayou
   const colors = {
-    success: "##188038", // cor principal suave
-    error: "#f33d3dd3", // vermelho suave
-    warning: "var(--main)", // tom de destaque
-    info: "#F9F9F9", // neutro
+    success: "#059669", // verde
+    error: "#dc2626", // vermelho
+    warning: "#d97706", // amarelo/laranja
+    info: "#2563eb", // azul
   };
 
   return createPortal(

@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { TextField, Button } from "@mui/material";
 import { handleAddProduct } from "@services/productService";
-import { showAlert } from "@components/Alerts"; // <- showAlert global
+import { showAlert } from "@components/Alerts";
 import styles from "./FormAddProduct.module.css";
 
 function FormAddProduct({ onClose, onProductAdded }) {
@@ -24,8 +23,6 @@ function FormAddProduct({ onClose, onProductAdded }) {
     e.preventDefault();
 
     const result = handleAddProduct(form);
-
-    // 🚀 Usando showAlert global
     showAlert(result.message, result.type === "update" ? "info" : "success");
 
     onProductAdded?.();
@@ -35,100 +32,118 @@ function FormAddProduct({ onClose, onProductAdded }) {
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.grid}>
-        <TextField
-          label="Código"
-          name="code"
-          required
-          fullWidth
-          value={form.code}
-          onChange={handleChange}
-        />
-
-        <TextField
-          label="Nome do Produto"
-          name="name"
-          required
-          fullWidth
-          value={form.name}
-          onChange={handleChange}
-        />
-
-        <TextField
-          label="Quantidade"
-          name="stock"
-          type="number"
-          required
-          fullWidth
-          value={form.stock}
-          onChange={handleChange}
-        />
-
-        <TextField
-          label="Stock mínimo"
-          name="minStock"
-          type="number"
-          fullWidth
-          value={form.minStock}
-          onChange={handleChange}
-        />
-
-        <TextField
-          label="Preço"
-          name="price"
-          type="number"
-          required
-          fullWidth
-          value={form.price}
-          onChange={handleChange}
-        />
-
-        <TextField
-          label="Categoria"
-          name="categoria"
-          fullWidth
-          value={form.categoria}
-          onChange={handleChange}
-        />
-
-        <div className={styles.fullWidth}>
-          <TextField
-            label="Imagem (URL)"
-            name="src"
-            fullWidth
-            value={form.src}
+        <div className={styles.field}>
+          <label className={styles.label}>Codigo</label>
+          <input
+            type="text"
+            name="code"
+            value={form.code}
             onChange={handleChange}
+            className={styles.input}
+            required
           />
         </div>
 
-        <div className={styles.fullWidth}>
-          <TextField
-            label="Descrição"
-            name="description"
-            multiline
-            rows={3}
-            fullWidth
-            value={form.description}
+        <div className={styles.field}>
+          <label className={styles.label}>Nome do Produto</label>
+          <input
+            type="text"
+            name="name"
+            value={form.name}
             onChange={handleChange}
+            className={styles.input}
+            required
           />
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.label}>Quantidade</label>
+          <input
+            type="number"
+            name="stock"
+            value={form.stock}
+            onChange={handleChange}
+            className={styles.input}
+            required
+          />
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.label}>Stock minimo</label>
+          <input
+            type="number"
+            name="minStock"
+            value={form.minStock}
+            onChange={handleChange}
+            className={styles.input}
+          />
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.label}>Preco</label>
+          <input
+            type="number"
+            name="price"
+            value={form.price}
+            onChange={handleChange}
+            className={styles.input}
+            required
+          />
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.label}>Categoria</label>
+          <select
+            name="categoria"
+            value={form.categoria}
+            onChange={handleChange}
+            className={styles.select}
+          >
+            <option value="">Selecione...</option>
+            <option value="Perfumes">Perfumes</option>
+            <option value="Cremes">Cremes</option>
+            <option value="Maquiagem">Maquiagem</option>
+            <option value="Cabelos">Cabelos</option>
+            <option value="Corpo">Corpo</option>
+            <option value="Outros">Outros</option>
+          </select>
+        </div>
+
+        <div className={styles.fullWidth}>
+          <div className={styles.field}>
+            <label className={styles.label}>Imagem (URL)</label>
+            <input
+              type="text"
+              name="src"
+              value={form.src}
+              onChange={handleChange}
+              className={styles.input}
+              placeholder="https://exemplo.com/imagem.jpg"
+            />
+          </div>
+        </div>
+
+        <div className={styles.fullWidth}>
+          <div className={styles.field}>
+            <label className={styles.label}>Descricao</label>
+            <textarea
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              className={styles.textarea}
+              rows={3}
+            />
+          </div>
         </div>
       </div>
 
       <div className={styles.actions}>
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{
-            backgroundColor: "var(--main)",
-            "&:hover": { backgroundColor: "#c39263" },
-            borderRadius: "10px",
-            textTransform: "none",
-            fontWeight: 500,
-            padding: "10px 18px",
-            boxShadow: "none",
-          }}
-        >
+        <button type="button" onClick={onClose} className={styles.cancelButton}>
+          Cancelar
+        </button>
+        <button type="submit" className={styles.submitButton}>
           Salvar Produto
-        </Button>
+        </button>
       </div>
     </form>
   );

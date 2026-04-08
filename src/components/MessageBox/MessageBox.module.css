@@ -1,53 +1,110 @@
-.container {
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-flow: row nowrap;
-
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-
-  background: #00000080;
-  z-index: 12;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.5);
 }
 
-.box {
-  flex: 0 1 500px;
-  background: #fff;
-  padding: 20px;
-  color: #6b7280;
-  border-radius: 12px;
+.modal {
+  background: white;
+  border-radius: 0.75rem;
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.iconDanger {
+  color: #dc2626;
+}
+
+.iconWarning {
+  color: #d97706;
+}
+
+.content {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.5rem;
 }
 
 .message {
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #37383a;
+  font-size: 0.9375rem;
+  color: #6b7280;
+  line-height: 1.5;
 }
 
-.btns {
+.actions {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-flow: row nowrap;
-  gap: 8px;
+  gap: 0.75rem;
 }
 
-.btns button {
-  flex: 1 1 50%;
-  border: none;
+.cancelButton {
+  flex: 1;
+  padding: 0.75rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  color: #4b5563;
   cursor: pointer;
-  padding: 10px 0;
-  border-radius: 4px;
+  transition: all 0.2s;
 }
 
-.btnCancelar {
-  background-color: lightgray;
+.cancelButton:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
 }
 
-.btnConfirmar {
-  color: #fff;
+.confirmButton {
+  flex: 1;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.confirmButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+}
+
+.dangerButton {
+  flex: 1;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dangerButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }

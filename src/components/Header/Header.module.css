@@ -33,8 +33,8 @@
 }
 
 .menuBtn:hover {
-  background: var(--m-desfoque);
-  color: var(--sec);
+  background: #fdf2f8;
+  color: #be185d;
 }
 
 .greeting {
@@ -100,12 +100,12 @@
 
 .focus {
   background: #ffffff;
-  border-color: var(--main);
-  box-shadow: 0 0 0 3px var(--m-desfoque);
+  border-color: #ec4899;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
 }
 
 .focus .searchIcon {
-  color: var(--main);
+  color: #ec4899;
 }
 
 /* RIGHT */
@@ -130,8 +130,8 @@
 }
 
 .iconBtn:hover {
-  background: var(--m-desfoque);
-  color: var(--sec);
+  background: #fdf2f8;
+  color: #be185d;
 }
 
 .notificationBadge {
@@ -140,7 +140,7 @@
   right: 4px;
   width: 18px;
   height: 18px;
-  background: var(--main);
+  background: #ec4899;
   color: #ffffff;
   font-size: 10px;
   font-weight: 600;

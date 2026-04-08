@@ -1,58 +1,42 @@
 import { useState } from "react";
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-
+import { Plus, X } from "lucide-react";
+import { createPortal } from "react-dom";
 import FormAddProduct from "@components/FormAddProduct/FormAddProduct";
+import styles from "./AddProductButton.module.css";
 
 function AddProductButton({ onProductAdded }) {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <Button
-        variant="contained"
-        startIcon={<AddIcon />}
-        onClick={() => setOpen(true)}
-        sx={{
-          backgroundColor: "var(--main)",
-          "&:hover": {
-            backgroundColor: "#c39263",
-          },
-          borderRadius: "10px",
-          textTransform: "none",
-          fontWeight: 500,
-          padding: "10px 18px",
-          boxShadow: "none",
-        }}
-      >
+      <button className={styles.addButton} onClick={() => setOpen(true)}>
+        <Plus size={20} />
         Adicionar Produto
-      </Button>
+      </button>
 
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        fullWidth
-        maxWidth="sm"
-      >
-        <DialogTitle
-          sx={{
-            fontWeight: 700,
-            fontSize: 20,
-          }}
-        >
-          Novo Produto
-        </DialogTitle>
-
-        <DialogContent>
-          <FormAddProduct
-            onClose={() => setOpen(false)}
-            onProductAdded={onProductAdded}
-          />
-        </DialogContent>
-      </Dialog>
+      {open &&
+        createPortal(
+          <div className={styles.overlay} onClick={() => setOpen(false)}>
+            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.header}>
+                <h2 className={styles.title}>Novo Produto</h2>
+                <button
+                  onClick={() => setOpen(false)}
+                  className={styles.closeButton}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <div className={styles.content}>
+                <FormAddProduct
+                  onClose={() => setOpen(false)}
+                  onProductAdded={onProductAdded}
+                />
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
     </>
   );
 }

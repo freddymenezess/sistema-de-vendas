@@ -25,55 +25,77 @@ function FormAddSupplier({ setOpen, handleNewSupplier }) {
     setContato("");
     setEndereco("");
 
-    setOpen(false); // fecha modal
+    setOpen(false);
+  }
+
+  function handleClose() {
+    setOpen(false);
   }
 
   return createPortal(
-    <div className={styles.container}>
-      <X className={styles.close} onClick={() => setOpen(false)} />
-
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <h3>Cadastre um novo fornecedor</h3>
-
-        <div className={styles.inputGroup}>
-          <label htmlFor="nome">Nome</label>
-          <input
-            type="text"
-            id="nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-          />
+    <div className={styles.overlay} onClick={handleClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>Novo Fornecedor</h2>
+          <button onClick={handleClose} className={styles.closeButton}>
+            <X size={20} />
+          </button>
         </div>
 
-        <div className={styles.inputGroup}>
-          <label htmlFor="contato">Contato</label>
-          <input
-            type="text"
-            id="contato"
-            value={contato}
-            onChange={(e) => setContato(e.target.value)}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.content}>
+            <div className={styles.form}>
+              <div className={styles.field}>
+                <label className={styles.label}>Nome</label>
+                <input
+                  type="text"
+                  placeholder="Nome do fornecedor"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  className={styles.input}
+                  autoFocus
+                  required
+                />
+              </div>
 
-        <div className={styles.inputGroup}>
-          <label htmlFor="endereco">Endereço</label>
-          <input
-            type="text"
-            id="endereco"
-            value={endereco}
-            onChange={(e) => setEndereco(e.target.value)}
-            required
-          />
-        </div>
+              <div className={styles.field}>
+                <label className={styles.label}>Contato</label>
+                <input
+                  type="text"
+                  placeholder="Telefone ou email"
+                  value={contato}
+                  onChange={(e) => setContato(e.target.value)}
+                  className={styles.input}
+                  required
+                />
+              </div>
 
-        <button type="submit" className={styles.btn}>
-          Adicionar Fornecedor
-        </button>
-      </form>
+              <div className={styles.field}>
+                <label className={styles.label}>Endereco</label>
+                <input
+                  type="text"
+                  placeholder="Endereco do fornecedor"
+                  value={endereco}
+                  onChange={(e) => setEndereco(e.target.value)}
+                  className={styles.input}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.footer}>
+            <button type="button" onClick={handleClose} className={styles.cancelButton}>
+              Cancelar
+            </button>
+            <button type="submit" className={styles.submitButton}>
+              Adicionar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>,
-    document.body,
+    document.body
   );
 }
 

@@ -34,106 +34,115 @@ function FormNewUser({ setOpend, handleNewUser }) {
     setEmail("");
     setPhone("");
 
-    setOpend(false); // fecha modal
+    setOpend(false);
+  }
+
+  function handleClose() {
+    setOpend(false);
   }
 
   return createPortal(
-    <div className={styles.container}>
-      <form className={styles.loginForm} onSubmit={handleSubmit}>
-        <h3 style={{ marginBottom: "20px", textAlign: "center" }}>
-          Cadastre um novo funcionário
-        </h3>
-
-        <div className={styles.inputGroup}>
-          <label htmlFor="name">Nome Completo</label>
-          <input
-            type="text"
-            id="name"
-            placeholder="John Doe"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            autoFocus
-            required
-          />
+    <div className={styles.overlay} onClick={handleClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>Novo Funcionario</h2>
+          <button onClick={handleClose} className={styles.closeButton}>
+            <X size={20} />
+          </button>
         </div>
 
-        <div className={styles.inputGroup}>
-          <label htmlFor="role">Função</label>
-          <select
-            id="role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            required
-          >
-            <option value="manager">Gerente</option>
-            <option value="seller">Atendente de Caixa</option>
-          </select>
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.content}>
+            <div className={styles.form}>
+              <div className={styles.field}>
+                <label className={styles.label}>Nome Completo</label>
+                <input
+                  type="text"
+                  placeholder="John Doe"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className={styles.input}
+                  autoFocus
+                  required
+                />
+              </div>
 
-        <div className={styles.inputGroup}>
-          <label htmlFor="password">Palavra-passe</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Palavra-passe para o funcionário"
-            value={password}
-            onChange={(e) => setPass(e.target.value)}
-            required
-          />
-        </div>
+              <div className={styles.field}>
+                <label className={styles.label}>Funcao</label>
+                <select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className={styles.select}
+                  required
+                >
+                  <option value="manager">Gerente</option>
+                  <option value="seller">Atendente de Caixa</option>
+                </select>
+              </div>
 
-        <div className={styles.inputGroup}>
-          <label htmlFor="nif">NIF</label>
-          <input
-            type="text"
-            id="nif"
-            placeholder="Digite o NIF"
-            value={nif}
-            onChange={(e) => setNif(e.target.value)}
-            required
-          />
-        </div>
+              <div className={styles.field}>
+                <label className={styles.label}>Palavra-passe</label>
+                <input
+                  type="password"
+                  placeholder="Palavra-passe para o funcionario"
+                  value={password}
+                  onChange={(e) => setPass(e.target.value)}
+                  className={styles.input}
+                  required
+                />
+              </div>
 
-        <div className={styles.inputGroup}>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            placeholder="email@exemplo.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+              <div className={styles.fieldRow}>
+                <div className={styles.field}>
+                  <label className={styles.label}>NIF</label>
+                  <input
+                    type="text"
+                    placeholder="Digite o NIF"
+                    value={nif}
+                    onChange={(e) => setNif(e.target.value)}
+                    className={styles.input}
+                    required
+                  />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.label}>Telefone</label>
+                  <input
+                    type="tel"
+                    placeholder="(+244) 912 345 678"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className={styles.input}
+                    required
+                  />
+                </div>
+              </div>
 
-        <div className={styles.inputGroup}>
-          <label htmlFor="phone">Telefone</label>
-          <input
-            type="tel"
-            id="phone"
-            placeholder="(+244) 912 345 678"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-          />
-        </div>
+              <div className={styles.field}>
+                <label className={styles.label}>Email</label>
+                <input
+                  type="email"
+                  placeholder="email@exemplo.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={styles.input}
+                  required
+                />
+              </div>
+            </div>
+          </div>
 
-        <button type="submit" className={styles.btn}>
-          Cadastrar
-        </button>
-        <button
-          style={{
-            background: "#666",
-          }}
-          type="submit"
-          className={styles.btn}
-          onClick={() => setOpend(false)}
-        >
-          Fechar
-        </button>
-      </form>
+          <div className={styles.footer}>
+            <button type="button" onClick={handleClose} className={styles.cancelButton}>
+              Cancelar
+            </button>
+            <button type="submit" className={styles.submitButton}>
+              Cadastrar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>,
-    document.body,
+    document.body
   );
 }
 
