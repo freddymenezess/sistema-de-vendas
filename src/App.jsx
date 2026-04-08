@@ -12,9 +12,11 @@ function PageTitleSetter() {
     const pathTitles = {
       "/": "Home | MAMEV",
       "/dashboard": "Dashboard | MAMEV",
+      "/painel": "Dashboard | MAMEV",
       "/stock": "Stock | MAMEV",
       "/vendas": "Vendas | MAMEV",
       "/funcionarios": "Equipa | MAMEV",
+      "/caixas": "Caixas | MAMEV",
       "/relatorios": "Relatórios | MAMEV",
       "/login": "Login | MAMEV",
     };

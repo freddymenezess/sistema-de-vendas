@@ -1,461 +1,128 @@
-import { useEffect, useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { ShoppingCart } from "lucide-react";
 import { getItem } from "@services/storage";
-import { jsPDF } from "jspdf";
-import "jspdf-autotable";
-import {
-  TrendingUp,
-  Receipt,
-  Calendar,
-  CalendarDays,
-  Download,
-  ShoppingCart,
-  DollarSign,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { handleFormatCoin } from "@utils/handleFormatCoin";
 import styles from "./Vendas.module.css";
 
 function Vendas() {
   const [vendas, setVendas] = useState([]);
-  const [groupBy, setGroupBy] = useState("day");
-  const [expandedGroups, setExpandedGroups] = useState({});
-  const [searchTerm, setSearchTerm] = useState("");
+  const [filtro, setFiltro] = useState("");
 
   useEffect(() => {
-    const stored = getItem("compras") || [];
-    setVendas(stored.reverse());
+    loadVendas();
   }, []);
 
-  const filteredVendas = useMemo(() => {
-    if (!searchTerm) return vendas;
-    return vendas.filter(
-      (venda) =>
-        venda.idCompra?.toString().includes(searchTerm) ||
-        venda.produtos?.some((p) =>
-          p.name?.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-    );
-  }, [vendas, searchTerm]);
-
-  const groupedSales = useMemo(() => {
-    return filteredVendas.reduce((acc, venda) => {
-      const date = new Date(venda.data);
-      const key =
-        groupBy === "day"
-          ? date.toLocaleDateString("pt-PT")
-          : `${date.toLocaleString("pt-PT", { month: "long" })} ${date.getFullYear()}`;
-
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(venda);
-      return acc;
-    }, {});
-  }, [filteredVendas, groupBy]);
-
-  const sortedGroups = useMemo(() => {
-    return Object.entries(groupedSales).sort(([a], [b]) => {
-      const dateA = new Date(a.split("/").reverse().join("-"));
-      const dateB = new Date(b.split("/").reverse().join("-"));
+  const loadVendas = () => {
+    const compras = getItem("compras") || [];
+    const vendasOrdenadas = [...compras].sort((a, b) => {
+      const dateA = new Date(a.data);
+      const dateB = new Date(b.data);
       return dateB - dateA;
     });
-  }, [groupedSales]);
+    setVendas(vendasOrdenadas);
+  };
 
-  const stats = useMemo(() => {
-    const totalGeral = filteredVendas.reduce((acc, v) => acc + v.total, 0);
-    const totalItens = filteredVendas.reduce(
-      (acc, v) => acc + v.produtos.reduce((a, p) => a + p.quantidade, 0),
-      0
+  const filteredVendas = useMemo(() => {
+    if (!filtro) return vendas;
+    return vendas.filter(
+      (v) =>
+        v.idCompra?.toString().includes(filtro) ||
+        v.vendedorNome?.toLowerCase().includes(filtro.toLowerCase())
     );
-    const ticketMedio =
-      filteredVendas.length > 0 ? totalGeral / filteredVendas.length : 0;
+  }, [vendas, filtro]);
 
-    return { totalGeral, totalItens, ticketMedio };
-  }, [filteredVendas]);
-
-  const toggleGroup = (groupKey) => {
-    setExpandedGroups((prev) => ({
-      ...prev,
-      [groupKey]: !prev[groupKey],
-    }));
+  const formatDate = (date) => {
+    if (!date) return "-";
+    const d = new Date(date);
+    return new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(d);
   };
 
-  const generatePDF = (groupKey, sales) => {
-    const doc = new jsPDF();
-    const groupTotal = sales.reduce((acc, v) => acc + v.total, 0);
-
-    doc.setFillColor(236, 72, 153);
-    doc.rect(0, 0, 220, 45, "F");
-
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(24);
-    doc.setFont("helvetica", "bold");
-    doc.text("Relatorio de Vendas", 14, 22);
-
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.text(`Periodo: ${groupKey}`, 14, 32);
-
-    doc.setTextColor(0, 0, 0);
-
-    doc.setFillColor(245, 245, 245);
-    doc.roundedRect(14, 55, 182, 30, 3, 3, "F");
-
-    doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100);
-    doc.text("Total de Vendas", 24, 66);
-    doc.text("Faturamento", 90, 66);
-    doc.text("Data do Relatorio", 150, 66);
-
-    doc.setFontSize(14);
-    doc.setTextColor(30, 30, 30);
-    doc.setFont("helvetica", "bold");
-    doc.text(`${sales.length}`, 24, 78);
-    doc.text(`${groupTotal.toLocaleString()} Kz`, 90, 78);
-    doc.text(new Date().toLocaleDateString("pt-PT"), 150, 78);
-
-    let yPosition = 100;
-
-    sales.forEach((venda) => {
-      if (yPosition > 250) {
-        doc.addPage();
-        yPosition = 20;
-      }
-
-      doc.setFillColor(250, 250, 250);
-      doc.roundedRect(14, yPosition, 182, 12, 2, 2, "F");
-
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(50, 50, 50);
-      doc.text(`Venda #${venda.idCompra}`, 18, yPosition + 8);
-
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(100, 100, 100);
-      doc.text(
-        new Date(venda.data).toLocaleString("pt-PT"),
-        80,
-        yPosition + 8
-      );
-
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(236, 72, 153);
-      doc.text(`${venda.total.toLocaleString()} Kz`, 160, yPosition + 8);
-
-      yPosition += 16;
-
-      const tableData = venda.produtos.map((p) => [
-        p.name,
-        p.quantidade.toString(),
-        `${p.preco.toLocaleString()} Kz`,
-        `${p.preco_pagar.toLocaleString()} Kz`,
-      ]);
-
-      doc.autoTable({
-        startY: yPosition,
-        head: [["Produto", "Qtd", "Preco Unit.", "Subtotal"]],
-        body: tableData,
-        margin: { left: 14, right: 14 },
-        styles: {
-          fontSize: 9,
-          cellPadding: 4,
-        },
-        headStyles: {
-          fillColor: [236, 72, 153],
-          textColor: [255, 255, 255],
-          fontStyle: "bold",
-        },
-        alternateRowStyles: {
-          fillColor: [252, 252, 252],
-        },
-        columnStyles: {
-          0: { cellWidth: 70 },
-          1: { cellWidth: 25, halign: "center" },
-          2: { cellWidth: 40, halign: "right" },
-          3: { cellWidth: 40, halign: "right" },
-        },
-      });
-
-      yPosition = doc.lastAutoTable.finalY + 15;
-    });
-
-    const pageCount = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.setTextColor(150, 150, 150);
-      doc.text(
-        `Pagina ${i} de ${pageCount} | Gerado automaticamente pelo sistema`,
-        14,
-        doc.internal.pageSize.height - 10
-      );
-    }
-
-    doc.save(`relatorio-vendas-${groupKey.replace(/\//g, "-")}.pdf`);
-  };
-
-  const generateFullReport = () => {
-    const doc = new jsPDF();
-
-    doc.setFillColor(236, 72, 153);
-    doc.rect(0, 0, 220, 50, "F");
-
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(26);
-    doc.setFont("helvetica", "bold");
-    doc.text("Relatorio Completo de Vendas", 14, 24);
-
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.text(`Gerado em: ${new Date().toLocaleString("pt-PT")}`, 14, 36);
-
-    doc.setTextColor(0, 0, 0);
-
-    doc.setFillColor(245, 245, 245);
-    doc.roundedRect(14, 60, 55, 35, 3, 3, "F");
-    doc.roundedRect(77, 60, 55, 35, 3, 3, "F");
-    doc.roundedRect(140, 60, 55, 35, 3, 3, "F");
-
-    doc.setFontSize(9);
-    doc.setTextColor(100, 100, 100);
-    doc.text("Total de Vendas", 20, 72);
-    doc.text("Faturamento Total", 83, 72);
-    doc.text("Ticket Medio", 146, 72);
-
-    doc.setFontSize(16);
-    doc.setTextColor(30, 30, 30);
-    doc.setFont("helvetica", "bold");
-    doc.text(`${vendas.length}`, 20, 86);
-    doc.text(`${stats.totalGeral.toLocaleString()} Kz`, 83, 86);
-    doc.text(`${Math.round(stats.ticketMedio).toLocaleString()} Kz`, 146, 86);
-
-    const allTableData = vendas.map((v) => [
-      `#${v.idCompra}`,
-      new Date(v.data).toLocaleDateString("pt-PT"),
-      v.produtos.length.toString(),
-      `${v.total.toLocaleString()} Kz`,
-    ]);
-
-    doc.autoTable({
-      startY: 110,
-      head: [["ID", "Data", "Itens", "Total"]],
-      body: allTableData,
-      margin: { left: 14, right: 14 },
-      styles: {
-        fontSize: 10,
-        cellPadding: 5,
-      },
-      headStyles: {
-        fillColor: [236, 72, 153],
-        textColor: [255, 255, 255],
-        fontStyle: "bold",
-      },
-      alternateRowStyles: {
-        fillColor: [252, 252, 252],
-      },
-    });
-
-    const pageCount = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.setTextColor(150, 150, 150);
-      doc.text(
-        `Pagina ${i} de ${pageCount} | Gerado automaticamente pelo sistema`,
-        14,
-        doc.internal.pageSize.height - 10
-      );
-    }
-
-    doc.save(`relatorio-completo-${new Date().toISOString().split("T")[0]}.pdf`);
+  const formatPayment = (payment) => {
+    const labels = {
+      dinheiro: "Dinheiro",
+      cartao_credito: "Credito",
+      cartao_debito: "Debito",
+      pix: "PIX",
+    };
+    return labels[payment] || payment || "-";
   };
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.headerContent}>
-          <div className={styles.titleArea}>
-            <div>
-              <h1>Relatorio de Vendas</h1>
-              <p>Analise dados detalhados para tomar decisoes estrategicas</p>
+      <div className={styles.welcome}>
+        <h1 className={styles.welcomeTitle}>Historico de Vendas</h1>
+        <p className={styles.welcomeSubtitle}>
+          Visualize todas as vendas realizadas
+        </p>
+      </div>
+
+      <div className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Todas as Vendas</h2>
+          <input
+            type="text"
+            placeholder="Buscar por vendedor ou ID..."
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+            className={styles.searchInput}
+          />
+        </div>
+        <div className={styles.sectionContent}>
+          {filteredVendas.length === 0 ? (
+            <div className={styles.emptyState}>
+              <ShoppingCart size={48} className={styles.emptyStateIcon} />
+              <p>Nenhuma venda encontrada</p>
             </div>
-          </div>
-
-          <button className={styles.exportBtn} onClick={generateFullReport}>
-            <Download size={20} />
-            Exportar Completo
-          </button>
-        </div>
-
-        <div className={styles.controls}>
-          <div className={styles.searchBox}>
-            <input
-              type="text"
-              placeholder="Pesquisar por ID ou produto..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          <div className={styles.groupToggle}>
-            <button
-              className={groupBy === "day" ? styles.active : ""}
-              onClick={() => setGroupBy("day")}
-            >
-              <Calendar size={18} />
-              Por Dia
-            </button>
-            <button
-              className={groupBy === "month" ? styles.active : ""}
-              onClick={() => setGroupBy("month")}
-            >
-              <CalendarDays size={18} />
-              Por Mes
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <section className={styles.kpiSection}>
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiIcon} data-color="primary">
-            <ShoppingCart size={24} />
-          </div>
-          <div className={styles.kpiInfo}>
-            <span>Total de Vendas</span>
-            <strong>{filteredVendas.length}</strong>
-          </div>
-        </div>
-
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiIcon} data-color="success">
-            <DollarSign size={24} />
-          </div>
-          <div className={styles.kpiInfo}>
-            <span>Faturamento Total</span>
-            <strong>{stats.totalGeral.toLocaleString()} Kz</strong>
-          </div>
-        </div>
-
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiIcon} data-color="info">
-            <Receipt size={24} />
-          </div>
-          <div className={styles.kpiInfo}>
-            <span>Ticket Medio</span>
-            <strong>{Math.round(stats.ticketMedio).toLocaleString()} Kz</strong>
-          </div>
-        </div>
-
-        <div className={styles.kpiCard}>
-          <div className={styles.kpiIcon} data-color="warning">
-            <TrendingUp size={24} />
-          </div>
-          <div className={styles.kpiInfo}>
-            <span>Itens Vendidos</span>
-            <strong>{stats.totalItens}</strong>
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.salesSection}>
-        {filteredVendas.length === 0 ? (
-          <div className={styles.emptyState}>
-            <Receipt size={48} />
-            <h3>Nenhuma venda encontrada</h3>
-            <p>
-              {searchTerm
-                ? "Tente ajustar os filtros de pesquisa"
-                : "As vendas realizadas aparecerao aqui"}
-            </p>
-          </div>
-        ) : (
-          <div className={styles.groupList}>
-            {sortedGroups.map(([groupKey, sales]) => {
-              const groupTotal = sales.reduce((acc, v) => acc + v.total, 0);
-              const isExpanded = expandedGroups[groupKey] !== false;
-
-              return (
-                <div key={groupKey} className={styles.group}>
-                  <div
-                    className={styles.groupHeader}
-                    onClick={() => toggleGroup(groupKey)}
-                  >
-                    <div className={styles.groupInfo}>
-                      <div className={styles.groupDate}>
-                        {groupBy === "day" ? <Calendar size={20} /> : <CalendarDays size={20} />}
-                        <h3>{groupKey}</h3>
-                      </div>
-                      <div className={styles.groupMeta}>
-                        <span className={styles.salesCount}>
-                          {sales.length} {sales.length === 1 ? "venda" : "vendas"}
+          ) : (
+            <div className={styles.tableResponsive}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Data/Hora</th>
+                    <th>Vendedor</th>
+                    <th>Itens</th>
+                    <th>Pagamento</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredVendas.map((venda) => (
+                    <tr key={venda.idCompra}>
+                      <td>{formatDate(venda.data)}</td>
+                      <td>{venda.vendedorNome || "-"}</td>
+                      <td>{venda.produtos?.length || 0} itens</td>
+                      <td>{formatPayment(venda.formaPagamento)}</td>
+                      <td>
+                        <span
+                          className={`${styles.badge} ${
+                            venda.status === "concluida"
+                              ? styles.badgeGreen
+                              : venda.status === "cancelada"
+                                ? styles.badgeRed
+                                : styles.badgeYellow
+                          }`}
+                        >
+                          {venda.status || "concluida"}
                         </span>
-                        <span className={styles.groupTotal}>
-                          {groupTotal.toLocaleString()} Kz
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className={styles.groupActions}>
-                      <button
-                        className={styles.printBtn}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          generatePDF(groupKey, sales);
-                        }}
-                      >
-                        <Download size={16} />
-                        PDF
-                      </button>
-                      <button className={styles.expandBtn}>
-                        {isExpanded ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
-                      </button>
-                    </div>
-                  </div>
-
-                  {isExpanded && (
-                    <div className={styles.salesList}>
-                      {sales.map((venda) => (
-                        <div key={venda.idCompra} className={styles.saleCard}>
-                          <div className={styles.saleHeader}>
-                            <div className={styles.saleInfo}>
-                              <span className={styles.saleId}>
-                                #{venda.idCompra}
-                              </span>
-                              <span className={styles.saleDate}>
-                                {new Date(venda.data).toLocaleString("pt-PT")}
-                              </span>
-                            </div>
-                            <div className={styles.saleTotal}>
-                              {venda.total.toLocaleString()} Kz
-                            </div>
-                          </div>
-
-                          <div className={styles.productsList}>
-                            {venda.produtos.map((produto, idx) => (
-                              <div key={idx} className={styles.productItem}>
-                                <div className={styles.productInfo}>
-                                  <span className={styles.productName}>
-                                    {produto.name}
-                                  </span>
-                                  <span className={styles.productQty}>
-                                    {produto.quantidade}x {produto.preco.toLocaleString()} Kz
-                                  </span>
-                                </div>
-                                <span className={styles.productTotal}>
-                                  {produto.preco_pagar.toLocaleString()} Kz
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
+                      </td>
+                      <td>
+                        <strong>{handleFormatCoin(venda.total || 0)}</strong>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -8,6 +8,8 @@ import {
   FileText,
   Heart,
   LogOut,
+  CreditCard,
+  BarChart3,
 } from "lucide-react";
 import useAuth from "@hooks/useAuth";
 import { getItem } from "@services/storage";
@@ -25,9 +27,15 @@ const menuItems = {
     {
       section: "Gestao",
       items: [
-        { name: "Equipa", icon: Users, to: "/funcionarios" },
+        { name: "Funcionarios", icon: Users, to: "/funcionarios" },
         { name: "Estoque", icon: Package, to: "/stock" },
-        { name: "Fornecedores", icon: FileText, to: "/fornecedores" },
+        { name: "Caixas", icon: CreditCard, to: "/caixas" },
+      ],
+    },
+    {
+      section: "Analises",
+      items: [
+        { name: "Relatorios", icon: BarChart3, to: "/relatorios" },
       ],
     },
   ],
@@ -36,16 +44,14 @@ const menuItems = {
       section: "Principal",
       items: [
         { name: "Dashboard", icon: LayoutDashboard, to: "/painel" },
-        { name: "Carrinho", icon: ShoppingCart, to: "/carrinho" },
       ],
     },
     {
-      section: "Gestao",
+      section: "Operacoes",
       items: [
-        { name: "Vendas", icon: TrendingUp, to: "/vendas" },
         { name: "Estoque", icon: Package, to: "/stock" },
-        { name: "Equipa", icon: Users, to: "/funcionarios" },
-        { name: "Fornecedores", icon: FileText, to: "/fornecedores" },
+        { name: "Caixas", icon: CreditCard, to: "/caixas" },
+        { name: "Relatorios", icon: BarChart3, to: "/relatorios" },
       ],
     },
   ],
@@ -53,13 +59,15 @@ const menuItems = {
     {
       section: "Principal",
       items: [
-        { name: "Carrinho", icon: ShoppingCart, to: "/carrinho" },
-        { name: "Estoque", icon: Package, to: "/stock" },
+        { name: "PDV", icon: ShoppingCart, to: "/carrinho" },
+        { name: "Meu Caixa", icon: CreditCard, to: "/meu-caixa" },
       ],
     },
     {
       section: "Consultas",
-      items: [{ name: "Vendas", icon: TrendingUp, to: "/vendas" }],
+      items: [
+        { name: "Estoque", icon: Package, to: "/stock-consulta" },
+      ],
     },
   ],
 };

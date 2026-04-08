@@ -10,6 +10,8 @@ import Funcionarios from "@/pages/Funcionarios/Funcionarios";
 import Vendas from "@pages/Vendas/Vendas";
 import Estoque from "@pages/Estoque/Estoque";
 import Fornecedores from "@pages/Fornecedores/Fornecedores";
+import Caixas from "@pages/Caixas/Caixas";
+import Relatorios from "@pages/Relatorios/Relatorios";
 
 function AppRoutes() {
   return (
@@ -49,6 +51,8 @@ function AppRoutes() {
         <Route path="/painel" element={<Dashboard />} />
         <Route path="/funcionarios" element={<Funcionarios />} />
         <Route path="/fornecedores" element={<Fornecedores />} />
+        <Route path="/caixas" element={<Caixas />} />
+        <Route path="/relatorios" element={<Relatorios />} />
       </Route>
     </Routes>
   );
