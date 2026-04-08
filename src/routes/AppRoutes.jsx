@@ -6,7 +6,7 @@ import Home from "@pages/Home/Home";
 import Login from "@pages/Login/Login";
 import NonAuthorized from "@pages/NonAuthorized/NonAuthorized";
 import Dashboard from "@pages/Dashboard/Dashboard";
-import Equipa from "@pages/Equipa/Equipa";
+import Funcionarios from "@/pages/Funcionarios/Funcionarios";
 import Vendas from "@pages/Vendas/Vendas";
 import Estoque from "@pages/Estoque/Estoque";
 import Fornecedores from "@pages/Fornecedores/Fornecedores";
@@ -41,13 +41,13 @@ function AppRoutes() {
 
       <Route
         element={
-          <ProtectedRoute requiredRoles={["admin", "manager"]}>
+          <ProtectedRoute>
             <MainLayout />
           </ProtectedRoute>
         }
       >
         <Route path="/painel" element={<Dashboard />} />
-        <Route path="/funcionarios" element={<Equipa />} />
+        <Route path="/funcionarios" element={<Funcionarios />} />
         <Route path="/fornecedores" element={<Fornecedores />} />
       </Route>
     </Routes>
