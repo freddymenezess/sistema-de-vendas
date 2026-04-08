@@ -286,9 +286,6 @@ function Vendas() {
       <header className={styles.header}>
         <div className={styles.headerContent}>
           <div className={styles.titleArea}>
-            <div className={styles.iconWrapper}>
-              <TrendingUp />
-            </div>
             <div>
               <h1>Relatório de Vendas</h1>
               <p>Analise dados detalhados para tomar decisões estratégicas</p>

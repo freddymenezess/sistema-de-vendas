@@ -1,61 +1,75 @@
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "@services/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import useAuth from "@hooks/useAuth";
-import usersStorage from "@data/users.json";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { getItem, setItem } from "@services/storage.js";
+import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import { User, Lock, Eye, EyeOff, LogIn } from "lucide-react";
 import mamev from "/mamev-icon.png";
 import loginImage from "/login-image.jpg";
-import Spinner from "@components/Spinner/Spinner"
+import Spinner from "@components/Spinner/Spinner";
 import styles from "./Login.module.css";
 
 function Login() {
-  const [id, setId] = useState(0);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [correctData, setCorrectData] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { user, loading, login, handleSetActiveUser } = useAuth();
-  const navigate = useNavigate();
+  const { user, loading, setLoading, login } = useAuth();
 
-  useEffect(() => {
-    if (user) {
-      if (user.role === "admin" || user.role === "manager") {
-        navigate("/painel", { replace: true });
-      } else {
-        navigate("/carrinho", { replace: true });
-      }
+  if (user) {
+    if (user.role === "admin" || user.role === "manager") {
+      return <Navigate to="/painel" replace />;
+    } else {
+      return <Navigate to="/carrinho" replace />;
     }
-  }, [user, navigate]);
+  }
 
   if (loading) {
     return <Spinner />;
   }
 
-  function handleId(event) {
-    setId(event.target.value);
+  function handleSetEmail(event) {
+    setEmail(event.target.value);
   }
 
   function handlePasswordChange(event) {
     setPassword(event.target.value);
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+    setLoading(true);
 
-    if (!getItem("users")) setItem("users", usersStorage);
+    try {
+      // 1️⃣ Login no Firebase Auth
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      const firebaseUser = userCredential.user;
 
-    const users = getItem("users");
-    const foundUser = users.find(
-      (u) => (u.nif === id || u.email === id) && u.password === password,
-    );
+      // 2️⃣ Pegar dados extras do Firestore
+      const docRef = doc(db, "users", firebaseUser.uid);
+      const docSnap = await getDoc(docRef);
+      const data = docSnap.data();
+      const essentialUser = {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        role: data?.role || "", // default caso não exista
+        nome: data?.nome || "",
+        tel: data?.tel || null,
+      };
 
-    if (!foundUser) {
+      // Guardar no contexto
+      login(essentialUser);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
       setCorrectData(false);
-      return;
     }
-    login(foundUser);
-    handleSetActiveUser(foundUser.id);
   }
 
   function handleSetCorrectData() {
@@ -75,22 +89,22 @@ function Login() {
             </div>
             <div className={styles.desc}>
               <p>
-                Bem-vindo ao sistema de gestão da <strong>MAMEV Cosméticos</strong>!
-                Por favor, inicie sessão para continuar.
+                Bem-vindo ao sistema de gestão da{" "}
+                <strong>MAMEV Cosméticos</strong>! Por favor, inicie sessão para
+                continuar.
               </p>
             </div>
             <div className={styles.inputGroup}>
-              <label htmlFor="username">Informe o seu NIF ou email</label>
+              <label htmlFor="email">Digite o seu email</label>
               <div className={styles.inputWrapper}>
                 <User className={styles.inputIcon} size={20} />
                 <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  placeholder="NIF ou email"
-                  onChange={handleId}
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="example@gmail.com"
+                  onChange={handleSetEmail}
                   onFocus={handleSetCorrectData}
-                  autoFocus
                   required
                 />
               </div>
@@ -124,8 +138,8 @@ function Login() {
             </button>
             {!correctData && (
               <p className={styles.errorMessage}>
-                Dados inválidos. Em caso de perda ou esquecimento dos seus dados de
-                acesso, contacte a direção da empresa.
+                Dados inválidos. Em caso de perda ou esquecimento dos seus dados
+                de acesso, contacte a direção da empresa.
               </p>
             )}
           </form>

@@ -13,8 +13,9 @@ import Logout from "@mui/icons-material/Logout";
 import { useMenu } from "@context/MenuProvider";
 import useAuth from "@hooks/useAuth";
 import { NavLink } from "react-router-dom";
-import styles from "./NavBar.module.css";
+import { getItem } from "@services/storage";
 import logoFull from "/mamev-f.png";
+import styles from "./NavBar.module.css";
 
 const navItemsByRole = {
   admin: [
@@ -41,7 +42,8 @@ const navItemsByRole = {
 
 function NavBar({ className = "" }) {
   const { isOpen, toggleMenu } = useMenu();
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
+  const user = getItem("currentUser");
 
   // Obtém as rotas com base no role do usuário, ou usa um array vazio se não estiver autenticado
   const navItems = user?.role ? navItemsByRole[user.role] || [] : [];

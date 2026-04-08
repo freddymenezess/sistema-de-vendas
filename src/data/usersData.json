@@ -1,0 +1,34 @@
+[ 
+  {
+    "nome": "Edvânia Francisco",
+    "role": "manager",
+    "senha": "1234",
+    "nif": "123456780LA059",
+    "email": "edvania.francisco@mamev.com",
+    "tel": "923456789"
+  },
+  {
+    "nome": "Marcelo Epalanga",
+    "role": "seller",
+    "senha": "1234",
+    "nif": "123456781LA059",
+    "email": "marcelo.epalanga@mamev.com",
+    "tel": "934567890"
+  },
+  {
+    "nome": "Adão Gaspar",
+    "role": "seller",
+    "senha": "1234",
+    "nif": "123456782LA059",
+    "email": "adao.gaspar@mamev.com",
+    "tel": "945678901"
+  },
+  {
+    "nome": "Edson Ramos",
+    "role": "seller",
+    "senha": "1234",
+    "nif": "123456783LA059",
+    "email": "edson.ramos@mamev.com",
+    "tel": "956789012"
+  }
+]

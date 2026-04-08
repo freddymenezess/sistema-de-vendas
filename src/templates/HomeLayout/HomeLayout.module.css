@@ -1,42 +1,12 @@
 .container {
-  position: relative;
   display: flex;
-  background-color: var(--bg);
   height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg);
 }
 
 .main {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  overflow-y: hidden;
-}
-
-.header {
-  flex: 0 0 70px;
-}
-
-.outletContainer {
-  display: flex;
-  flex: 1;
-  padding: 15px;
-  padding-left: 0;
-  overflow-y: hidden;
-}
-
-.menu {
-  position: sticky;
-  top: 0;
-}
-
-.outlet {
-  flex: 1;
-  overflow-y: scroll;
-  min-height: 0;
-  margin: -15px 0;
-}
-
-.outlet::-webkit-scrollbar {
-  display: none;
+  min-width: 0;
+  overflow: hidden;
 }

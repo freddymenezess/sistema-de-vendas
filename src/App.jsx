@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { MenuProvider } from "@context/MenuProvider";
 import AuthProvider from "@auth/AuthContext";
 import AppRoutes from "@routes/AppRoutes";
-import Alerts from "@components/Alerts"; // ajuste o caminho
+import Alerts from "@components/Alerts"; 
 
 function PageTitleSetter() {
   const location = useLocation();
