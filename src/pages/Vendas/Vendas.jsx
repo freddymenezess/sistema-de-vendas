@@ -1,25 +1,32 @@
 import { useState, useEffect, useMemo } from "react";
 import { ShoppingCart } from "lucide-react";
-import { getItem } from "@services/storage";
+import { getVendas } from "@services/firebaseData.service.js";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import styles from "./Vendas.module.css";
 
 function Vendas() {
   const [vendas, setVendas] = useState([]);
-  const [filtro, setFiltro] = useState("");
+  const [filtro, setFiltro] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadVendas();
   }, []);
 
-  const loadVendas = () => {
-    const compras = getItem("compras") || [];
-    const vendasOrdenadas = [...compras].sort((a, b) => {
-      const dateA = new Date(a.data);
-      const dateB = new Date(b.data);
-      return dateB - dateA;
-    });
-    setVendas(vendasOrdenadas);
+  const loadVendas = async () => {
+    try {
+      const compras = await getVendas();
+      const vendasOrdenadas = [...compras].sort((a, b) => {
+        const dateA = new Date(a.data);
+        const dateB = new Date(b.data);
+        return dateB - dateA;
+      });
+      setVendas(vendasOrdenadas);
+    } catch (error) {
+      console.error("[v0] Erro ao carregar vendas:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const filteredVendas = useMemo(() => {
@@ -74,7 +81,11 @@ function Vendas() {
           />
         </div>
         <div className={styles.sectionContent}>
-          {filteredVendas.length === 0 ? (
+          {loading ? (
+            <div className={styles.emptyState}>
+              <p>Carregando vendas...</p>
+            </div>
+          ) : filteredVendas.length === 0 ? (
             <div className={styles.emptyState}>
               <ShoppingCart size={48} className={styles.emptyStateIcon} />
               <p>Nenhuma venda encontrada</p>

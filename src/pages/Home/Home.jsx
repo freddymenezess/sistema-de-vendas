@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import Products from "@components/Products/Products";
 import { useSelectedProduct } from "@context/SelectedProductProvider";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
-import { getItem, setItem } from "@services/storage.js";
+import { updateProducts, addVenda, getVendas } from "@services/firebaseData.service.js";
 import { showAlert } from "@components/Alerts";
 import {
   Search,
@@ -48,7 +48,7 @@ function Home() {
     setProducts((prev) => prev.map((p) => ({ ...p, quantity: 0 })));
   }
 
-  function handleFinalize() {
+  async function handleFinalize() {
     if (carrinho.length === 0) {
       showAlert("Carrinho vazio!", "error");
       return;
@@ -102,11 +102,21 @@ function Home() {
         : prod;
     });
 
-    setItem("products", newProds);
-    setProducts(newProds.map((p) => ({ ...p, quantity: 0 })));
-    setItem("compras", [...(getItem("compras") || []), novaVenda]);
-    setLoading(false);
-    showAlert("Venda finalizada com sucesso!", "success");
+    try {
+      // Atualiza produtos no Firebase
+      await updateProducts(newProds);
+      setProducts(newProds.map((p) => ({ ...p, quantity: 0 })));
+      
+      // Adiciona venda no Firebase
+      await addVenda(novaVenda);
+      
+      setLoading(false);
+      showAlert("Venda finalizada com sucesso!", "success");
+    } catch (error) {
+      console.error("[v0] Erro ao finalizar venda:", error);
+      setLoading(false);
+      showAlert("Erro ao finalizar venda. Tente novamente.", "error");
+    }
   }
 
   const subtotal = carrinho.reduce((acc, i) => acc + i.subtotal, 0);

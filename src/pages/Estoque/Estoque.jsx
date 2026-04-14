@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Plus, Package, X } from "lucide-react";
-import { getItem, setItem } from "@services/storage";
+import { getProducts, updateProducts } from "@services/firebaseData.service.js";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import styles from "./Estoque.module.css";
 import modalStyles from "./Modal.module.css";
@@ -21,6 +21,7 @@ function Estoque({ readOnly = false }) {
   const [categoria, setCategoria] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingProduto, setEditingProduto] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     categoria: "",
@@ -39,9 +40,15 @@ function Estoque({ readOnly = false }) {
     filterProdutos();
   }, [search, categoria, produtos]);
 
-  const loadProdutos = () => {
-    const products = getItem("products") || [];
-    setProdutos(products);
+  const loadProdutos = async () => {
+    try {
+      const products = await getProducts();
+      setProdutos(products);
+    } catch (error) {
+      console.error("[v0] Erro ao carregar produtos:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const filterProdutos = () => {
@@ -94,19 +101,46 @@ function Estoque({ readOnly = false }) {
     setEditingProduto(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const produtoData = {
       name: formData.name,
       categoria: formData.categoria,
-      preco: parseFloat(formData.preco) || 0,
-      precoCusto: parseFloat(formData.precoCusto) || 0,
-      quantidade: parseInt(formData.quantidade) || 0,
+      preco: parseFloat(formData.preco),
+      precoCusto: parseFloat(formData.precoCusto),
+      stock: editingProduto ? editingProduto.stock || 0 : 0,
+      minStock: editingProduto ? editingProduto.minStock || 0 : 0,
+      quantity: editingProduto ? editingProduto.quantity || 0 : 0,
       code: formData.code,
       descricao: formData.descricao,
-      updatedAt: new Date().toISOString(),
+      src: editingProduto?.src || "",
     };
+
+    try {
+      if (editingProduto) {
+        const updated = produtos.map((p) =>
+          p.id === editingProduto.id
+            ? { ...p, ...produtoData, updatedAt: new Date().toISOString() }
+            : p
+        );
+        await updateProducts(updated);
+        setProdutos(updated);
+      } else {
+        const newProduto = {
+          ...produtoData,
+          id: Date.now(),
+          createdAt: new Date().toISOString(),
+        };
+        const updated = [...produtos, newProduto];
+        await updateProducts(updated);
+        setProdutos(updated);
+      }
+      closeModal();
+    } catch (error) {
+      console.error("[v0] Erro ao salvar produto:", error);
+    }
+  };
 
     const products = getItem("products") || [];
 

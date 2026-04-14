@@ -1,22 +1,37 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ShoppingCart, DollarSign, Package, Users } from "lucide-react";
-import { getItem } from "@services/storage";
+import { getProducts, getVendas } from "@services/firebaseData.service.js";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import useAuth from "@hooks/useAuth";
 import styles from "./Dashboard.module.css";
 
 function Dashboard() {
   const { user } = useAuth();
+  const [compras, setCompras] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [compras] = useState(() => getItem("compras") || []);
-  const [products] = useState(() => getItem("products") || []);
-  const [users] = useState(() => getItem("users") || []);
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const [vendas, prods] = await Promise.all([getVendas(), getProducts()]);
+      setCompras(vendas);
+      setProducts(prods);
+    } catch (error) {
+      console.error("[v0] Erro ao carregar dados do dashboard:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const stats = useMemo(() => {
     const totalVendido = compras.reduce((acc, c) => acc + c.total, 0);
     const totalVendas = compras.length;
     const totalProdutos = products.length;
-    const totalFuncionarios = users.length;
+    const totalFuncionarios = 0; // Sem dados de funcionários aqui
 
     return {
       totalVendido,
@@ -24,7 +39,7 @@ function Dashboard() {
       totalProdutos,
       totalFuncionarios,
     };
-  }, [compras, products, users]);
+  }, [compras, products]);
 
   const vendasRecentes = useMemo(() => {
     return [...compras]
@@ -42,6 +57,14 @@ function Dashboard() {
       minute: "2-digit",
     }).format(d);
   };
+
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <p>Carregando dashboard...</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -120,7 +143,7 @@ function Dashboard() {
                 </thead>
                 <tbody>
                   {vendasRecentes.map((venda) => (
-                    <tr key={venda.idCompra}>
+                    <tr key={venda.idCompra || venda.docId}>
                       <td>{formatDate(venda.data)}</td>
                       <td>{venda.produtos?.length || 0} itens</td>
                       <td>

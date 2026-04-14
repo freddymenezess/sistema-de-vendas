@@ -1,18 +1,38 @@
-import { createContext, useState, useContext } from "react";
-import { getItem, setItem } from "@services/storage.js";
+import { createContext, useState, useContext, useEffect } from "react";
+import { getProducts, initializeDefaultProducts } from "@services/firebaseData.service.js";
 import prodsStorage from "@data/products.json";
-
-const storedProducts = getItem("products");
-
-if (!storedProducts) {
-  setItem("products", prodsStorage);
-}
 
 const SelectedProductContext = createContext();
 
 export const SelectedProductProvider = ({ children }) => {
-  const [products, setProducts] = useState(getItem("products") || prodsStorage);
+  const [products, setProducts] = useState([]);
   const [selectedId, setSelectedId] = useState(1);
+  const [loading, setLoading] = useState(true);
+
+  // Inicializa produtos do Firebase na montagem do componente
+  useEffect(() => {
+    const initProducts = async () => {
+      try {
+        // Inicializa com produtos padrão se não existirem
+        await initializeDefaultProducts(prodsStorage);
+        // Carrega produtos do Firebase
+        const firebaseProducts = await getProducts();
+        if (firebaseProducts.length > 0) {
+          setProducts(firebaseProducts);
+        } else {
+          // Fallback para produtos padrão se Firebase estiver vazio
+          setProducts(prodsStorage);
+        }
+      } catch (error) {
+        console.error("[v0] Erro ao carregar produtos:", error);
+        setProducts(prodsStorage);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initProducts();
+  }, []);
 
   function handleInc(id) {
     setProducts((prevProducts) =>
@@ -31,6 +51,7 @@ export const SelectedProductProvider = ({ children }) => {
       ),
     );
   }
+
   return (
     <SelectedProductContext.Provider
       value={{
@@ -40,6 +61,7 @@ export const SelectedProductProvider = ({ children }) => {
         setSelectedId,
         handleInc,
         handleDec,
+        loading,
       }}
     >
       {children}
