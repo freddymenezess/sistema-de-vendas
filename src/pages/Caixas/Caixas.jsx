@@ -1,10 +1,19 @@
 import { useState, useEffect } from "react";
 import { CreditCard } from "lucide-react";
-import { getItem, setItem } from "@services/storage";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
+import { db } from "@services/firebase";
+import useAuth from "@hooks/useAuth";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import styles from "./Caixas.module.css";
 
 function Caixas({ isVendedorView = false }) {
+  const { user } = useAuth();
   const [caixas, setCaixas] = useState([]);
   const [meuCaixa, setMeuCaixa] = useState(null);
   const [vendedores, setVendedores] = useState([]);
@@ -13,8 +22,7 @@ function Caixas({ isVendedorView = false }) {
   const [selectedVendedor, setSelectedVendedor] = useState("");
   const [valorInicial, setValorInicial] = useState("");
   const [selectedCaixa, setSelectedCaixa] = useState(null);
-
-  const currentUser = getItem("currentUser");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (isVendedorView) {
@@ -25,26 +33,62 @@ function Caixas({ isVendedorView = false }) {
     }
   }, [isVendedorView]);
 
-  const loadMeuCaixa = () => {
-    const allCaixas = getItem("caixas") || [];
-    const caixaAtivo = allCaixas.find(
-      (c) => c.vendedorId === currentUser?.id && c.status === "aberto"
-    );
-    setMeuCaixa(caixaAtivo || null);
+  const loadMeuCaixa = async () => {
+    try {
+      const caixasRef = collection(db, "caixas");
+      const snapshot = await getDocs(caixasRef);
+      const caixaAtivo = snapshot.docs.find((doc) => {
+        const data = doc.data();
+        return data.vendedorId === user?.uid && data.status === "aberto";
+      });
+
+      if (caixaAtivo) {
+        setMeuCaixa({ id: caixaAtivo.id, ...caixaAtivo.data() });
+      }
+    } catch (error) {
+      console.error("Erro ao carregar meu caixa:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const loadCaixas = () => {
-    const allCaixas = getItem("caixas") || [];
-    const sorted = [...allCaixas].sort((a, b) => {
-      return new Date(b.dataAbertura) - new Date(a.dataAbertura);
-    });
-    setCaixas(sorted);
+  const loadCaixas = async () => {
+    try {
+      const caixasRef = collection(db, "caixas");
+      const snapshot = await getDocs(caixasRef);
+      const caixasData = snapshot.docs
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        .sort((a, b) => {
+          const dateA = a.dataAbertura?.toDate
+            ? a.dataAbertura.toDate()
+            : new Date(a.dataAbertura);
+          const dateB = b.dataAbertura?.toDate
+            ? b.dataAbertura.toDate()
+            : new Date(b.dataAbertura);
+          return dateB - dateA;
+        });
+      setCaixas(caixasData);
+    } catch (error) {
+      console.error("Erro ao carregar caixas:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const loadVendedores = () => {
-    const users = getItem("users") || [];
-    const sellers = users.filter((u) => u.role === "seller");
-    setVendedores(sellers);
+  const loadVendedores = async () => {
+    try {
+      const usuariosRef = collection(db, "usuarios");
+      const snapshot = await getDocs(usuariosRef);
+      const vendedoresData = snapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((u) => u.cargo === "seller");
+      setVendedores(vendedoresData);
+    } catch (error) {
+      console.error("Erro ao carregar vendedores:", error);
+    }
   };
 
   const openModal = (type, caixa = null) => {
@@ -55,64 +99,69 @@ function Caixas({ isVendedorView = false }) {
     setSelectedVendedor("");
   };
 
-  const abrirCaixa = () => {
+  const abrirCaixa = async () => {
     if (!selectedVendedor || !valorInicial) {
       alert("Preencha todos os campos");
       return;
     }
 
     const vendedor = vendedores.find((v) => v.id === selectedVendedor);
-    const allCaixas = getItem("caixas") || [];
 
-    // Verificar se vendedor ja tem caixa aberto
-    const caixaExistente = allCaixas.find(
-      (c) => c.vendedorId === selectedVendedor && c.status === "aberto"
+    // Verificar se vendedor já tem caixa aberto
+    const caixaExistente = caixas.find(
+      (c) => c.vendedorId === selectedVendedor && c.status === "aberto",
     );
     if (caixaExistente) {
-      alert("Este vendedor ja possui um caixa aberto!");
+      alert("Este vendedor já possui um caixa aberto!");
       return;
     }
 
-    const novoCaixa = {
-      id: Date.now().toString(),
-      vendedorId: selectedVendedor,
-      vendedorNome: vendedor?.nome || "Vendedor",
-      valorInicial: parseFloat(valorInicial),
-      totalVendas: 0,
-      quantidadeVendas: 0,
-      dataAbertura: new Date().toISOString(),
-      status: "aberto",
-      abertoPor: currentUser?.nome || "Gerente",
-    };
+    try {
+      await addDoc(collection(db, "caixas"), {
+        vendedorId: selectedVendedor,
+        vendedorNome: vendedor?.nome || "Vendedor",
+        valorInicial: parseFloat(valorInicial),
+        totalVendas: 0,
+        quantidadeVendas: 0,
+        dataAbertura: new Date(),
+        status: "aberto",
+        abertoPor: user?.nome || "Gerente",
+      });
 
-    setItem("caixas", [...allCaixas, novoCaixa]);
-    setShowModal(false);
-    loadCaixas();
+      setShowModal(false);
+      loadCaixas();
+    } catch (error) {
+      console.error("Erro ao abrir caixa:", error);
+    }
   };
 
-  const fecharCaixa = () => {
+  const fecharCaixa = async () => {
     if (!selectedCaixa) return;
 
-    const allCaixas = getItem("caixas") || [];
-    const updatedCaixas = allCaixas.map((c) =>
-      c.id === selectedCaixa.id
-        ? {
-            ...c,
-            status: "fechado",
-            dataFechamento: new Date().toISOString(),
-            fechadoPor: currentUser?.nome || "Gerente",
-          }
-        : c
-    );
+    try {
+      await updateDoc(doc(db, "caixas", selectedCaixa.id), {
+        status: "fechado",
+        dataFechamento: new Date(),
+        fechadoPor: user?.nome || "Gerente",
+      });
 
-    setItem("caixas", updatedCaixas);
-    setShowModal(false);
-    loadCaixas();
+      setShowModal(false);
+      loadCaixas();
+    } catch (error) {
+      console.error("Erro ao fechar caixa:", error);
+    }
+  };
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(value || 0);
   };
 
   const formatDate = (date) => {
     if (!date) return "-";
-    const d = new Date(date);
+    const d = date?.toDate ? date.toDate() : new Date(date);
     return new Intl.DateTimeFormat("pt-BR", {
       day: "2-digit",
       month: "2-digit",
@@ -122,7 +171,6 @@ function Caixas({ isVendedorView = false }) {
     }).format(d);
   };
 
-  // View do vendedor
   if (isVendedorView) {
     return (
       <div className={styles.container}>
@@ -166,7 +214,8 @@ function Caixas({ isVendedorView = false }) {
                   <div className={styles.infoLabel}>Total em Caixa</div>
                   <div className={styles.infoValue}>
                     {handleFormatCoin(
-                      (meuCaixa.valorInicial || 0) + (meuCaixa.totalVendas || 0)
+                      (meuCaixa.valorInicial || 0) +
+                        (meuCaixa.totalVendas || 0),
                     )}
                   </div>
                 </div>
@@ -178,7 +227,7 @@ function Caixas({ isVendedorView = false }) {
             </>
           ) : (
             <p className={styles.caixaEmpty}>
-              Seu caixa ainda nao foi aberto hoje.
+              Seu caixa ainda não foi aberto hoje.
               <br />
               Solicite a abertura ao gerente.
             </p>
@@ -188,7 +237,6 @@ function Caixas({ isVendedorView = false }) {
     );
   }
 
-  // View do gerente/admin
   const caixasAbertos = caixas.filter((c) => c.status === "aberto");
   const caixasFechados = caixas
     .filter((c) => c.status === "fechado")
@@ -197,7 +245,7 @@ function Caixas({ isVendedorView = false }) {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Gestao de Caixas</h1>
+        <h1 className={styles.title}>Gestão de Caixas</h1>
         <p className={styles.subtitle}>Gerencie os caixas dos vendedores</p>
       </div>
 
@@ -205,7 +253,10 @@ function Caixas({ isVendedorView = false }) {
         <div className={styles.statusHeader}>
           <h2 className={styles.statusTitle}>Abrir Novo Caixa</h2>
         </div>
-        <button onClick={() => openModal("abrir")} className={styles.openButton}>
+        <button
+          onClick={() => openModal("abrir")}
+          className={styles.openButton}
+        >
           Abrir Caixa para Vendedor
         </button>
       </div>
@@ -241,7 +292,7 @@ function Caixas({ isVendedorView = false }) {
                     className={`${styles.movimentacaoValue} ${styles.valuePositive}`}
                   >
                     {handleFormatCoin(
-                      (caixa.valorInicial || 0) + (caixa.totalVendas || 0)
+                      (caixa.valorInicial || 0) + (caixa.totalVendas || 0),
                     )}
                   </div>
                   <button
@@ -283,7 +334,7 @@ function Caixas({ isVendedorView = false }) {
                   </div>
                   <div className={styles.movimentacaoValue}>
                     {handleFormatCoin(
-                      (caixa.valorInicial || 0) + (caixa.totalVendas || 0)
+                      (caixa.valorInicial || 0) + (caixa.totalVendas || 0),
                     )}
                   </div>
                 </div>
@@ -352,7 +403,7 @@ function Caixas({ isVendedorView = false }) {
                   <strong>Total em Caixa:</strong>{" "}
                   {handleFormatCoin(
                     (selectedCaixa?.valorInicial || 0) +
-                      (selectedCaixa?.totalVendas || 0)
+                      (selectedCaixa?.totalVendas || 0),
                   )}
                 </p>
               </div>

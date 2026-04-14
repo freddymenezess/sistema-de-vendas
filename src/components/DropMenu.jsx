@@ -43,9 +43,11 @@ export default function DropMenu() {
             lineHeight: 1.2,
           }}
         >
-          <span style={{ fontSize: "0.80rem", fontWeight: 600 }}>{user.name}</span>
+          <span className={{ fontSize: "0.80rem", fontWeight: 600 }}>
+            {user.name}
+          </span>
           <span
-            style={{
+            className={{
               fontSize: 12,
               color: "#9ca3af",
             }}

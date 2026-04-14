@@ -1,14 +1,16 @@
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { ShoppingCart, DollarSign, Package, Users } from "lucide-react";
 import { getItem } from "@services/storage";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
+import useAuth from "@hooks/useAuth";
 import styles from "./Dashboard.module.css";
 
 function Dashboard() {
-  const user = getItem("currentUser");
-  const compras = getItem("compras") || [];
-  const products = getItem("products") || [];
-  const users = getItem("users") || [];
+  const { user } = useAuth();
+
+  const [compras] = useState(() => getItem("compras") || []);
+  const [products] = useState(() => getItem("products") || []);
+  const [users] = useState(() => getItem("users") || []);
 
   const stats = useMemo(() => {
     const totalVendido = compras.reduce((acc, c) => acc + c.total, 0);
@@ -45,7 +47,7 @@ function Dashboard() {
     <div className={styles.container}>
       <div className={styles.welcome}>
         <h1 className={styles.welcomeTitle}>
-          Ola, {user?.nome?.split(" ")[0] || "Usuario"}!
+          Olá, {user?.nome?.split(" ")[0] || "Usuario"}!
         </h1>
         <p className={styles.welcomeSubtitle}>
           Confira o resumo das atividades
@@ -69,7 +71,9 @@ function Dashboard() {
           </div>
           <div className={styles.statContent}>
             <p className={styles.statLabel}>Faturamento</p>
-            <p className={styles.statValue}>{handleFormatCoin(stats.totalVendido)}</p>
+            <p className={styles.statValue}>
+              {handleFormatCoin(stats.totalVendido)}
+            </p>
           </div>
         </div>
 

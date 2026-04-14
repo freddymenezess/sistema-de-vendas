@@ -5,7 +5,6 @@ import {
   TrendingUp,
   Users,
   Package,
-  FileText,
   Heart,
   LogOut,
   CreditCard,
@@ -13,7 +12,6 @@ import {
   LucideSquareUser
 } from "lucide-react";
 import useAuth from "@hooks/useAuth";
-import { getItem } from "@services/storage";
 import styles from "./Sidebar.module.css";
 
 const menuItems = {
@@ -42,7 +40,10 @@ const menuItems = {
   manager: [
     {
       section: "Principal",
-      items: [{ name: "Dashboard", icon: LayoutDashboard, to: "/painel" }],
+      items: [
+        { name: "Dashboard", icon: LayoutDashboard, to: "/painel" },
+        { name: "Vendas", icon: TrendingUp, to: "/vendas" },
+      ],
     },
     {
       section: "Operações",
@@ -69,8 +70,7 @@ const menuItems = {
 };
 
 function Sidebar({ isOpen, onClose }) {
-  const { logout } = useAuth();
-  const user = getItem("currentUser");
+  const { user, logout } = useAuth();
   const cargo = user?.cargo || "seller";
   const menu = menuItems[cargo] || menuItems.seller;
 

@@ -1,6 +1,6 @@
 import { useSelectedProduct } from "@context/SelectedProductProvider";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
-import { Package, SearchX } from "lucide-react";
+import { Package, SearchX, Plus } from "lucide-react";
 import styles from "./Products.module.css";
 
 function Products({ searchQuery = "" }) {
@@ -45,21 +45,36 @@ function Products({ searchQuery = "" }) {
               {qty > 0 && <span className={styles.qtyBadge}>{qty}</span>}
             </div>
 
-            <div className={styles.main}>
-              <div className={styles.top}>
-                <h4 className={styles.name}>{prod.name}</h4>
+            <div className={styles.productInfo}>
+              <h4 className={styles.name}>{prod.name}</h4>
+              <div className={styles.meta}>
+                <span className={styles.category}>{prod.categoria}</span>
+                <span className={styles.code}>{prod.code}</span>
               </div>
               <div className={styles.stockRow}>
-                <span className={prod.stock < 10 ? styles.stockLow : styles.stockOk}>
+                <span
+                  className={prod.stock < 10 ? styles.stockLow : styles.stockOk}
+                >
                   Estoque: {prod.stock || 0}
                 </span>
               </div>
             </div>
 
-            <div className={styles.actions}>
+            <div className={styles.productFooter}>
               <span className={styles.price}>
                 {handleFormatCoin(prod.price)}
               </span>
+              <button
+                type="button"
+                className={styles.addButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleInc(prod.id);
+                }}
+              >
+                <Plus size={14} />
+                Adicionar
+              </button>
             </div>
           </div>
         );

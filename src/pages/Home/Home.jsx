@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Products from "@components/Products/Products";
 import { useSelectedProduct } from "@context/SelectedProductProvider";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
@@ -21,33 +21,31 @@ function Home() {
 
   const [search, setSearch] = useState("");
   const [formaPagamento, setFormaPagamento] = useState("dinheiro");
-  const [carrinho, setCarrinho] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Derive cart from products that have quantity > 0
-  useEffect(() => {
-    const newCarrinho = products
-      .filter((p) => (p.quantity || 0) > 0)
-      .map((p) => ({
-        id: p.id,
-        nome: p.name,
-        src: p.src,
-        preco: p.price,
-        qtd: p.quantity,
-        subtotal: p.price * p.quantity,
-      }));
-    setCarrinho(newCarrinho);
-  }, [products]);
+  const carrinho = useMemo(
+    () =>
+      products
+        .filter((p) => (p.quantity || 0) > 0)
+        .map((p) => ({
+          id: p.id,
+          nome: p.name,
+          src: p.src,
+          preco: p.price,
+          qtd: p.quantity,
+          subtotal: p.price * p.quantity,
+        })),
+    [products],
+  );
 
   function handleRemove(id) {
     setProducts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, quantity: 0 } : p))
+      prev.map((p) => (p.id === id ? { ...p, quantity: 0 } : p)),
     );
   }
 
   function handleClearCart() {
     setProducts((prev) => prev.map((p) => ({ ...p, quantity: 0 })));
-    setCarrinho([]);
   }
 
   function handleFinalize() {
@@ -71,8 +69,8 @@ function Home() {
       stockErrors.forEach((p) =>
         showAlert(
           `${p.name}: Solicitado ${p.quantidade}, Estoque minimo ${p.minStock}`,
-          "error"
-        )
+          "error",
+        ),
       );
       setLoading(false);
       return;
@@ -107,23 +105,53 @@ function Home() {
     setItem("products", newProds);
     setProducts(newProds.map((p) => ({ ...p, quantity: 0 })));
     setItem("compras", [...(getItem("compras") || []), novaVenda]);
-    setCarrinho([]);
     setLoading(false);
     showAlert("Venda finalizada com sucesso!", "success");
   }
 
   const subtotal = carrinho.reduce((acc, i) => acc + i.subtotal, 0);
   const total = subtotal;
+  const totalItems = carrinho.reduce((acc, item) => acc + item.qtd, 0);
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Ponto de Venda</h1>
+        <div>
+          <h1 className={styles.title}>Ponto de Venda</h1>
+          <p className={styles.subtitle}>
+            Registre vendas com agilidade e acompanhe o carrinho em tempo real.
+          </p>
+        </div>
+      </div>
+
+      <div className={styles.overviewGrid}>
+        <div className={styles.overviewCard}>
+          <span className={styles.overviewLabel}>Produtos disponíveis</span>
+          <strong className={styles.overviewValue}>{products.length}</strong>
+        </div>
+        <div className={styles.overviewCard}>
+          <span className={styles.overviewLabel}>Itens no carrinho</span>
+          <strong className={styles.overviewValue}>{totalItems}</strong>
+        </div>
+        <div className={styles.overviewCard}>
+          <span className={styles.overviewLabel}>Valor do carrinho</span>
+          <strong className={styles.overviewValue}>
+            {handleFormatCoin(total)}
+          </strong>
+        </div>
       </div>
 
       <div className={styles.pdvLayout}>
         {/* Products Section */}
         <div className={styles.productsSection}>
+          <div className={styles.sectionHeader}>
+            <div>
+              <h2 className={styles.sectionTitle}>Produtos</h2>
+              <p className={styles.sectionSubtitle}>
+                Selecione o produto e adicione ao carrinho com rapidez.
+              </p>
+            </div>
+          </div>
           <div className={styles.searchBar}>
             <div className={styles.searchInputWrapper}>
               <Search size={20} className={styles.searchIcon} />
@@ -237,7 +265,9 @@ function Home() {
                 </button>
                 <button
                   className={`${styles.paymentOption} ${
-                    formaPagamento === "cartao_credito" ? styles.paymentActive : ""
+                    formaPagamento === "cartao_credito"
+                      ? styles.paymentActive
+                      : ""
                   }`}
                   onClick={() => setFormaPagamento("cartao_credito")}
                 >
@@ -246,7 +276,9 @@ function Home() {
                 </button>
                 <button
                   className={`${styles.paymentOption} ${
-                    formaPagamento === "cartao_debito" ? styles.paymentActive : ""
+                    formaPagamento === "cartao_debito"
+                      ? styles.paymentActive
+                      : ""
                   }`}
                   onClick={() => setFormaPagamento("cartao_debito")}
                 >

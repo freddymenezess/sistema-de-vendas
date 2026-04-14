@@ -4,23 +4,12 @@ import { MenuProvider } from "@context/MenuProvider";
 import AuthProvider from "@auth/AuthContext";
 import AppRoutes from "@routes/AppRoutes";
 import Alerts from "@components/Alerts"; 
+import { pathTitles } from "@data/path-titles";
 
 function PageTitleSetter() {
   const location = useLocation();
 
   useEffect(() => {
-    const pathTitles = {
-      "/": "Home | MAMEV",
-      "/dashboard": "Dashboard | MAMEV",
-      "/painel": "Dashboard | MAMEV",
-      "/stock": "Stock | MAMEV",
-      "/vendas": "Vendas | MAMEV",
-      "/funcionarios": "Equipa | MAMEV",
-      "/caixas": "Caixas | MAMEV",
-      "/relatorios": "Relatórios | MAMEV",
-      "/login": "Login | MAMEV",
-    };
-
     const title = pathTitles[location.pathname] || "MAMEV Cosméticos";
     document.title = title;
   }, [location.pathname]);

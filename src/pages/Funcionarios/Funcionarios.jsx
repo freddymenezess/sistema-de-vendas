@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
+import {
+  collection,
+  getDocs,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { secondaryAuth, db } from "@services/firebase";
 import { Plus, X } from "lucide-react";
-import { getItem, setItem } from "@services/storage";
 import styles from "./Funcionarios.module.css";
 import modalStyles from "./Modal.module.css";
 
@@ -15,24 +24,36 @@ function Funcionarios() {
     nome: "",
     email: "",
     senha: "",
-    role: "seller",
+    cargo: "seller",
     telefone: "",
   });
   const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadFuncionarios();
   }, []);
 
-  const loadFuncionarios = () => {
-    const users = getItem("users") || [];
-    setFuncionarios(users);
+  const loadFuncionarios = async () => {
+    try {
+      const usuariosRef = collection(db, "usuarios");
+      const snapshot = await getDocs(usuariosRef);
+      const funcionariosData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setFuncionarios(funcionariosData);
+    } catch (error) {
+      console.error("Erro ao carregar funcionários:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const filteredFuncionarios = funcionarios.filter(
     (f) =>
       f.nome?.toLowerCase().includes(search.toLowerCase()) ||
-      f.email?.toLowerCase().includes(search.toLowerCase())
+      f.email?.toLowerCase().includes(search.toLowerCase()),
   );
 
   const openModal = (funcionario = null) => {
@@ -42,7 +63,7 @@ function Funcionarios() {
         nome: funcionario.nome || "",
         email: funcionario.email || "",
         senha: "",
-        role: funcionario.role || "seller",
+        cargo: funcionario.cargo || "seller",
         telefone: funcionario.telefone || "",
       });
     } else {
@@ -51,7 +72,7 @@ function Funcionarios() {
         nome: "",
         email: "",
         senha: "",
-        role: "seller",
+        cargo: "seller",
         telefone: "",
       });
     }
@@ -63,74 +84,71 @@ function Funcionarios() {
     setEditingFuncionario(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
 
     try {
-      const users = getItem("users") || [];
-
       if (editingFuncionario) {
-        // Atualizar funcionario existente
-        const updatedUsers = users.map((u) =>
-          u.id === editingFuncionario.id
-            ? {
-                ...u,
-                nome: formData.nome,
-                role: formData.role,
-                telefone: formData.telefone,
-                updatedAt: new Date().toISOString(),
-              }
-            : u
-        );
-        setItem("users", updatedUsers);
+        // Atualizar funcionário existente
+        const updateData = {
+          nome: formData.nome,
+          cargo: formData.cargo,
+          telefone: formData.telefone,
+          updatedAt: new Date(),
+        }
+        await updateDoc(doc(db, 'usuarios', editingFuncionario.id), updateData)
       } else {
-        // Criar novo funcionario
+        // Criar novo funcionário
         if (!formData.senha || formData.senha.length < 6) {
-          alert("A senha deve ter pelo menos 6 caracteres");
-          setSubmitting(false);
-          return;
+          alert('A senha deve ter pelo menos 6 caracteres')
+          setSubmitting(false)
+          return
         }
 
-        // Verificar email existente
-        if (users.some((u) => u.email === formData.email)) {
-          alert("Este email ja esta em uso");
-          setSubmitting(false);
-          return;
-        }
+        const userCredential = await createUserWithEmailAndPassword(
+          secondaryAuth,
+          formData.email,
+          formData.senha,
+        );
 
-        const newUser = {
-          id: Date.now().toString(),
+        await secondaryAuth.signOut();
+
+        // Criar documento do usuário no Firestore
+        await setDoc(doc(db, "usuarios", userCredential.user.uid), {
+          uid: userCredential.user.uid,
           nome: formData.nome,
           email: formData.email,
-          senha: formData.senha,
-          role: formData.role,
+          cargo: formData.cargo,
           telefone: formData.telefone,
-          createdAt: new Date().toISOString(),
+          createdAt: new Date(),
           ativo: true,
-        };
-
-        setItem("users", [...users, newUser]);
+        });
       }
 
-      closeModal();
-      loadFuncionarios();
+      closeModal()
+      loadFuncionarios()
     } catch (error) {
-      console.error("Erro ao salvar funcionario:", error);
-      alert("Erro ao salvar funcionario");
+      if (error.code === 'auth/email-already-in-use') {
+        alert('Este email já está em uso')
+      } else {
+        alert('Erro ao salvar funcionário: ' + error.message)
+      }
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
   };
 
-  const handleDelete = (id) => {
-    if (!confirm("Tem certeza que deseja excluir este funcionario?")) return;
+  const handleDelete = async (id) => {
+    if (!confirm('Tem certeza que deseja excluir este funcionário?')) return
 
-    const users = getItem("users") || [];
-    const updatedUsers = users.filter((u) => u.id !== id);
-    setItem("users", updatedUsers);
-    loadFuncionarios();
-  };
+    try {
+      await deleteDoc(doc(db, 'usuarios', id))
+      loadFuncionarios()
+    } catch (error) {
+      console.error('Erro ao excluir funcionário:', error)
+    }
+  }
 
   const getInitials = (name) => {
     if (!name) return "U";
@@ -142,42 +160,42 @@ function Funcionarios() {
       .toUpperCase();
   };
 
-  const getBadgeClass = (role) => {
-    switch (role) {
-      case "admin":
-        return styles.badgeAdmin;
-      case "manager":
-        return styles.badgeGerente;
-      default:
-        return styles.badgeVendedor;
+  const getBadgeClass = (cargo) => {
+    switch (cargo) {
+    case "admin":
+      return styles.badgeAdmin;
+    case "manager":
+      return styles.badgeGerente;
+    default:
+      return styles.badgeVendedor;
     }
   };
 
-  const getRoleLabel = (role) => {
-    switch (role) {
-      case "admin":
-        return "Admin";
-      case "manager":
-        return "Gerente";
-      default:
-        return "Vendedor";
+  const getRoleLabel = (cargo) => {
+    switch (cargo) {
+    case "admin":
+      return "Admin";
+    case "manager":
+      return "Gerente";
+    default:
+      return "Vendedor";
     }
   };
 
   const formatDate = (date) => {
     if (!date) return "-";
-    const d = new Date(date);
+    const d = date?.toDate ? date.toDate() : new Date(date);
     return new Intl.DateTimeFormat("pt-BR").format(d);
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Funcionarios</h1>
+        <h1 className={styles.title}>Funcionários</h1>
         <div className={styles.actions}>
           <input
             type="text"
-            placeholder="Buscar funcionario..."
+            placeholder="Buscar funcionário..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className={styles.searchInput}
@@ -190,54 +208,57 @@ function Funcionarios() {
       </div>
 
       <div className={styles.grid}>
-        {filteredFuncionarios.map((funcionario) => (
-          <div key={funcionario.id} className={styles.card}>
-            <div className={styles.cardHeader}>
-              <div className={styles.avatar}>
-                {getInitials(funcionario.nome)}
-              </div>
-              <div className={styles.cardInfo}>
-                <h3 className={styles.name}>{funcionario.nome}</h3>
-                <p className={styles.email}>{funcionario.email}</p>
-              </div>
-              <span
-                className={`${styles.badge} ${getBadgeClass(funcionario.role)}`}
-              >
-                {getRoleLabel(funcionario.role)}
-              </span>
-            </div>
-            <div className={styles.cardMeta}>
-              <div className={styles.metaItem}>
-                <span className={styles.metaLabel}>Telefone</span>
-                <span className={styles.metaValue}>
-                  {funcionario.telefone || "-"}
+        {loading ? (
+          <div className={styles.emptyState}>Carregando funcionários...</div>
+        ) : filteredFuncionarios.length === 0 ? (
+          <div className={styles.emptyState}>Nenhum funcionário encontrado</div>
+        ) : (
+          filteredFuncionarios.map((funcionario) => (
+            <div key={funcionario.id} className={styles.card}>
+              <div className={styles.cardHeader}>
+                <div className={styles.avatar}>
+                  {getInitials(funcionario.nome)}
+                </div>
+                <div className={styles.cardInfo}>
+                  <h3 className={styles.name}>{funcionario.nome}</h3>
+                  <p className={styles.email}>{funcionario.email}</p>
+                </div>
+                <span
+                  className={`${styles.badge} ${getBadgeClass(funcionario.cargo)}`}
+                >
+                  {getRoleLabel(funcionario.cargo)}
                 </span>
               </div>
-              <div className={styles.metaItem}>
-                <span className={styles.metaLabel}>Cadastro</span>
-                <span className={styles.metaValue}>
-                  {formatDate(funcionario.createdAt)}
-                </span>
+              <div className={styles.cardMeta}>
+                <div className={styles.metaItem}>
+                  <span className={styles.metaLabel}>Telefone</span>
+                  <span className={styles.metaValue}>
+                    {funcionario.telefone || "-"}
+                  </span>
+                </div>
+                <div className={styles.metaItem}>
+                  <span className={styles.metaLabel}>Cadastro</span>
+                  <span className={styles.metaValue}>
+                    {formatDate(funcionario.createdAt)}
+                  </span>
+                </div>
+              </div>
+              <div className={styles.cardActions}>
+                <button
+                  onClick={() => openModal(funcionario)}
+                  className={styles.actionButton}
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => handleDelete(funcionario.id)}
+                  className={`${styles.actionButton} ${styles.actionButtonDanger}`}
+                >
+                  Excluir
+                </button>
               </div>
             </div>
-            <div className={styles.cardActions}>
-              <button
-                onClick={() => openModal(funcionario)}
-                className={styles.actionButton}
-              >
-                Editar
-              </button>
-              <button
-                onClick={() => handleDelete(funcionario.id)}
-                className={`${styles.actionButton} ${styles.actionButtonDanger}`}
-              >
-                Excluir
-              </button>
-            </div>
-          </div>
-        ))}
-        {filteredFuncionarios.length === 0 && (
-          <div className={styles.emptyState}>Nenhum funcionario encontrado</div>
+          ))
         )}
       </div>
 
@@ -302,9 +323,9 @@ function Funcionarios() {
                     <div className={modalStyles.field}>
                       <label className={modalStyles.label}>Cargo</label>
                       <select
-                        value={formData.role}
+                        value={formData.cargo}
                         onChange={(e) =>
-                          setFormData({ ...formData, role: e.target.value })
+                          setFormData({ ...formData, cargo: e.target.value })
                         }
                         className={modalStyles.select}
                         required

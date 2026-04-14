@@ -1,13 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { collection, getDocs, addDoc, updateDoc, doc, query, where } from 'firebase/firestore'
+import { collection, getDocs, addDoc, updateDoc, doc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { useAuth } from '@/contexts/AuthContext'
 import styles from '@/styles/Caixa.module.css'
 
 export default function Caixa({ isVendedorView = false }) {
-  const { user, userData, isGerente, isAdmin } = useAuth()
+  const { user, userData } = useAuth()
   const [caixas, setCaixas] = useState([])
   const [meuCaixa, setMeuCaixa] = useState(null)
   const [vendedores, setVendedores] = useState([])

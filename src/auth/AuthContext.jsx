@@ -1,45 +1,46 @@
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@services/firebase";
+import { auth, db } from "@services/firebase";
 import { signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
-import { setItem } from "@services/storage.js";
-import { users, products, lowProducts } from "@data";
 
 export const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        setUserData(firebaseUser);
+        const userDoc = await getDoc(doc(db, "usuarios", firebaseUser.uid));
+        if (userDoc.exists()) {
+          setUser(userDoc.data());
+        }
+      } else {
+        setUser(null);
+        setUserData(null);
+      }
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const login = (userData) => {
-    setItem("currentUser", userData);
-    setItem("users", users);
-    setItem("products", products);
-    setItem("lowProducts", lowProducts);
-  };
-
   const logout = async () => {
     await signOut(auth);
     setUser(null);
-    localStorage.clear();
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        userData,
         loading,
         setLoading,
-        login,
         logout,
       }}
     >

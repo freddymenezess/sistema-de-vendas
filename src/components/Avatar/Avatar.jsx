@@ -8,7 +8,7 @@ function Avatar({ name, style = {}, className = "" }) {
     .slice(0, 2);
 
   return (
-    <div style={style} className={`${styles.avatar} ${className}`}>
+    <div className={style} className={`${styles.avatar} ${className}`}>
       {initials}
     </div>
   );

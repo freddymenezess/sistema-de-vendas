@@ -140,7 +140,7 @@ function Estoque({ readOnly = false }) {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>
-          {readOnly ? "Consulta de Estoque" : "Gestao de Estoque"}
+          {readOnly ? "Consulta de Estoque" : "Gestão de Estoque"}
         </h1>
         <div className={styles.actions}>
           <input
