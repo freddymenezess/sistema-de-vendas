@@ -1,31 +1,26 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "@services/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { auth } from "@services/firebase";
 import useAuth from "@hooks/useAuth";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, LogIn, Heart } from "lucide-react";
-import Spinner from "@components/Spinner/Spinner";
 import styles from "./Login.module.css";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [correctData, setCorrectData] = useState(true);
+  const [error, setError] = useState(false);
+  const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { user, loading, setLoading, login } = useAuth();
+  const { user, loading, setLoading } = useAuth();
 
   if (user) {
-    if (user.role === "admin" || user.role === "manager") {
+    if (user.cargo === "admin" || user.cargo === "manager") {
       return <Navigate to="/painel" replace />;
     } else {
-      return <Navigate to="/carrinho" replace />;
+      return <Navigate to="/meu-caixa" replace />;
     }
-  }
-
-  if (loading) {
-    return <Spinner />;
   }
 
   function handleSetEmail(event) {
@@ -39,36 +34,43 @@ function Login() {
   async function handleSubmit(event) {
     event.preventDefault();
     setLoading(true);
+    setError(false);
 
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const firebaseUser = userCredential.user;
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      setError(true);
 
-      const docRef = doc(db, "users", firebaseUser.uid);
-      const docSnap = await getDoc(docRef);
-      const data = docSnap.data();
-      const essentialUser = {
-        uid: firebaseUser.uid,
-        email: firebaseUser.email,
-        role: data?.role || "",
-        nome: data?.nome || "",
-        tel: data?.tel || null,
-      };
-
-      login(essentialUser);
-    } catch (error) {
-      console.error(error);
+      switch (err.code) {
+      case "auth/network-request-failed":
+        setMessage("Sem conexão. Verifique sua internet e tente novamente.");
+        break;
+      case "auth/user-not-found":
+      case "auth/invalid-credential":
+        setMessage(
+          "Email ou senha incorretos. Em caso de dúvida, contacte a direcção.",
+        );
+        break;
+      case "auth/wrong-password":
+        setMessage(
+          "Senha incorreta. Em caso de dúvida, contacte a direcção.",
+        );
+        break;
+      case "auth/too-many-requests":
+        setMessage(
+          "Muitas tentativas. Aguarde alguns minutos e tente novamente.",
+        );
+        break;
+      default:
+        setMessage("Erro inesperado. Tente novamente.");
+      }
+    } finally {
       setLoading(false);
-      setCorrectData(false);
     }
   }
 
   function handleSetCorrectData() {
-    setCorrectData(true);
+    setError(false);
   }
 
   return (
@@ -78,16 +80,12 @@ function Login() {
           <div className={styles.logoIcon}>
             <Heart size={32} />
           </div>
-          <h1 className={styles.title}>Mamev Cosmeticos</h1>
-          <p className={styles.subtitle}>Sistema de Gestao</p>
+          <h1 className={styles.title}>Mamev Cosmetics</h1>
+          <p className={styles.subtitle}>Sistema de Vendas</p>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          {!correctData && (
-            <div className={styles.error}>
-              Email ou senha incorretos. Em caso de perda ou esquecimento, contacte a direcao.
-            </div>
-          )}
+          {error && <div className={styles.error}>{message}</div>}
 
           <div className={styles.field}>
             <label className={styles.label}>Email</label>

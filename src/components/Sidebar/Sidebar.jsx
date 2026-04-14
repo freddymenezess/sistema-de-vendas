@@ -10,6 +10,7 @@ import {
   LogOut,
   CreditCard,
   BarChart3,
+  LucideSquareUser
 } from "lucide-react";
 import useAuth from "@hooks/useAuth";
 import { getItem } from "@services/storage";
@@ -20,38 +21,35 @@ const menuItems = {
     {
       section: "Principal",
       items: [
-        { name: "Dashboard", icon: LayoutDashboard, to: "/painel" },
+        { name: "Painel do Admin", icon: LayoutDashboard, to: "/painel" },
         { name: "Vendas", icon: TrendingUp, to: "/vendas" },
       ],
     },
     {
-      section: "Gestao",
+      section: "Gestão",
       items: [
-        { name: "Funcionarios", icon: Users, to: "/funcionarios" },
+        { name: "Funcionários", icon: Users, to: "/funcionarios" },
         { name: "Estoque", icon: Package, to: "/stock" },
         { name: "Caixas", icon: CreditCard, to: "/caixas" },
+        { name: "Fornecedores", icon: LucideSquareUser, to: "/fornecedores" },
       ],
     },
     {
-      section: "Analises",
-      items: [
-        { name: "Relatorios", icon: BarChart3, to: "/relatorios" },
-      ],
+      section: "Análises",
+      items: [{ name: "Relatórios", icon: BarChart3, to: "/relatorios" }],
     },
   ],
   manager: [
     {
       section: "Principal",
-      items: [
-        { name: "Dashboard", icon: LayoutDashboard, to: "/painel" },
-      ],
+      items: [{ name: "Dashboard", icon: LayoutDashboard, to: "/painel" }],
     },
     {
-      section: "Operacoes",
+      section: "Operações",
       items: [
         { name: "Estoque", icon: Package, to: "/stock" },
         { name: "Caixas", icon: CreditCard, to: "/caixas" },
-        { name: "Relatorios", icon: BarChart3, to: "/relatorios" },
+        { name: "Relatórios", icon: BarChart3, to: "/relatorios" },
       ],
     },
   ],
@@ -65,9 +63,7 @@ const menuItems = {
     },
     {
       section: "Consultas",
-      items: [
-        { name: "Estoque", icon: Package, to: "/stock-consulta" },
-      ],
+      items: [{ name: "Estoque", icon: Package, to: "/stock-consulta" }],
     },
   ],
 };
@@ -75,8 +71,8 @@ const menuItems = {
 function Sidebar({ isOpen, onClose }) {
   const { logout } = useAuth();
   const user = getItem("currentUser");
-  const role = user?.role || "seller";
-  const menu = menuItems[role] || menuItems.seller;
+  const cargo = user?.cargo || "seller";
+  const menu = menuItems[cargo] || menuItems.seller;
 
   const getInitials = (name) => {
     if (!name) return "U";
@@ -128,7 +124,7 @@ function Sidebar({ isOpen, onClose }) {
             <div className={styles.avatar}>{getInitials(user?.nome)}</div>
             <div className={styles.userDetails}>
               <div className={styles.userName}>{user?.nome || "Usuario"}</div>
-              <div className={styles.userRole}>{role}</div>
+              <div className={styles.userRole}>{user?.cargo || cargo}</div>
             </div>
           </div>
           <button className={styles.logoutButton} onClick={logout}>
