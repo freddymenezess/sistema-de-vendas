@@ -38,6 +38,7 @@ function AppRoutes() {
         }
       >
         <Route path="/stock" element={<Estoque />} />
+        <Route path="/stock-consulta" element={<Estoque readOnly={true} />} />
         <Route path="/vendas" element={<Vendas />} />
       </Route>
 
@@ -52,6 +53,7 @@ function AppRoutes() {
         <Route path="/funcionarios" element={<Funcionarios />} />
         <Route path="/fornecedores" element={<Fornecedores />} />
         <Route path="/caixas" element={<Caixas />} />
+        <Route path="/meu-caixa" element={<Caixas isVendedorView={true} />} />
         <Route path="/relatorios" element={<Relatorios />} />
       </Route>
     </Routes>
