@@ -141,6 +141,26 @@ export default function Fatura({ venda, onClose }) {
             </span>
           </div>
 
+          {/* Nota Informativa de Devolução */}
+          <div className={styles.notaDevolucao}>
+            <h4 className={styles.notaTitulo}>Nota Informativa de Devolução</h4>
+            <p className={styles.notaTexto}>
+              Aceitamos devoluções apenas em caso de produto danificado ou com defeito de fabrico.
+            </p>
+            <ul className={styles.notaLista}>
+              <li>Prazo para devolução: até <strong>7 dias</strong> após a compra</li>
+              <li>Obrigatória a apresentação da <strong>fatura original</strong></li>
+              <li>O produto deve estar em <strong>condições adequadas para verificação</strong></li>
+              <li>Produtos abertos ou usados <strong>não são elegíveis</strong>, salvo em caso de defeito comprovado</li>
+            </ul>
+            <p className={styles.notaTexto}>
+              A empresa reserva-se o direito de <strong>verificar o estado do produto</strong> antes da aprovação da devolução.
+            </p>
+            <p className={styles.notaTexto}>
+              Em caso de validação, poderá ser realizada <strong>troca ou reembolso</strong>, conforme aplicável.
+            </p>
+          </div>
+
           {/* Footer */}
           <div className={styles.faturaFooter}>
             <p className={styles.footerMessage}>Obrigado pela preferência!</p>

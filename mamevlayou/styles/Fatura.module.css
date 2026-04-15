@@ -203,6 +203,47 @@
   color: #be185d;
 }
 
+/* Nota Informativa de Devolução */
+.notaDevolucao {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.75rem;
+  color: #78350f;
+}
+
+.notaTitulo {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #92400e;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.notaTexto {
+  margin: 0.5rem 0;
+  line-height: 1.4;
+}
+
+.notaLista {
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+  list-style-type: disc;
+}
+
+.notaLista li {
+  margin-bottom: 0.25rem;
+  line-height: 1.4;
+}
+
+.notaLista li strong,
+.notaTexto strong {
+  color: #92400e;
+}
+
 .faturaFooter {
   text-align: center;
   border-top: 2px dashed #e5e7eb;
