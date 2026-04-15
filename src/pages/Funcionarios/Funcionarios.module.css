@@ -220,6 +220,83 @@
   border-top: none;
 }
 
+/* Avatar Image */
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Photo Upload Styles */
+.photoUploadSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.photoUploadWrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--bg);
+  border: 2px dashed var(--border-hover);
+  transition: all 0.2s ease;
+}
+
+.photoUploadWrapper:hover {
+  border-color: var(--primary);
+}
+
+.photoPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+}
+
+.photoOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  color: white;
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.photoUploadWrapper:hover .photoOverlay {
+  opacity: 1;
+}
+
+.fileInput {
+  display: none;
+}
+
+.photoHint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
 @media (min-width: 640px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   collection,
   getDocs,
@@ -8,12 +8,14 @@ import {
   doc,
 } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { secondaryAuth, db } from "@services/firebase";
-import { Plus, X } from "lucide-react";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { secondaryAuth, db, storage } from "@services/firebase";
+import { Plus, X, Camera, User } from "lucide-react";
 import styles from "./Funcionarios.module.css";
 import modalStyles from "./Modal.module.css";
 
 const CARGOS = ["admin", "manager", "seller"];
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
 function Funcionarios() {
   const [funcionarios, setFuncionarios] = useState([]);
@@ -39,9 +41,14 @@ function Funcionarios() {
     // Contato de emergência
     contatoEmergenciaNome: "",
     contatoEmergenciaTelefone: "",
+    // Foto
+    fotoUrl: "",
   });
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     loadFuncionarios();
@@ -88,7 +95,9 @@ function Funcionarios() {
         dataAdmissao: funcionario.dataAdmissao || "",
         contatoEmergenciaNome: funcionario.contatoEmergenciaNome || "",
         contatoEmergenciaTelefone: funcionario.contatoEmergenciaTelefone || "",
+        fotoUrl: funcionario.fotoUrl || "",
       });
+      setPreviewUrl(funcionario.fotoUrl || "");
     } else {
       setEditingFuncionario(null);
       setFormData({
@@ -107,7 +116,9 @@ function Funcionarios() {
         dataAdmissao: "",
         contatoEmergenciaNome: "",
         contatoEmergenciaTelefone: "",
+        fotoUrl: "",
       });
+      setPreviewUrl("");
     }
     setShowModal(true);
   };
@@ -115,6 +126,48 @@ function Funcionarios() {
   const closeModal = () => {
     setShowModal(false);
     setEditingFuncionario(null);
+    setPreviewUrl("");
+  };
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validar tipo de arquivo
+    if (!file.type.startsWith("image/")) {
+      alert("Por favor, selecione uma imagem.");
+      return;
+    }
+
+    // Validar tamanho (max 2MB)
+    if (file.size > MAX_FILE_SIZE) {
+      alert("A imagem deve ter no maximo 2MB.");
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      // Criar preview local
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+
+      // Upload para Firebase Storage
+      const fileName = `funcionarios/${Date.now()}_${file.name}`;
+      const storageRef = ref(storage, fileName);
+      await uploadBytes(storageRef, file);
+      const downloadUrl = await getDownloadURL(storageRef);
+
+      setFormData({ ...formData, fotoUrl: downloadUrl });
+    } catch (error) {
+      console.error("Erro ao fazer upload da foto:", error);
+      alert("Erro ao fazer upload da foto.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -138,6 +191,7 @@ function Funcionarios() {
           dataAdmissao: formData.dataAdmissao,
           contatoEmergenciaNome: formData.contatoEmergenciaNome,
           contatoEmergenciaTelefone: formData.contatoEmergenciaTelefone,
+          fotoUrl: formData.fotoUrl,
           updatedAt: new Date(),
         }
         await updateDoc(doc(db, 'usuarios', editingFuncionario.id), updateData)
@@ -174,6 +228,7 @@ function Funcionarios() {
           dataAdmissao: formData.dataAdmissao,
           contatoEmergenciaNome: formData.contatoEmergenciaNome,
           contatoEmergenciaTelefone: formData.contatoEmergenciaTelefone,
+          fotoUrl: formData.fotoUrl,
           createdAt: new Date(),
           ativo: true,
         });
@@ -270,7 +325,11 @@ function Funcionarios() {
             <div key={funcionario.id} className={styles.card}>
               <div className={styles.cardHeader}>
                 <div className={styles.avatar}>
-                  {getInitials(funcionario.nome)}
+                  {funcionario.fotoUrl ? (
+                    <img src={funcionario.fotoUrl} alt={funcionario.nome} className={styles.avatarImg} />
+                  ) : (
+                    getInitials(funcionario.nome)
+                  )}
                 </div>
                 <div className={styles.cardInfo}>
                   <h3 className={styles.name}>{funcionario.nome}</h3>
@@ -332,6 +391,34 @@ function Funcionarios() {
             <form onSubmit={handleSubmit}>
               <div className={modalStyles.content}>
                 <div className={modalStyles.form}>
+                  {/* Foto de Perfil */}
+                  <div className={styles.photoUploadSection}>
+                    <div 
+                      className={styles.photoUploadWrapper}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      {previewUrl ? (
+                        <img src={previewUrl} alt="Preview" className={styles.photoPreview} />
+                      ) : (
+                        <div className={styles.photoPlaceholder}>
+                          <User size={32} />
+                        </div>
+                      )}
+                      <div className={styles.photoOverlay}>
+                        <Camera size={20} />
+                        <span>{uploading ? "Enviando..." : "Foto"}</span>
+                      </div>
+                    </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      className={styles.fileInput}
+                    />
+                    <p className={styles.photoHint}>Max. 2MB</p>
+                  </div>
+
                   {/* Dados Básicos */}
                   <h3 className={styles.sectionTitle}>Dados Básicos</h3>
                   <div className={modalStyles.field}>

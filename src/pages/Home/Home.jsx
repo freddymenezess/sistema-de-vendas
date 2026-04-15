@@ -1,6 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useContext } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@services/firebase";
 import Products from "@components/Products/Products";
 import { useSelectedProduct } from "@context/SelectedProductProvider";
+import { AuthContext } from "@auth/AuthContext";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import { updateProducts, addVenda, getVendas } from "@services/firebaseData.service.js";
 import { showAlert } from "@components/Alerts";
@@ -13,6 +16,8 @@ import {
   Minus,
   ShoppingCart,
   X,
+  User,
+  UserCheck,
 } from "lucide-react";
 import styles from "./Home.module.css";
 

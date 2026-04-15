@@ -14,6 +14,8 @@ import Caixas from "@pages/Caixas/Caixas";
 import Relatorios from "@pages/Relatorios/Relatorios";
 import Perfil from "@pages/Perfil/Perfil";
 import Encomendas from "@pages/Encomendas/Encomendas";
+import Clientes from "@pages/Clientes/Clientes";
+import Devolucoes from "@pages/Devolucoes/Devolucoes";
 
 function AppRoutes() {
   return (
@@ -59,6 +61,8 @@ function AppRoutes() {
         <Route path="/relatorios" element={<Relatorios />} />
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/encomendas" element={<Encomendas />} />
+        <Route path="/clientes" element={<Clientes />} />
+        <Route path="/devolucoes" element={<Devolucoes />} />
       </Route>
     </Routes>
   );

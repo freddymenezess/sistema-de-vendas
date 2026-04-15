@@ -1,9 +1,13 @@
-import { useState, useEffect } from "react";
-import { Plus, Package, X, AlertTriangle } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Plus, Package, X, AlertTriangle, Upload, Image } from "lucide-react";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "@services/firebase";
 import { getProducts, updateProducts } from "@services/firebaseData.service.js";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import styles from "./Estoque.module.css";
 import modalStyles from "./Modal.module.css";
+
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
 const CATEGORIAS = [
   "Perfumes",
@@ -31,7 +35,11 @@ function Estoque({ readOnly = false }) {
     minStock: "",
     code: "",
     descricao: "",
+    src: "",
   });
+  const [uploading, setUploading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     loadProdutos();
@@ -82,7 +90,9 @@ function Estoque({ readOnly = false }) {
         minStock: produto.minStock?.toString() || "",
         code: produto.code || "",
         descricao: produto.descricao || "",
+        src: produto.src || "",
       });
+      setPreviewUrl(produto.src || "");
     } else {
       setEditingProduto(null);
       setFormData({
@@ -94,7 +104,9 @@ function Estoque({ readOnly = false }) {
         minStock: "",
         code: "",
         descricao: "",
+        src: "",
       });
+      setPreviewUrl("");
     }
     setShowModal(true);
   };
@@ -102,6 +114,48 @@ function Estoque({ readOnly = false }) {
   const closeModal = () => {
     setShowModal(false);
     setEditingProduto(null);
+    setPreviewUrl("");
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validar tipo de arquivo
+    if (!file.type.startsWith("image/")) {
+      alert("Por favor, selecione uma imagem.");
+      return;
+    }
+
+    // Validar tamanho (max 2MB)
+    if (file.size > MAX_FILE_SIZE) {
+      alert("A imagem deve ter no maximo 2MB.");
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      // Criar preview local
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+
+      // Upload para Firebase Storage
+      const fileName = `produtos/${Date.now()}_${file.name}`;
+      const storageRef = ref(storage, fileName);
+      await uploadBytes(storageRef, file);
+      const downloadUrl = await getDownloadURL(storageRef);
+
+      setFormData({ ...formData, src: downloadUrl });
+    } catch (error) {
+      console.error("Erro ao fazer upload da imagem:", error);
+      alert("Erro ao fazer upload da imagem.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -116,7 +170,7 @@ function Estoque({ readOnly = false }) {
       minStock: parseInt(formData.minStock) || 0,
       code: formData.code,
       descricao: formData.descricao,
-      src: editingProduto?.src || "",
+      src: formData.src || editingProduto?.src || "",
     };
 
     try {
@@ -259,6 +313,35 @@ function Estoque({ readOnly = false }) {
             <form onSubmit={handleSubmit}>
               <div className={modalStyles.content}>
                 <div className={modalStyles.form}>
+                  {/* Imagem do Produto */}
+                  <div className={styles.imageUploadSection}>
+                    <div 
+                      className={styles.imageUploadWrapper}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      {previewUrl ? (
+                        <img src={previewUrl} alt="Preview" className={styles.imagePreview} />
+                      ) : (
+                        <div className={styles.imagePlaceholder}>
+                          <Image size={32} />
+                          <span>Adicionar Imagem</span>
+                        </div>
+                      )}
+                      <div className={styles.imageOverlay}>
+                        <Upload size={20} />
+                        <span>{uploading ? "Enviando..." : "Alterar"}</span>
+                      </div>
+                    </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className={styles.fileInput}
+                    />
+                    <p className={styles.imageHint}>Max. 2MB (JPG, PNG)</p>
+                  </div>
+
                   <div className={modalStyles.field}>
                     <label className={modalStyles.label}>Nome do Produto</label>
                     <input

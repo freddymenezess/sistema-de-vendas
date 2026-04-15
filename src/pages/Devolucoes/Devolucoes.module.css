@@ -1,0 +1,568 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  margin: 0.25rem 0 0;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.searchWrapper {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.625rem 1rem 0.625rem 2.75rem;
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  background: var(--bg-card);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.addButton {
+  padding: 0.625rem 1.25rem;
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.addButton:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-primary);
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.statCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.statIcon {
+  width: 48px;
+  height: 48px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statIconPending {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.statIconSuccess {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.statIconDanger {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.statInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.statLabel {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.statValue {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.cardNumero {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.cardDate {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badgePendente {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.badgeAprovada {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.badgeRecusada {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.cardBody {
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+
+.cardCliente {
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+}
+
+.cardMotivo {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.5rem;
+}
+
+.cardItens {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin: 0 0 0.25rem;
+}
+
+.cardTotal {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--error);
+  margin: 0;
+}
+
+.cardActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.actionButton:hover {
+  background: var(--bg);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.actionButtonSuccess:hover {
+  background: var(--success-bg);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.actionButtonDanger:hover {
+  background: var(--error-bg);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.emptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+}
+
+.emptyIcon {
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+
+.hint {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.375rem;
+}
+
+/* Produtos Section */
+.produtosSection {
+  background: var(--bg);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.produtosTitulo {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+}
+
+.produtosList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.produtoItem {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+}
+
+.produtoCheck {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+.produtoCheck input {
+  width: 16px;
+  height: 16px;
+}
+
+.produtoNome {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.produtoInfo {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.produtoQtd {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8125rem;
+}
+
+.produtoInput {
+  width: 70px;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+}
+
+.totalDevolucao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 1rem;
+}
+
+.totalDevolucao strong {
+  color: var(--error);
+  font-size: 1.125rem;
+}
+
+/* Nota de Devolução */
+.notaDevolucao {
+  background: var(--bg-card);
+  padding: 2rem;
+  font-size: 0.875rem;
+}
+
+.notaHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.notaEmpresa h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.notaEmpresa p {
+  margin: 0.125rem 0;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.notaInfo {
+  text-align: right;
+}
+
+.notaInfo h2 {
+  font-size: 1rem;
+  color: var(--error);
+  margin: 0 0 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.notaInfo p {
+  margin: 0.125rem 0;
+  font-size: 0.8125rem;
+}
+
+.notaSection {
+  background: var(--bg);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+}
+
+.notaSection h3 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+}
+
+.notaSection p {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.notaMotivo {
+  background: var(--warning-bg);
+  border: 1px solid var(--warning);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+}
+
+.notaMotivo h3 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #92400e;
+  margin: 0 0 0.5rem;
+}
+
+.notaMotivo p {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+  color: #78350f;
+}
+
+.notaTabela {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.notaTabela th {
+  background: var(--bg);
+  padding: 0.75rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border-bottom: 2px solid var(--border);
+}
+
+.notaTabela td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.notaTotal {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 0;
+  border-top: 2px solid var(--text-primary);
+  font-size: 1rem;
+}
+
+.notaTotal strong {
+  font-size: 1.25rem;
+  color: var(--error);
+}
+
+.notaDecisao {
+  border: 2px solid var(--border);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 2rem;
+}
+
+.notaDecisao h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+}
+
+.notaDecisao p {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.notaAssinaturas {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+}
+
+.assinatura {
+  text-align: center;
+  width: 45%;
+}
+
+.assinaturaLinha {
+  border-top: 1px solid var(--text-primary);
+  padding-top: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.notaFooter {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px dashed var(--border);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.notaFooter p {
+  margin: 0.25rem 0;
+}
+
+@media (min-width: 640px) {
+  .statsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

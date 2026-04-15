@@ -11,7 +11,9 @@ import {
   BarChart3,
   LucideSquareUser,
   User,
-  Truck
+  Truck,
+  UserCheck,
+  RotateCcw,
 } from "lucide-react";
 import useAuth from "@hooks/useAuth";
 import styles from "./Sidebar.module.css";
@@ -29,6 +31,8 @@ const menuItems = {
       section: "Gestão",
       items: [
         { name: "Funcionários", icon: Users, to: "/funcionarios" },
+        { name: "Clientes", icon: UserCheck, to: "/clientes" },
+        { name: "Devoluções", icon: RotateCcw, to: "/devolucoes" },
         { name: "Estoque", icon: Package, to: "/stock" },
         { name: "Encomendas", icon: Truck, to: "/encomendas" },
         { name: "Caixas", icon: CreditCard, to: "/caixas" },
