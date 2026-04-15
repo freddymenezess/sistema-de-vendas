@@ -1,13 +1,18 @@
-import { useState, useEffect, useMemo } from "react";
-import { ShoppingCart } from "lucide-react";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { ShoppingCart, Eye, Printer, X } from "lucide-react";
 import { getVendas } from "@services/firebaseData.service.js";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
+import Fatura from "@components/Fatura/Fatura";
 import styles from "./Vendas.module.css";
+import modalStyles from "./Modal.module.css";
 
 function Vendas() {
   const [vendas, setVendas] = useState([]);
   const [filtro, setFiltro] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedVenda, setSelectedVenda] = useState(null);
+  const [showFaturaModal, setShowFaturaModal] = useState(false);
+  const faturaRef = useRef(null);
 
   useEffect(() => {
     loadVendas();
@@ -60,6 +65,56 @@ function Vendas() {
     return labels[payment] || payment || "-";
   };
 
+  const openFaturaModal = (venda) => {
+    setSelectedVenda(venda);
+    setShowFaturaModal(true);
+  };
+
+  const closeFaturaModal = () => {
+    setShowFaturaModal(false);
+    setSelectedVenda(null);
+  };
+
+  const handlePrintFatura = () => {
+    const printContent = faturaRef.current;
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Fatura ${selectedVenda?.idCompra}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; margin: 0; }
+            .fatura { max-width: 800px; margin: 0 auto; }
+            .header { display: flex; justify-content: space-between; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb; }
+            .empresa h1 { margin: 0 0 5px; font-size: 18px; }
+            .empresa p { margin: 2px 0; color: #666; font-size: 12px; }
+            .faturaInfo { text-align: right; }
+            .faturaInfo h2 { margin: 0 0 5px; font-size: 14px; color: #3b82f6; }
+            .faturaInfo p { margin: 2px 0; font-size: 12px; }
+            .vendedor { display: flex; justify-content: space-between; margin-bottom: 15px; padding: 10px 0; border-bottom: 1px solid #e5e7eb; }
+            .vendedor p { margin: 0; font-size: 12px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+            th { background: #f3f4f6; padding: 8px; text-align: left; font-size: 11px; border-bottom: 2px solid #e5e7eb; }
+            td { padding: 8px; border-bottom: 1px solid #e5e7eb; font-size: 12px; }
+            .totais { display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 20px; }
+            .totalRow { display: flex; justify-content: space-between; width: 200px; padding: 5px 0; font-size: 12px; }
+            .totalFinal { border-top: 2px solid #333; padding-top: 8px; margin-top: 5px; font-size: 14px; font-weight: bold; }
+            .notaDevolucao { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 5px; padding: 10px; margin-bottom: 15px; font-size: 10px; color: #78350f; }
+            .notaTitulo { font-size: 11px; font-weight: bold; color: #92400e; margin: 0 0 5px; }
+            .notaLista { margin: 5px 0; padding-left: 15px; }
+            .notaLista li { margin-bottom: 3px; }
+            .footer { text-align: center; border-top: 2px dashed #e5e7eb; padding-top: 15px; }
+            .footerMessage { font-size: 12px; font-weight: bold; margin: 0 0 5px; }
+            .footerSubtext { font-size: 10px; color: #666; margin: 0; }
+          </style>
+        </head>
+        <body>${printContent.innerHTML}</body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.welcome}>
@@ -101,6 +156,7 @@ function Vendas() {
                     <th>Pagamento</th>
                     <th>Status</th>
                     <th>Total</th>
+                    <th>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -126,6 +182,16 @@ function Vendas() {
                       <td>
                         <strong>{handleFormatCoin(venda.total || 0)}</strong>
                       </td>
+                      <td>
+                        <button
+                          onClick={() => openFaturaModal(venda)}
+                          className={styles.faturaButton}
+                          title="Ver Fatura"
+                        >
+                          <Eye size={16} />
+                          Fatura
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -134,6 +200,45 @@ function Vendas() {
           )}
         </div>
       </div>
+
+      {/* Modal da Fatura */}
+      {showFaturaModal && selectedVenda && (
+        <div className={modalStyles.overlay} onClick={closeFaturaModal}>
+          <div
+            className={`${modalStyles.modal} ${modalStyles.modalLarge}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={modalStyles.header}>
+              <h2 className={modalStyles.title}>
+                Fatura #{selectedVenda.idCompra}
+              </h2>
+              <button onClick={closeFaturaModal} className={modalStyles.closeButton}>
+                <X size={20} />
+              </button>
+            </div>
+            <div className={modalStyles.content}>
+              <Fatura ref={faturaRef} venda={selectedVenda} />
+            </div>
+            <div className={modalStyles.footer}>
+              <button
+                type="button"
+                onClick={closeFaturaModal}
+                className={modalStyles.cancelButton}
+              >
+                Fechar
+              </button>
+              <button
+                type="button"
+                onClick={handlePrintFatura}
+                className={modalStyles.submitButton}
+              >
+                <Printer size={18} />
+                Imprimir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

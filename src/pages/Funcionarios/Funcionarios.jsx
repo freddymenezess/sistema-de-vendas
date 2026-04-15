@@ -26,6 +26,19 @@ function Funcionarios() {
     senha: "",
     cargo: "seller",
     telefone: "",
+    // Dados pessoais
+    nif: "",
+    bi: "",
+    dataNascimento: "",
+    endereco: "",
+    // Dados profissionais
+    salario: "",
+    iban: "",
+    tipoContrato: "efetivo",
+    dataAdmissao: "",
+    // Contato de emergência
+    contatoEmergenciaNome: "",
+    contatoEmergenciaTelefone: "",
   });
   const [submitting, setSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -65,6 +78,16 @@ function Funcionarios() {
         senha: "",
         cargo: funcionario.cargo || "seller",
         telefone: funcionario.telefone || "",
+        nif: funcionario.nif || "",
+        bi: funcionario.bi || "",
+        dataNascimento: funcionario.dataNascimento || "",
+        endereco: funcionario.endereco || "",
+        salario: funcionario.salario || "",
+        iban: funcionario.iban || "",
+        tipoContrato: funcionario.tipoContrato || "efetivo",
+        dataAdmissao: funcionario.dataAdmissao || "",
+        contatoEmergenciaNome: funcionario.contatoEmergenciaNome || "",
+        contatoEmergenciaTelefone: funcionario.contatoEmergenciaTelefone || "",
       });
     } else {
       setEditingFuncionario(null);
@@ -74,6 +97,16 @@ function Funcionarios() {
         senha: "",
         cargo: "seller",
         telefone: "",
+        nif: "",
+        bi: "",
+        dataNascimento: "",
+        endereco: "",
+        salario: "",
+        iban: "",
+        tipoContrato: "efetivo",
+        dataAdmissao: "",
+        contatoEmergenciaNome: "",
+        contatoEmergenciaTelefone: "",
       });
     }
     setShowModal(true);
@@ -95,6 +128,16 @@ function Funcionarios() {
           nome: formData.nome,
           cargo: formData.cargo,
           telefone: formData.telefone,
+          nif: formData.nif,
+          bi: formData.bi,
+          dataNascimento: formData.dataNascimento,
+          endereco: formData.endereco,
+          salario: formData.salario ? parseFloat(formData.salario) : null,
+          iban: formData.iban,
+          tipoContrato: formData.tipoContrato,
+          dataAdmissao: formData.dataAdmissao,
+          contatoEmergenciaNome: formData.contatoEmergenciaNome,
+          contatoEmergenciaTelefone: formData.contatoEmergenciaTelefone,
           updatedAt: new Date(),
         }
         await updateDoc(doc(db, 'usuarios', editingFuncionario.id), updateData)
@@ -121,6 +164,16 @@ function Funcionarios() {
           email: formData.email,
           cargo: formData.cargo,
           telefone: formData.telefone,
+          nif: formData.nif,
+          bi: formData.bi,
+          dataNascimento: formData.dataNascimento,
+          endereco: formData.endereco,
+          salario: formData.salario ? parseFloat(formData.salario) : null,
+          iban: formData.iban,
+          tipoContrato: formData.tipoContrato,
+          dataAdmissao: formData.dataAdmissao,
+          contatoEmergenciaNome: formData.contatoEmergenciaNome,
+          contatoEmergenciaTelefone: formData.contatoEmergenciaTelefone,
           createdAt: new Date(),
           ativo: true,
         });
@@ -279,6 +332,8 @@ function Funcionarios() {
             <form onSubmit={handleSubmit}>
               <div className={modalStyles.content}>
                 <div className={modalStyles.form}>
+                  {/* Dados Básicos */}
+                  <h3 className={styles.sectionTitle}>Dados Básicos</h3>
                   <div className={modalStyles.field}>
                     <label className={modalStyles.label}>Nome Completo</label>
                     <input
@@ -344,6 +399,147 @@ function Funcionarios() {
                           setFormData({ ...formData, telefone: e.target.value })
                         }
                         className={modalStyles.input}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Dados Pessoais */}
+                  <h3 className={styles.sectionTitle}>Dados Pessoais</h3>
+                  <div className={modalStyles.fieldRow}>
+                    <div className={modalStyles.field}>
+                      <label className={modalStyles.label}>NIF</label>
+                      <input
+                        type="text"
+                        value={formData.nif}
+                        onChange={(e) =>
+                          setFormData({ ...formData, nif: e.target.value })
+                        }
+                        className={modalStyles.input}
+                        placeholder="Número de Identificação Fiscal"
+                      />
+                    </div>
+                    <div className={modalStyles.field}>
+                      <label className={modalStyles.label}>BI</label>
+                      <input
+                        type="text"
+                        value={formData.bi}
+                        onChange={(e) =>
+                          setFormData({ ...formData, bi: e.target.value })
+                        }
+                        className={modalStyles.input}
+                        placeholder="Bilhete de Identidade"
+                      />
+                    </div>
+                  </div>
+                  <div className={modalStyles.fieldRow}>
+                    <div className={modalStyles.field}>
+                      <label className={modalStyles.label}>Data de Nascimento</label>
+                      <input
+                        type="date"
+                        value={formData.dataNascimento}
+                        onChange={(e) =>
+                          setFormData({ ...formData, dataNascimento: e.target.value })
+                        }
+                        className={modalStyles.input}
+                      />
+                    </div>
+                    <div className={modalStyles.field}>
+                      <label className={modalStyles.label}>Endereço</label>
+                      <input
+                        type="text"
+                        value={formData.endereco}
+                        onChange={(e) =>
+                          setFormData({ ...formData, endereco: e.target.value })
+                        }
+                        className={modalStyles.input}
+                        placeholder="Endereço completo"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Dados Profissionais */}
+                  <h3 className={styles.sectionTitle}>Dados Profissionais</h3>
+                  <div className={modalStyles.fieldRow}>
+                    <div className={modalStyles.field}>
+                      <label className={modalStyles.label}>Salário (Kz)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={formData.salario}
+                        onChange={(e) =>
+                          setFormData({ ...formData, salario: e.target.value })
+                        }
+                        className={modalStyles.input}
+                        placeholder="0.00"
+                      />
+                    </div>
+                    <div className={modalStyles.field}>
+                      <label className={modalStyles.label}>IBAN</label>
+                      <input
+                        type="text"
+                        value={formData.iban}
+                        onChange={(e) =>
+                          setFormData({ ...formData, iban: e.target.value })
+                        }
+                        className={modalStyles.input}
+                        placeholder="AO06..."
+                      />
+                    </div>
+                  </div>
+                  <div className={modalStyles.fieldRow}>
+                    <div className={modalStyles.field}>
+                      <label className={modalStyles.label}>Tipo de Contrato</label>
+                      <select
+                        value={formData.tipoContrato}
+                        onChange={(e) =>
+                          setFormData({ ...formData, tipoContrato: e.target.value })
+                        }
+                        className={modalStyles.select}
+                      >
+                        <option value="efetivo">Efetivo</option>
+                        <option value="temporario">Temporário</option>
+                        <option value="estagio">Estágio</option>
+                        <option value="freelancer">Freelancer</option>
+                      </select>
+                    </div>
+                    <div className={modalStyles.field}>
+                      <label className={modalStyles.label}>Data de Admissão</label>
+                      <input
+                        type="date"
+                        value={formData.dataAdmissao}
+                        onChange={(e) =>
+                          setFormData({ ...formData, dataAdmissao: e.target.value })
+                        }
+                        className={modalStyles.input}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Contato de Emergência */}
+                  <h3 className={styles.sectionTitle}>Contato de Emergência</h3>
+                  <div className={modalStyles.fieldRow}>
+                    <div className={modalStyles.field}>
+                      <label className={modalStyles.label}>Nome</label>
+                      <input
+                        type="text"
+                        value={formData.contatoEmergenciaNome}
+                        onChange={(e) =>
+                          setFormData({ ...formData, contatoEmergenciaNome: e.target.value })
+                        }
+                        className={modalStyles.input}
+                        placeholder="Nome do contato"
+                      />
+                    </div>
+                    <div className={modalStyles.field}>
+                      <label className={modalStyles.label}>Telefone</label>
+                      <input
+                        type="tel"
+                        value={formData.contatoEmergenciaTelefone}
+                        onChange={(e) =>
+                          setFormData({ ...formData, contatoEmergenciaTelefone: e.target.value })
+                        }
+                        className={modalStyles.input}
+                        placeholder="(+244) 912 345 678"
                       />
                     </div>
                   </div>

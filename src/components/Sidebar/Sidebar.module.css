@@ -152,8 +152,36 @@
   text-transform: capitalize;
 }
 
+.userActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.profileButton {
+  flex: 1;
+  padding: 0.625rem;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.profileButton:hover {
+  background: var(--primary);
+  color: white;
+}
+
 .logoutButton {
-  width: 100%;
+  flex: 1;
   padding: 0.625rem;
   background: #fee2e2;
   color: #dc2626;

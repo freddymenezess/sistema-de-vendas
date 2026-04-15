@@ -12,6 +12,8 @@ import Estoque from "@pages/Estoque/Estoque";
 import Fornecedores from "@pages/Fornecedores/Fornecedores";
 import Caixas from "@pages/Caixas/Caixas";
 import Relatorios from "@pages/Relatorios/Relatorios";
+import Perfil from "@pages/Perfil/Perfil";
+import Encomendas from "@pages/Encomendas/Encomendas";
 
 function AppRoutes() {
   return (
@@ -55,6 +57,8 @@ function AppRoutes() {
         <Route path="/caixas" element={<Caixas />} />
         <Route path="/meu-caixa" element={<Caixas isVendedorView={true} />} />
         <Route path="/relatorios" element={<Relatorios />} />
+        <Route path="/perfil" element={<Perfil />} />
+        <Route path="/encomendas" element={<Encomendas />} />
       </Route>
     </Routes>
   );

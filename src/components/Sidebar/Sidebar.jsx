@@ -9,7 +9,9 @@ import {
   LogOut,
   CreditCard,
   BarChart3,
-  LucideSquareUser
+  LucideSquareUser,
+  User,
+  Truck
 } from "lucide-react";
 import useAuth from "@hooks/useAuth";
 import styles from "./Sidebar.module.css";
@@ -28,6 +30,7 @@ const menuItems = {
       items: [
         { name: "Funcionários", icon: Users, to: "/funcionarios" },
         { name: "Estoque", icon: Package, to: "/stock" },
+        { name: "Encomendas", icon: Truck, to: "/encomendas" },
         { name: "Caixas", icon: CreditCard, to: "/caixas" },
         { name: "Fornecedores", icon: LucideSquareUser, to: "/fornecedores" },
       ],
@@ -127,10 +130,16 @@ function Sidebar({ isOpen, onClose }) {
               <div className={styles.userRole}>{user?.cargo || cargo}</div>
             </div>
           </div>
-          <button className={styles.logoutButton} onClick={logout}>
-            <LogOut size={16} />
-            Sair
-          </button>
+          <div className={styles.userActions}>
+            <NavLink to="/perfil" onClick={onClose} className={styles.profileButton}>
+              <User size={16} />
+              Perfil
+            </NavLink>
+            <button className={styles.logoutButton} onClick={logout}>
+              <LogOut size={16} />
+              Sair
+            </button>
+          </div>
         </div>
       </aside>
     </>

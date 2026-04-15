@@ -1,0 +1,408 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.addButton {
+  padding: 0.625rem 1.25rem;
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  width: fit-content;
+}
+
+.addButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px #3b82f666;
+}
+
+.alertBanner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--warning-bg, #fef3c7);
+  color: var(--warning, #d97706);
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.25rem;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.cardNumero {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cardDate {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.statusPendente {
+  background: var(--warning-bg, #fef3c7);
+  color: var(--warning, #d97706);
+}
+
+.statusEnviada {
+  background: var(--info-bg, #dbeafe);
+  color: var(--info, #2563eb);
+}
+
+.statusRecebida {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.statusCancelada {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.cardBody {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.fornecedor {
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem;
+}
+
+.itensCount {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem;
+}
+
+.total {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+}
+
+.cardActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--border-hover);
+  border-radius: 0.375rem;
+  background: white;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.actionButton:hover {
+  background: #f9fafb;
+}
+
+.actionButtonPrimary {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  border-color: transparent;
+}
+
+.actionButtonPrimary:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.actionButtonSuccess {
+  background: var(--success-bg);
+  color: var(--success);
+  border-color: transparent;
+}
+
+.actionButtonSuccess:hover {
+  background: var(--success);
+  color: white;
+}
+
+.emptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Itens da Encomenda */
+.itensSection {
+  background: #f9fafb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.itensTitulo {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1rem;
+}
+
+.itensEmpty {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+.itensList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.itemRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: white;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--border);
+}
+
+.itemInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemNome {
+  display: block;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.itemMeta {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.itemQuantidade {
+  width: 80px;
+}
+
+.itemInput {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-hover);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.itemInput:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.itemPreco {
+  width: 100px;
+  text-align: right;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.itemRemove {
+  padding: 0.375rem;
+  border: none;
+  background: none;
+  color: var(--error);
+  cursor: pointer;
+  border-radius: 0.25rem;
+}
+
+.itemRemove:hover {
+  background: var(--error-bg);
+}
+
+.addItemSection {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border);
+}
+
+.totalSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 1rem;
+}
+
+.totalSection strong {
+  font-size: 1.25rem;
+  color: var(--primary);
+}
+
+/* Print Document */
+.printDocument {
+  padding: 1.5rem;
+  background: white;
+}
+
+.printHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.printHeader h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.printHeader p {
+  margin: 0.5rem 0 0;
+  color: var(--text-muted);
+}
+
+.printInfo {
+  margin-bottom: 1.5rem;
+}
+
+.printInfo p {
+  margin: 0.25rem 0;
+}
+
+.printTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+.printTable th,
+.printTable td {
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.printTable th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+
+.printTotal {
+  text-align: right;
+  font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+}
+
+.printTotal strong {
+  color: var(--primary);
+}
+
+.printObs {
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.printObs p {
+  margin: 0.5rem 0 0;
+}
+
+.printFooter {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

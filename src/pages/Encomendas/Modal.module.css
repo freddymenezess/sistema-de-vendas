@@ -14,10 +14,14 @@
   background: white;
   border-radius: 0.75rem;
   width: 100%;
-  max-width: 640px;
+  max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.modalLarge {
+  max-width: 700px;
 }
 
 .header {
@@ -96,11 +100,6 @@
   box-shadow: 0 0 0 3px #3b82f61a;
 }
 
-.input:disabled {
-  background: var(--bg);
-  cursor: not-allowed;
-}
-
 .select {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -122,7 +121,7 @@
   border-radius: 0.5rem;
   font-size: 0.9375rem;
   resize: vertical;
-  min-height: 100px;
+  min-height: 80px;
 }
 
 .textarea:focus {
@@ -167,18 +166,15 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .submitButton:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px #3b82f666;
-}
-
-.submitButton:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
 }
 
 @media (max-width: 480px) {

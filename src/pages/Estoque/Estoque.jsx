@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, Package, X } from "lucide-react";
+import { Plus, Package, X, AlertTriangle } from "lucide-react";
 import { getProducts, updateProducts } from "@services/firebaseData.service.js";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import styles from "./Estoque.module.css";
@@ -28,6 +28,7 @@ function Estoque({ readOnly = false }) {
     preco: "",
     precoCusto: "",
     quantidade: "",
+    minStock: "",
     code: "",
     descricao: "",
   });
@@ -78,6 +79,7 @@ function Estoque({ readOnly = false }) {
         preco: produto.preco?.toString() || "",
         precoCusto: produto.precoCusto?.toString() || "",
         quantidade: produto.quantidade?.toString() || "",
+        minStock: produto.minStock?.toString() || "",
         code: produto.code || "",
         descricao: produto.descricao || "",
       });
@@ -89,6 +91,7 @@ function Estoque({ readOnly = false }) {
         preco: "",
         precoCusto: "",
         quantidade: "",
+        minStock: "",
         code: "",
         descricao: "",
       });
@@ -108,10 +111,9 @@ function Estoque({ readOnly = false }) {
       name: formData.name,
       categoria: formData.categoria,
       preco: parseFloat(formData.preco),
-      precoCusto: parseFloat(formData.precoCusto),
-      stock: editingProduto ? editingProduto.stock || 0 : 0,
-      minStock: editingProduto ? editingProduto.minStock || 0 : 0,
-      quantity: editingProduto ? editingProduto.quantity || 0 : 0,
+      precoCusto: parseFloat(formData.precoCusto) || 0,
+      quantidade: parseInt(formData.quantidade) || 0,
+      minStock: parseInt(formData.minStock) || 0,
       code: formData.code,
       descricao: formData.descricao,
       src: editingProduto?.src || "",
@@ -142,30 +144,16 @@ function Estoque({ readOnly = false }) {
     }
   };
 
-    const products = getItem("products") || [];
-
-    if (editingProduto) {
-      const updatedProducts = products.map((p) =>
-        p.id === editingProduto.id ? { ...p, ...produtoData } : p
-      );
-      setItem("products", updatedProducts);
-    } else {
-      produtoData.id = Date.now().toString();
-      produtoData.createdAt = new Date().toISOString();
-      setItem("products", [...products, produtoData]);
-    }
-
-    closeModal();
-    loadProdutos();
-  };
-
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (!confirm("Tem certeza que deseja excluir este produto?")) return;
 
-    const products = getItem("products") || [];
-    const updatedProducts = products.filter((p) => p.id !== id);
-    setItem("products", updatedProducts);
-    loadProdutos();
+    try {
+      const updated = produtos.filter((p) => p.id !== id);
+      await updateProducts(updated);
+      setProdutos(updated);
+    } catch (error) {
+      console.error("[v0] Erro ao excluir produto:", error);
+    }
   };
 
   const canEdit = !readOnly;
@@ -219,11 +207,17 @@ function Estoque({ readOnly = false }) {
                   {handleFormatCoin(produto.preco || 0)}
                 </span>
                 <span
-                  className={`${styles.productStock} ${produto.quantidade < 10 ? styles.stockLow : ""}`}
+                  className={`${styles.productStock} ${(produto.quantidade || 0) <= (produto.minStock || 0) ? styles.stockLow : ""}`}
                 >
                   {produto.quantidade || 0} un.
                 </span>
               </div>
+              {produto.minStock > 0 && (produto.quantidade || 0) <= produto.minStock && (
+                <div className={styles.stockAlert}>
+                  <AlertTriangle size={14} />
+                  <span>Stock baixo (min: {produto.minStock})</span>
+                </div>
+              )}
               {canEdit && (
                 <div className={styles.productActions}>
                   <button
@@ -342,18 +336,31 @@ function Estoque({ readOnly = false }) {
                       />
                     </div>
                     <div className={modalStyles.field}>
-                      <label className={modalStyles.label}>
-                        Codigo de Barras
-                      </label>
+                      <label className={modalStyles.label}>Stock Minimo</label>
                       <input
-                        type="text"
-                        value={formData.code}
+                        type="number"
+                        value={formData.minStock}
                         onChange={(e) =>
-                          setFormData({ ...formData, code: e.target.value })
+                          setFormData({
+                            ...formData,
+                            minStock: e.target.value,
+                          })
                         }
                         className={modalStyles.input}
+                        placeholder="Alerta quando atingir"
                       />
                     </div>
+                  </div>
+                  <div className={modalStyles.field}>
+                    <label className={modalStyles.label}>Codigo de Barras</label>
+                    <input
+                      type="text"
+                      value={formData.code}
+                      onChange={(e) =>
+                        setFormData({ ...formData, code: e.target.value })
+                      }
+                      className={modalStyles.input}
+                    />
                   </div>
                   <div className={modalStyles.field}>
                     <label className={modalStyles.label}>Descricao</label>

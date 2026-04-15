@@ -1,0 +1,261 @@
+.fatura {
+  background: white;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: "Arial", sans-serif;
+  font-size: 0.875rem;
+  color: #1f2937;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.empresa {
+  flex: 1;
+}
+
+.empresaNome {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.5rem;
+}
+
+.empresaInfo {
+  margin: 0.25rem 0;
+  color: #6b7280;
+  font-size: 0.8125rem;
+}
+
+.faturaInfo {
+  text-align: right;
+}
+
+.faturaTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary, #3b82f6);
+  margin: 0 0 0.5rem;
+  letter-spacing: 0.1em;
+}
+
+.faturaNumero,
+.faturaData {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+/* Cliente */
+.cliente {
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.5rem;
+}
+
+.clienteNome {
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.cliente p {
+  margin: 0.125rem 0;
+  font-size: 0.8125rem;
+}
+
+/* Vendedor */
+.vendedor {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.vendedor p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Tabela */
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+.tabela th {
+  background: #f3f4f6;
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.tabela td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.thProduto,
+.tdProduto {
+  width: 50%;
+}
+
+.thQtd,
+.tdQtd {
+  width: 10%;
+  text-align: center;
+}
+
+.thPreco,
+.tdPreco,
+.thSubtotal,
+.tdSubtotal {
+  width: 20%;
+  text-align: right;
+}
+
+/* Totais */
+.totais {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  padding-top: 1rem;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  width: 250px;
+  padding: 0.375rem 0;
+  font-size: 0.875rem;
+}
+
+.totalFinal {
+  border-top: 2px solid #1f2937;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.desconto {
+  color: var(--success, #16a34a);
+}
+
+/* Nota de Devolução */
+.notaDevolucao {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.75rem;
+  color: #78350f;
+}
+
+.notaTitulo {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #92400e;
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.notaTexto {
+  margin: 0.5rem 0;
+  line-height: 1.4;
+}
+
+.notaLista {
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+  list-style-type: disc;
+}
+
+.notaLista li {
+  margin-bottom: 0.25rem;
+  line-height: 1.4;
+}
+
+.notaLista li strong,
+.notaTexto strong {
+  color: #92400e;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  border-top: 2px dashed #e5e7eb;
+  padding-top: 1.5rem;
+}
+
+.footerMessage {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.5rem;
+}
+
+.footerSubtext {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Print Styles */
+@media print {
+  .fatura {
+    padding: 1rem;
+    font-size: 12px;
+  }
+
+  .header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .empresaNome {
+    font-size: 16px;
+  }
+
+  .faturaTitle {
+    font-size: 14px;
+  }
+
+  .notaDevolucao {
+    background: #fff;
+    border: 1px solid #000;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .tabela th {
+    background: #f3f4f6 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
