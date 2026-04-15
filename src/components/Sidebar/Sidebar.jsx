@@ -97,7 +97,9 @@ function Sidebar({ isOpen, onClose }) {
         className={`${styles.overlay} ${isOpen ? styles.overlayVisible : ""}`}
         onClick={onClose}
       />
-      <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ""}`}>
+      <aside
+        className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ""}`}
+      >
         <div className={styles.header}>
           <div className={styles.logoIcon}>
             <Heart size={20} />
@@ -135,7 +137,11 @@ function Sidebar({ isOpen, onClose }) {
             </div>
           </div>
           <div className={styles.userActions}>
-            <NavLink to="/perfil" onClick={onClose} className={styles.profileButton}>
+            <NavLink
+              to="/perfil"
+              onClick={onClose}
+              className={styles.profileButton}
+            >
               <User size={16} />
               Perfil
             </NavLink>

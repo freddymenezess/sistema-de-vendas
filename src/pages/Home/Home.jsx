@@ -23,10 +23,45 @@ import styles from "./Home.module.css";
 
 function Home() {
   const { products, setProducts, handleInc, handleDec } = useSelectedProduct();
+  const { user } = useContext(AuthContext);
 
   const [search, setSearch] = useState("");
   const [formaPagamento, setFormaPagamento] = useState("dinheiro");
   const [loading, setLoading] = useState(false);
+  const [clientes, setClientes] = useState([]);
+  const [clienteSelecionado, setClienteSelecionado] = useState(null);
+  const [showClienteDropdown, setShowClienteDropdown] = useState(false);
+  const [searchCliente, setSearchCliente] = useState("");
+
+  // Carregar clientes do Firebase
+  useEffect(() => {
+    const loadClientes = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "clientes"));
+        const clientesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setClientes(clientesData);
+      } catch (error) {
+        console.error("Erro ao carregar clientes:", error);
+      }
+    };
+    loadClientes();
+  }, []);
+
+  // Filtrar clientes pela busca
+  const clientesFiltrados = useMemo(() => {
+    if (!searchCliente) return clientes.slice(0, 5);
+    return clientes
+      .filter(
+        (c) =>
+          c.nome?.toLowerCase().includes(searchCliente.toLowerCase()) ||
+          c.telefone?.includes(searchCliente) ||
+          c.nif?.includes(searchCliente)
+      )
+      .slice(0, 5);
+  }, [clientes, searchCliente]);
 
   const carrinho = useMemo(
     () =>
