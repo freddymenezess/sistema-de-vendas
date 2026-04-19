@@ -2,9 +2,16 @@ import { useState, useEffect, useRef } from "react";
 import { Plus, X, Printer, Package, AlertTriangle, Truck } from "lucide-react";
 import { getProducts } from "@services/firebaseData.service.js";
 import { getFornecedores } from "@services/firebaseData.service.js";
-import { collection, getDocs, addDoc, updateDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 import { db } from "@services/firebase";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
+import { showWarning } from "@utils/sweetAlert";
 import styles from "./Encomendas.module.css";
 import modalStyles from "./Modal.module.css";
 
@@ -31,11 +38,12 @@ function Encomendas() {
 
   const loadData = async () => {
     try {
-      const [productsData, fornecedoresData, encomendasSnapshot] = await Promise.all([
-        getProducts(),
-        getFornecedores(),
-        getDocs(collection(db, "encomendas")),
-      ]);
+      const [productsData, fornecedoresData, encomendasSnapshot] =
+        await Promise.all([
+          getProducts(),
+          getFornecedores(),
+          getDocs(collection(db, "encomendas")),
+        ]);
 
       setProdutos(productsData);
       setFornecedores(fornecedoresData);
@@ -48,7 +56,7 @@ function Encomendas() {
 
       // Filtrar produtos com stock baixo
       const lowStock = productsData.filter(
-        (p) => p.minStock > 0 && (p.quantidade || 0) <= p.minStock
+        (p) => p.minStock > 0 && (p.quantidade || 0) <= p.minStock,
       );
       setLowStockProducts(lowStock);
     } catch (error) {
@@ -66,7 +74,10 @@ function Encomendas() {
         nome: p.name,
         quantidadeAtual: p.quantidade || 0,
         minStock: p.minStock || 0,
-        quantidadeEncomendar: Math.max(0, (p.minStock || 0) * 2 - (p.quantidade || 0)),
+        quantidadeEncomendar: Math.max(
+          0,
+          (p.minStock || 0) * 2 - (p.quantidade || 0),
+        ),
         precoCusto: p.precoCusto || 0,
       })),
       observacoes: "",
@@ -108,16 +119,21 @@ function Encomendas() {
   const calcularTotal = () => {
     return formData.itens.reduce(
       (acc, item) => acc + item.quantidadeEncomendar * item.precoCusto,
-      0
+      0,
     );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const itensValidos = formData.itens.filter((i) => i.quantidadeEncomendar > 0);
+    const itensValidos = formData.itens.filter(
+      (i) => i.quantidadeEncomendar > 0,
+    );
     if (itensValidos.length === 0) {
-      alert("Adicione pelo menos um item com quantidade maior que zero.");
+      showWarning(
+        "Atenção!",
+        "Adicione pelo menos um item com quantidade maior que zero.",
+      );
       return;
     }
 
@@ -152,8 +168,8 @@ function Encomendas() {
 
       setEncomendas(
         encomendas.map((e) =>
-          e.id === encomenda.id ? { ...e, status: newStatus } : e
-        )
+          e.id === encomenda.id ? { ...e, status: newStatus } : e,
+        ),
       );
     } catch (error) {
       console.error("[v0] Erro ao atualizar status:", error);
@@ -247,7 +263,8 @@ function Encomendas() {
         <div className={styles.alertBanner}>
           <AlertTriangle size={20} />
           <span>
-            {lowStockProducts.length} produto(s) com stock baixo precisam de reposição
+            {lowStockProducts.length} produto(s) com stock baixo precisam de
+            reposição
           </span>
         </div>
       )}
@@ -267,17 +284,23 @@ function Encomendas() {
               <div key={encomenda.id} className={styles.card}>
                 <div className={styles.cardHeader}>
                   <div>
-                    <span className={styles.cardNumero}>{encomenda.numero}</span>
+                    <span className={styles.cardNumero}>
+                      {encomenda.numero}
+                    </span>
                     <span className={styles.cardDate}>
                       {formatDate(encomenda.createdAt)}
                     </span>
                   </div>
-                  <span className={`${styles.status} ${getStatusClass(encomenda.status)}`}>
+                  <span
+                    className={`${styles.status} ${getStatusClass(encomenda.status)}`}
+                  >
                     {getStatusLabel(encomenda.status)}
                   </span>
                 </div>
                 <div className={styles.cardBody}>
-                  <p className={styles.fornecedor}>{encomenda.fornecedorNome}</p>
+                  <p className={styles.fornecedor}>
+                    {encomenda.fornecedorNome}
+                  </p>
                   <p className={styles.itensCount}>
                     {encomenda.itens?.length || 0} itens
                   </p>
@@ -335,7 +358,10 @@ function Encomendas() {
                     <select
                       value={formData.fornecedorId}
                       onChange={(e) =>
-                        setFormData({ ...formData, fornecedorId: e.target.value })
+                        setFormData({
+                          ...formData,
+                          fornecedorId: e.target.value,
+                        })
                       }
                       className={modalStyles.select}
                       required
@@ -352,15 +378,20 @@ function Encomendas() {
                   <div className={styles.itensSection}>
                     <h3 className={styles.itensTitulo}>Itens da Encomenda</h3>
                     {formData.itens.length === 0 ? (
-                      <p className={styles.itensEmpty}>Nenhum item adicionado</p>
+                      <p className={styles.itensEmpty}>
+                        Nenhum item adicionado
+                      </p>
                     ) : (
                       <div className={styles.itensList}>
                         {formData.itens.map((item, index) => (
                           <div key={item.produtoId} className={styles.itemRow}>
                             <div className={styles.itemInfo}>
-                              <span className={styles.itemNome}>{item.nome}</span>
+                              <span className={styles.itemNome}>
+                                {item.nome}
+                              </span>
                               <span className={styles.itemMeta}>
-                                Atual: {item.quantidadeAtual} | Min: {item.minStock}
+                                Atual: {item.quantidadeAtual} | Min:{" "}
+                                {item.minStock}
                               </span>
                             </div>
                             <div className={styles.itemQuantidade}>
@@ -369,14 +400,17 @@ function Encomendas() {
                                 min="0"
                                 value={item.quantidadeEncomendar}
                                 onChange={(e) =>
-                                  handleItemQuantityChange(index, e.target.value)
+                                  handleItemQuantityChange(
+                                    index,
+                                    e.target.value,
+                                  )
                                 }
                                 className={styles.itemInput}
                               />
                             </div>
                             <div className={styles.itemPreco}>
                               {handleFormatCoin(
-                                item.quantidadeEncomendar * item.precoCusto
+                                item.quantidadeEncomendar * item.precoCusto,
                               )}
                             </div>
                             <button
@@ -392,11 +426,13 @@ function Encomendas() {
                     )}
 
                     <div className={styles.addItemSection}>
-                      <label className={modalStyles.label}>Adicionar Produto</label>
+                      <label className={modalStyles.label}>
+                        Adicionar Produto
+                      </label>
                       <select
                         onChange={(e) => {
                           const produto = produtos.find(
-                            (p) => p.id.toString() === e.target.value
+                            (p) => p.id.toString() === e.target.value,
                           );
                           if (produto) addItem(produto);
                           e.target.value = "";
@@ -406,7 +442,8 @@ function Encomendas() {
                         <option value="">Selecione um produto...</option>
                         {produtos
                           .filter(
-                            (p) => !formData.itens.find((i) => i.produtoId === p.id)
+                            (p) =>
+                              !formData.itens.find((i) => i.produtoId === p.id),
                           )
                           .map((p) => (
                             <option key={p.id} value={p.id}>
@@ -427,7 +464,10 @@ function Encomendas() {
                     <textarea
                       value={formData.observacoes}
                       onChange={(e) =>
-                        setFormData({ ...formData, observacoes: e.target.value })
+                        setFormData({
+                          ...formData,
+                          observacoes: e.target.value,
+                        })
                       }
                       className={modalStyles.textarea}
                       placeholder="Observações adicionais..."
@@ -463,9 +503,7 @@ function Encomendas() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className={modalStyles.header}>
-              <h2 className={modalStyles.title}>
-                Documento de Encomenda
-              </h2>
+              <h2 className={modalStyles.title}>Documento de Encomenda</h2>
               <button
                 onClick={() => setShowPrintModal(false)}
                 className={modalStyles.closeButton}
@@ -485,10 +523,12 @@ function Encomendas() {
                     <strong>Número:</strong> {selectedEncomenda.numero}
                   </p>
                   <p>
-                    <strong>Data:</strong> {formatDate(selectedEncomenda.createdAt)}
+                    <strong>Data:</strong>{" "}
+                    {formatDate(selectedEncomenda.createdAt)}
                   </p>
                   <p>
-                    <strong>Fornecedor:</strong> {selectedEncomenda.fornecedorNome}
+                    <strong>Fornecedor:</strong>{" "}
+                    {selectedEncomenda.fornecedorNome}
                   </p>
                 </div>
 
@@ -509,7 +549,7 @@ function Encomendas() {
                         <td>{handleFormatCoin(item.precoCusto)}</td>
                         <td>
                           {handleFormatCoin(
-                            item.quantidadeEncomendar * item.precoCusto
+                            item.quantidadeEncomendar * item.precoCusto,
                           )}
                         </td>
                       </tr>
@@ -518,7 +558,8 @@ function Encomendas() {
                 </table>
 
                 <div className={styles.printTotal}>
-                  <strong>Total:</strong> {handleFormatCoin(selectedEncomenda.total)}
+                  <strong>Total:</strong>{" "}
+                  {handleFormatCoin(selectedEncomenda.total)}
                 </div>
 
                 {selectedEncomenda.observacoes && (
@@ -529,7 +570,9 @@ function Encomendas() {
                 )}
 
                 <div className={styles.printFooter}>
-                  <p>Documento gerado em {new Date().toLocaleString("pt-BR")}</p>
+                  <p>
+                    Documento gerado em {new Date().toLocaleString("pt-BR")}
+                  </p>
                 </div>
               </div>
             </div>

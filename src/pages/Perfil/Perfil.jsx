@@ -4,6 +4,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@services/firebase";
 import { AuthContext } from "@auth/AuthContext";
 import { Camera, Save, User } from "lucide-react";
+import { showError, showSuccess, showWarning } from "@utils/sweetAlert";
 import styles from "./Perfil.module.css";
 
 function Perfil() {
@@ -11,7 +12,6 @@ function Perfil() {
   const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState({ type: "", text: "" });
   const [formData, setFormData] = useState({
     nome: user?.nome || "",
     telefone: user?.telefone || "",
@@ -30,18 +30,17 @@ function Perfil() {
 
     // Validar tipo de arquivo
     if (!file.type.startsWith("image/")) {
-      setMessage({ type: "error", text: "Por favor, selecione uma imagem." });
+      showWarning("Arquivo inválido", "Por favor, selecione uma imagem.");
       return;
     }
 
     // Validar tamanho (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      setMessage({ type: "error", text: "A imagem deve ter no máximo 5MB." });
+      showWarning("Arquivo muito grande", "A imagem deve ter no máximo 5MB.");
       return;
     }
 
     setUploading(true);
-    setMessage({ type: "", text: "" });
 
     try {
       const storageRef = ref(storage, `profile-photos/${userData.uid}`);
@@ -55,10 +54,10 @@ function Perfil() {
         fotoUrl: downloadUrl,
       });
 
-      setMessage({ type: "success", text: "Foto atualizada com sucesso!" });
+      showSuccess("Sucesso!", "Foto atualizada com êxito!");
     } catch (error) {
       console.error("Erro ao fazer upload da foto:", error);
-      setMessage({ type: "error", text: "Erro ao fazer upload da foto." });
+      showError("Erro no upload", "Não foi possível fazer upload da foto.");
     } finally {
       setUploading(false);
     }
@@ -67,7 +66,6 @@ function Perfil() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    setMessage({ type: "", text: "" });
 
     try {
       await updateDoc(doc(db, "usuarios", userData.uid), {
@@ -78,23 +76,13 @@ function Perfil() {
         updatedAt: new Date(),
       });
 
-      setMessage({ type: "success", text: "Perfil atualizado com sucesso!" });
+      showSuccess("Sucesso!", "Perfil atualizado com êxito!");
     } catch (error) {
       console.error("Erro ao atualizar perfil:", error);
-      setMessage({ type: "error", text: "Erro ao atualizar perfil." });
+      showError("Erro", "Não foi possível atualizar o perfil.");
     } finally {
       setSaving(false);
     }
-  };
-
-  const getInitials = (name) => {
-    if (!name) return "U";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .substring(0, 2)
-      .toUpperCase();
   };
 
   const getRoleLabel = (cargo) => {
@@ -200,15 +188,11 @@ function Perfil() {
             />
           </div>
 
-          {message.text && (
-            <div
-              className={`${styles.message} ${message.type === "error" ? styles.messageError : styles.messageSuccess}`}
-            >
-              {message.text}
-            </div>
-          )}
-
-          <button type="submit" className={styles.submitButton} disabled={saving}>
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={saving}
+          >
             <Save size={18} />
             {saving ? "Salvando..." : "Salvar Alterações"}
           </button>

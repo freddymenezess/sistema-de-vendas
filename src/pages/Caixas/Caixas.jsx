@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { CreditCard } from "lucide-react";
 import {
   collection,
@@ -10,6 +10,7 @@ import {
 import { db } from "@services/firebase";
 import useAuth from "@hooks/useAuth";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
+import { showWarning, showError, showSuccess } from "@utils/sweetAlert";
 import styles from "./Caixas.module.css";
 
 function Caixas({ isVendedorView = false }) {
@@ -22,18 +23,8 @@ function Caixas({ isVendedorView = false }) {
   const [selectedVendedor, setSelectedVendedor] = useState("");
   const [valorInicial, setValorInicial] = useState("");
   const [selectedCaixa, setSelectedCaixa] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (isVendedorView) {
-      loadMeuCaixa();
-    } else {
-      loadCaixas();
-      loadVendedores();
-    }
-  }, [isVendedorView]);
-
-  const loadMeuCaixa = async () => {
+  const loadMeuCaixa = useCallback(async () => {
     try {
       const caixasRef = collection(db, "caixas");
       const snapshot = await getDocs(caixasRef);
@@ -47,12 +38,10 @@ function Caixas({ isVendedorView = false }) {
       }
     } catch (error) {
       console.error("Erro ao carregar meu caixa:", error);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [user?.uid]);
 
-  const loadCaixas = async () => {
+  const loadCaixas = useCallback(async () => {
     try {
       const caixasRef = collection(db, "caixas");
       const snapshot = await getDocs(caixasRef);
@@ -73,12 +62,10 @@ function Caixas({ isVendedorView = false }) {
       setCaixas(caixasData);
     } catch (error) {
       console.error("Erro ao carregar caixas:", error);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, []);
 
-  const loadVendedores = async () => {
+  const loadVendedores = useCallback(async () => {
     try {
       const usuariosRef = collection(db, "usuarios");
       const snapshot = await getDocs(usuariosRef);
@@ -89,7 +76,16 @@ function Caixas({ isVendedorView = false }) {
     } catch (error) {
       console.error("Erro ao carregar vendedores:", error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (isVendedorView) {
+      loadMeuCaixa();
+    } else {
+      loadCaixas();
+      loadVendedores();
+    }
+  }, [isVendedorView, loadCaixas, loadMeuCaixa, loadVendedores]);
 
   const openModal = (type, caixa = null) => {
     setModalType(type);
@@ -101,7 +97,10 @@ function Caixas({ isVendedorView = false }) {
 
   const abrirCaixa = async () => {
     if (!selectedVendedor || !valorInicial) {
-      alert("Preencha todos os campos");
+      showWarning(
+        "Atenção!",
+        "Por favor, preencha todos os campos obrigatórios.",
+      );
       return;
     }
 
@@ -112,7 +111,10 @@ function Caixas({ isVendedorView = false }) {
       (c) => c.vendedorId === selectedVendedor && c.status === "aberto",
     );
     if (caixaExistente) {
-      alert("Este vendedor já possui um caixa aberto!");
+      showError(
+        "Caixa já aberto",
+        "Este vendedor já possui um caixa aberto. Feche o anterior antes de abrir um novo.",
+      );
       return;
     }
 
@@ -130,8 +132,13 @@ function Caixas({ isVendedorView = false }) {
 
       setShowModal(false);
       loadCaixas();
+      showSuccess(
+        "Caixa Aberto!",
+        `Caixa de ${vendedor?.nome} aberto com valor inicial de ${handleFormatCoin(valorInicial)}.`,
+      );
     } catch (error) {
       console.error("Erro ao abrir caixa:", error);
+      showError("Erro", "Não foi possível abrir o caixa. Tente novamente.");
     }
   };
 
@@ -145,18 +152,14 @@ function Caixas({ isVendedorView = false }) {
         fechadoPor: user?.nome || "Gerente",
       });
 
-      setShowModal(false);
-      loadCaixas();
+      showSuccess(
+        "Caixa Fechado!",
+        `Caixa de ${selectedCaixa.vendedorNome} foi fechado com êxito.`,
+      );
     } catch (error) {
       console.error("Erro ao fechar caixa:", error);
+      showError("Erro", "Não foi possível fechar o caixa. Tente novamente.");
     }
-  };
-
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value || 0);
   };
 
   const formatDate = (date) => {

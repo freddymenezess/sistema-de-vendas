@@ -1,0 +1,304 @@
+/* Customização do SweetAlert2 para o design da MAMEV */
+
+/* Container do modal */
+.swal2-custom-container {
+  z-index: 9999;
+}
+
+.swal2-custom-popup {
+  border-radius: 1rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  padding: 2rem;
+  border-left: 4px solid #3b82f6;
+  border: none;
+  border-left: 4px solid #3b82f6;
+  background: #ffffff;
+}
+
+/* Título */
+.swal2-custom-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  font-family: inherit;
+}
+
+/* Conteúdo/Mensagem */
+.swal2-custom-content {
+  color: #334155;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* Ícones */
+.swal2-icon {
+  width: 3rem;
+  height: 3rem;
+  border-width: 2px;
+}
+
+.swal2-icon.swal2-success {
+  border-color: #059669 !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-ring {
+  border-color: #059669 !important;
+}
+
+.swal2-icon.swal2-success [class*="swal2-success-line"] {
+  background-color: #059669 !important;
+}
+
+.swal2-icon.swal2-error {
+  border-color: #dc2626 !important;
+}
+
+.swal2-icon.swal2-warning {
+  border-color: #d97706 !important;
+}
+
+.swal2-icon.swal2-info {
+  border-color: #0ea5e9 !important;
+  color: #0ea5e9;
+}
+
+.swal2-icon.swal2-question {
+  border-color: #3b82f6 !important;
+  color: #3b82f6;
+}
+
+/* Botões */
+.swal2-custom-confirm-btn,
+.swal2-custom-deny-btn,
+.swal2-custom-cancel-btn,
+.swal2-actions button {
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.swal2-confirm,
+.swal2-custom-confirm-btn {
+  background-color: #3b82f6 !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+}
+
+.swal2-confirm:hover,
+.swal2-custom-confirm-btn:hover {
+  background-color: #1d4ed8 !important;
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5) !important;
+  transform: translateY(-1px);
+}
+
+.swal2-deny,
+.swal2-custom-deny-btn {
+  background-color: #d97706 !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3) !important;
+}
+
+.swal2-deny:hover,
+.swal2-custom-deny-btn:hover {
+  background-color: #b45309 !important;
+  box-shadow: 0 6px 16px rgba(217, 119, 6, 0.4) !important;
+  transform: translateY(-1px);
+}
+
+.swal2-cancel,
+.swal2-custom-cancel-btn {
+  background-color: #e2e8f0 !important;
+  color: #64748b !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.swal2-cancel:hover,
+.swal2-custom-cancel-btn:hover {
+  background-color: #cbd5e1 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+  transform: translateY(-1px);
+}
+
+/* Sucesso - verde */
+.swal2-popup.swal2-show:has(.swal2-icon.swal2-success) {
+  border-left-color: #059669 !important;
+}
+
+.swal2-popup:has(.swal2-icon.swal2-success) .swal2-confirm {
+  background-color: #059669 !important;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4) !important;
+}
+
+.swal2-popup:has(.swal2-icon.swal2-success) .swal2-confirm:hover {
+  background-color: #047857 !important;
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.5) !important;
+}
+
+/* Erro - vermelho */
+.swal2-popup.swal2-show:has(.swal2-icon.swal2-error) {
+  border-left-color: #dc2626 !important;
+}
+
+.swal2-popup:has(.swal2-icon.swal2-error) .swal2-confirm {
+  background-color: #dc2626 !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4) !important;
+}
+
+.swal2-popup:has(.swal2-icon.swal2-error) .swal2-confirm:hover {
+  background-color: #b91c1c !important;
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.5) !important;
+}
+
+/* Aviso - laranja */
+.swal2-popup.swal2-show:has(.swal2-icon.swal2-warning) {
+  border-left-color: #d97706 !important;
+}
+
+.swal2-popup:has(.swal2-icon.swal2-warning) .swal2-confirm {
+  background-color: #d97706 !important;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4) !important;
+}
+
+.swal2-popup:has(.swal2-icon.swal2-warning) .swal2-confirm:hover {
+  background-color: #b45309 !important;
+  box-shadow: 0 6px 16px rgba(217, 119, 6, 0.5) !important;
+}
+
+/* Info - azul claro */
+.swal2-popup.swal2-show:has(.swal2-icon.swal2-info) {
+  border-left-color: #0ea5e9 !important;
+}
+
+.swal2-popup:has(.swal2-icon.swal2-info) .swal2-confirm {
+  background-color: #0ea5e9 !important;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4) !important;
+}
+
+.swal2-popup:has(.swal2-icon.swal2-info) .swal2-confirm:hover {
+  background-color: #0284c7 !important;
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.5) !important;
+}
+
+/* Questão - azul primário */
+.swal2-popup.swal2-show:has(.swal2-icon.swal2-question) {
+  border-left-color: #3b82f6 !important;
+}
+
+/* Input */
+.swal2-custom-input {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 0.5rem !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.95rem !important;
+  color: #0f172a !important;
+  transition: all 0.2s ease !important;
+}
+
+.swal2-custom-input:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  outline: none !important;
+}
+
+/* Close button */
+.swal2-custom-close {
+  color: #94a3b8 !important;
+  font-size: 1.5rem !important;
+}
+
+.swal2-custom-close:hover {
+  color: #64748b !important;
+}
+
+/* Timer bar */
+.swal2-timer-progress-bar {
+  background: linear-gradient(to right, #3b82f6, #1d4ed8);
+}
+
+/* Actions container */
+.swal2-actions {
+  gap: 1rem;
+  padding-top: 1rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* Backdrop */
+.swal2-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Loading spinner */
+.swal2-loading {
+  border-color: transparent !important;
+  border-right-color: #3b82f6 !important;
+}
+
+/* Animações customizadas */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.swal2-popup.swal2-show {
+  animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes pulse-border {
+  0%,
+  100% {
+    border-left-width: 4px;
+  }
+  50% {
+    border-left-width: 5px;
+  }
+}
+
+.swal2-popup:has(.swal2-icon.swal2-success) {
+  animation: slideInDown 0.3s ease-out;
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+  .swal2-custom-popup {
+    padding: 1.5rem;
+    width: 90vw;
+  }
+
+  .swal2-custom-title {
+    font-size: 1.25rem;
+  }
+
+  .swal2-custom-content {
+    font-size: 0.9rem;
+  }
+
+  .swal2-custom-confirm-btn,
+  .swal2-custom-deny-btn,
+  .swal2-custom-cancel-btn,
+  .swal2-actions button {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .swal2-actions {
+    flex-direction: column;
+  }
+
+  .swal2-actions button {
+    width: 100%;
+  }
+}

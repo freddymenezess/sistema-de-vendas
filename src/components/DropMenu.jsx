@@ -5,11 +5,24 @@ import Settings from "@mui/icons-material/Settings";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Avatar from "@components/Avatar/Avatar";
 import useAuth from "@hooks/useAuth";
+import { showConfirm } from "@utils/sweetAlert";
 
 export default function DropMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    const result = await showConfirm(
+      "Terminar sessão?",
+      "Tem certeza que deseja sair do sistema?",
+      "Sim, sair",
+    );
+    if (result.isConfirmed) {
+      setAnchorEl(null);
+      logout();
+    }
+  };
 
   return (
     <>
@@ -71,6 +84,7 @@ export default function DropMenu() {
             boxShadow: "0 10px 40px rgba(0,0,0,0.12)",
           },
         }}
+        handleL
       >
         <MenuItem style={{ borderRadius: "4px" }}>
           <ListItemIcon>

@@ -6,7 +6,8 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import { showAlert } from "@components/Alerts"; // <- import do showAlert
+import { showAlert } from "@components/Alerts";
+import { showConfirm } from "@utils/sweetAlert";
 
 import styles from "./Menu.module.css";
 
@@ -51,7 +52,7 @@ function Menu({ className = "" }) {
     const verStock = venda.reduce((acc, vend) => {
       const prod = products.find((p) => p.id === vend.id);
 
-      if (prod && (prod.stock - vend.quantidade < prod.minStock)) {
+      if (prod && prod.stock - vend.quantidade < prod.minStock) {
         acc.push({
           id: prod.id,
           name: prod.name,
@@ -102,11 +103,18 @@ function Menu({ className = "" }) {
   }
 
   function handleReset() {
-    setProducts((prevProducts) =>
-      prevProducts.map((p) => ({ ...p, quantity: 0 })),
-    );
-
-    setVenda([]);
+    showConfirm(
+      "Limpar carrinho?",
+      "Tem certeza que deseja remover todos os itens do carrinho?",
+      "Sim, limpar",
+    ).then((result) => {
+      if (result.isConfirmed) {
+        setProducts((prevProducts) =>
+          prevProducts.map((p) => ({ ...p, quantity: 0 })),
+        );
+        setVenda([]);
+      }
+    });
   }
 
   const finalPrice = venda.reduce((acc, item) => acc + item.preco_pagar, 0);

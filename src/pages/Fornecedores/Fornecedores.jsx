@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
-import { Plus, Search, Phone, MapPin, Edit2, Trash2, X, Building2 } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Phone,
+  MapPin,
+  Edit2,
+  Trash2,
+  X,
+  Building2,
+} from "lucide-react";
 import {
   getFornecedores,
   initializeFornecedores,
@@ -7,7 +16,7 @@ import {
   updateFornecedor,
   deleteFornecedor,
 } from "@services/firebaseData.service.js";
-import { showAlert } from "@components/Alerts";
+import { showError, showSuccess, showDeleteConfirm } from "@utils/sweetAlert";
 import fornecedoresData from "@data/fornecedores.json";
 import styles from "./Fornecedores.module.css";
 import modalStyles from "./Modal.module.css";
@@ -37,7 +46,10 @@ function Fornecedores() {
       setFornecedores(data);
     } catch (error) {
       console.error("[v0] Erro ao carregar fornecedores:", error);
-      showAlert("Erro ao carregar fornecedores", "error");
+      showError(
+        "Erro",
+        "Não foi possível carregar os fornecedores. Tente novamente.",
+      );
     } finally {
       setLoading(false);
     }
@@ -47,7 +59,7 @@ function Fornecedores() {
     (f) =>
       f.nome?.toLowerCase().includes(search.toLowerCase()) ||
       f.contato?.toLowerCase().includes(search.toLowerCase()) ||
-      f.endereco?.toLowerCase().includes(search.toLowerCase())
+      f.endereco?.toLowerCase().includes(search.toLowerCase()),
   );
 
   const openModal = (fornecedor = null) => {
@@ -90,10 +102,10 @@ function Fornecedores() {
         const updated = fornecedores.map((f) =>
           f.id === editingFornecedor.id
             ? { ...f, ...formData, updatedAt: new Date().toISOString() }
-            : f
+            : f,
         );
         setFornecedores(updated);
-        showAlert("Fornecedor atualizado com sucesso!", "success");
+        showSuccess("Sucesso!", "Fornecedor atualizado com êxito!");
       } else {
         const newId = await addFornecedor({
           ...formData,
@@ -105,27 +117,32 @@ function Fornecedores() {
           createdAt: new Date().toISOString(),
         };
         setFornecedores([...fornecedores, newFornecedor]);
-        showAlert("Fornecedor adicionado com sucesso!", "success");
+        showSuccess("Sucesso!", "Fornecedor adicionado com êxito!");
       }
       closeModal();
     } catch (error) {
       console.error("[v0] Erro ao salvar fornecedor:", error);
-      showAlert("Erro ao salvar fornecedor", "error");
+      showError(
+        "Erro",
+        "Não foi possível salvar o fornecedor. Tente novamente.",
+      );
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Tem certeza que deseja excluir este fornecedor?"))
-      return;
+    const result = await showDeleteConfirm(
+      "Esta ação não pode ser desfeita. O fornecedor será removido do sistema.",
+    );
+    if (!result.isConfirmed) return;
 
     try {
       await deleteFornecedor(id);
       const updated = fornecedores.filter((f) => f.id !== id);
       setFornecedores(updated);
-      showAlert("Fornecedor removido com sucesso!", "success");
+      showSuccess("Sucesso!", "Fornecedor removido com êxito.");
     } catch (error) {
       console.error("[v0] Erro ao deletar fornecedor:", error);
-      showAlert("Erro ao deletar fornecedor", "error");
+      showError("Erro", "Não foi possível deletar o fornecedor.");
     }
   };
 
@@ -180,7 +197,9 @@ function Fornecedores() {
           filteredFornecedores.map((fornecedor) => (
             <div key={fornecedor.id} className={styles.card}>
               <div className={styles.cardHeader}>
-                <div className={styles.avatar}>{getInitials(fornecedor.nome)}</div>
+                <div className={styles.avatar}>
+                  {getInitials(fornecedor.nome)}
+                </div>
                 <div className={styles.cardInfo}>
                   <h3 className={styles.name}>{fornecedor.nome}</h3>
                   {fornecedor.email && (
@@ -192,13 +211,17 @@ function Fornecedores() {
                 {fornecedor.contato && (
                   <div className={styles.metaItem}>
                     <Phone size={14} className={styles.metaIcon} />
-                    <span className={styles.metaValue}>{fornecedor.contato}</span>
+                    <span className={styles.metaValue}>
+                      {fornecedor.contato}
+                    </span>
                   </div>
                 )}
                 {fornecedor.endereco && (
                   <div className={styles.metaItem}>
                     <MapPin size={14} className={styles.metaIcon} />
-                    <span className={styles.metaValue}>{fornecedor.endereco}</span>
+                    <span className={styles.metaValue}>
+                      {fornecedor.endereco}
+                    </span>
                   </div>
                 )}
               </div>
@@ -304,7 +327,10 @@ function Fornecedores() {
                     <textarea
                       value={formData.observacoes}
                       onChange={(e) =>
-                        setFormData({ ...formData, observacoes: e.target.value })
+                        setFormData({
+                          ...formData,
+                          observacoes: e.target.value,
+                        })
                       }
                       className={modalStyles.textarea}
                       placeholder="Observacoes adicionais..."

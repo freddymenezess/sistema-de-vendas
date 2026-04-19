@@ -1,9 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Plus, Package, X, AlertTriangle, Upload, Image } from "lucide-react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@services/firebase";
 import { getProducts, updateProducts } from "@services/firebaseData.service.js";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
+import {
+  showError,
+  showWarning,
+  showDeleteConfirm,
+  showSuccess,
+} from "@utils/sweetAlert";
 import styles from "./Estoque.module.css";
 import modalStyles from "./Modal.module.css";
 
@@ -25,7 +31,6 @@ function Estoque({ readOnly = false }) {
   const [categoria, setCategoria] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingProduto, setEditingProduto] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     categoria: "",
@@ -45,29 +50,23 @@ function Estoque({ readOnly = false }) {
     loadProdutos();
   }, []);
 
-  useEffect(() => {
-    filterProdutos();
-  }, [search, categoria, produtos]);
-
   const loadProdutos = async () => {
     try {
       const products = await getProducts();
       setProdutos(products);
     } catch (error) {
       console.error("[v0] Erro ao carregar produtos:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  const filterProdutos = () => {
+  const filterProdutos = useCallback(() => {
     let filtered = [...produtos];
 
     if (search) {
       filtered = filtered.filter(
         (p) =>
           p.name?.toLowerCase().includes(search.toLowerCase()) ||
-          p.code?.includes(search)
+          p.code?.includes(search),
       );
     }
 
@@ -76,7 +75,11 @@ function Estoque({ readOnly = false }) {
     }
 
     setFilteredProdutos(filtered);
-  };
+  }, [search, categoria, produtos]);
+
+  useEffect(() => {
+    filterProdutos();
+  }, [filterProdutos]);
 
   const openModal = (produto = null) => {
     if (produto) {
@@ -123,13 +126,13 @@ function Estoque({ readOnly = false }) {
 
     // Validar tipo de arquivo
     if (!file.type.startsWith("image/")) {
-      alert("Por favor, selecione uma imagem.");
+      showWarning("Arquivo inválido", "Por favor, selecione uma imagem.");
       return;
     }
 
     // Validar tamanho (max 2MB)
     if (file.size > MAX_FILE_SIZE) {
-      alert("A imagem deve ter no maximo 2MB.");
+      showWarning("Arquivo muito grande", "A imagem deve ter no máximo 2MB.");
       return;
     }
 
@@ -152,7 +155,10 @@ function Estoque({ readOnly = false }) {
       setFormData({ ...formData, src: downloadUrl });
     } catch (error) {
       console.error("Erro ao fazer upload da imagem:", error);
-      alert("Erro ao fazer upload da imagem.");
+      showError(
+        "Erro no upload",
+        "Não foi possível fazer upload da imagem. Tente novamente.",
+      );
     } finally {
       setUploading(false);
     }
@@ -178,7 +184,7 @@ function Estoque({ readOnly = false }) {
         const updated = produtos.map((p) =>
           p.id === editingProduto.id
             ? { ...p, ...produtoData, updatedAt: new Date().toISOString() }
-            : p
+            : p,
         );
         await updateProducts(updated);
         setProdutos(updated);
@@ -199,14 +205,19 @@ function Estoque({ readOnly = false }) {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("Tem certeza que deseja excluir este produto?")) return;
+    const result = await showDeleteConfirm(
+      "Esta ação não pode ser desfeita. O produto será removido do catálogo.",
+    );
+    if (!result.isConfirmed) return;
 
     try {
       const updated = produtos.filter((p) => p.id !== id);
       await updateProducts(updated);
       setProdutos(updated);
+      showSuccess("Sucesso!", "Produto excluído com êxito.");
     } catch (error) {
       console.error("[v0] Erro ao excluir produto:", error);
+      showError("Erro", "Não foi possível excluir o produto.");
     }
   };
 
@@ -266,12 +277,13 @@ function Estoque({ readOnly = false }) {
                   {produto.quantidade || 0} un.
                 </span>
               </div>
-              {produto.minStock > 0 && (produto.quantidade || 0) <= produto.minStock && (
-                <div className={styles.stockAlert}>
-                  <AlertTriangle size={14} />
-                  <span>Stock baixo (min: {produto.minStock})</span>
-                </div>
-              )}
+              {produto.minStock > 0 &&
+                (produto.quantidade || 0) <= produto.minStock && (
+                  <div className={styles.stockAlert}>
+                    <AlertTriangle size={14} />
+                    <span>Stock baixo (min: {produto.minStock})</span>
+                  </div>
+                )}
               {canEdit && (
                 <div className={styles.productActions}>
                   <button
@@ -315,12 +327,16 @@ function Estoque({ readOnly = false }) {
                 <div className={modalStyles.form}>
                   {/* Imagem do Produto */}
                   <div className={styles.imageUploadSection}>
-                    <div 
+                    <div
                       className={styles.imageUploadWrapper}
                       onClick={() => fileInputRef.current?.click()}
                     >
                       {previewUrl ? (
-                        <img src={previewUrl} alt="Preview" className={styles.imagePreview} />
+                        <img
+                          src={previewUrl}
+                          alt="Preview"
+                          className={styles.imagePreview}
+                        />
                       ) : (
                         <div className={styles.imagePlaceholder}>
                           <Image size={32} />
@@ -435,7 +451,9 @@ function Estoque({ readOnly = false }) {
                     </div>
                   </div>
                   <div className={modalStyles.field}>
-                    <label className={modalStyles.label}>Codigo de Barras</label>
+                    <label className={modalStyles.label}>
+                      Codigo de Barras
+                    </label>
                     <input
                       type="text"
                       value={formData.code}

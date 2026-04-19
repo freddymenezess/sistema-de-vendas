@@ -16,6 +16,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import useAuth from "@hooks/useAuth";
+import { showConfirm } from "@utils/sweetAlert";
 import styles from "./Sidebar.module.css";
 
 const menuItems = {
@@ -81,14 +82,16 @@ function Sidebar({ isOpen, onClose }) {
   const cargo = user?.cargo || "seller";
   const menu = menuItems[cargo] || menuItems.seller;
 
-  const getInitials = (name) => {
-    if (!name) return "U";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .substring(0, 2)
-      .toUpperCase();
+  const handleLogout = async () => {
+    const result = await showConfirm(
+      "Terminar sessão?",
+      "Tem certeza que deseja sair do sistema?",
+      "Sim, sair",
+    );
+    if (result.isConfirmed) {
+      logout();
+      onClose();
+    }
   };
 
   return (
@@ -130,10 +133,12 @@ function Sidebar({ isOpen, onClose }) {
 
         <div className={styles.userSection}>
           <div className={styles.userInfo}>
-            <div className={styles.avatar}>{getInitials(user?.nome)}</div>
+            <div className={styles.avatar}>
+              {user?.nome?.charAt(0).toUpperCase()}
+            </div>
             <div className={styles.userDetails}>
               <div className={styles.userName}>{user?.nome || "Usuario"}</div>
-              <div className={styles.userRole}>{user?.cargo || cargo}</div>
+              <div className={styles.userRole}>{user?.cargo}</div>
             </div>
           </div>
           <div className={styles.userActions}>
@@ -145,7 +150,7 @@ function Sidebar({ isOpen, onClose }) {
               <User size={16} />
               Perfil
             </NavLink>
-            <button className={styles.logoutButton} onClick={logout}>
+            <button className={styles.logoutButton} onClick={handleLogout}>
               <LogOut size={16} />
               Sair
             </button>

@@ -19,6 +19,7 @@ import {
   Printer,
 } from "lucide-react";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
+import { showError, showSuccess, showDeleteConfirm } from "@utils/sweetAlert";
 import styles from "./Clientes.module.css";
 import modalStyles from "./Modal.module.css";
 
@@ -72,7 +73,7 @@ function Clientes() {
       c.nome?.toLowerCase().includes(search.toLowerCase()) ||
       c.email?.toLowerCase().includes(search.toLowerCase()) ||
       c.telefone?.includes(search) ||
-      c.nif?.includes(search)
+      c.nif?.includes(search),
   );
 
   const openModal = (cliente = null) => {
@@ -145,19 +146,24 @@ function Clientes() {
       loadClientes();
     } catch (error) {
       console.error("Erro ao salvar cliente:", error);
-      alert("Erro ao salvar cliente: " + error.message);
+      showError("Erro ao salvar", "Erro ao salvar cliente: " + error.message);
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("Tem certeza que deseja excluir este cliente?")) return;
+    const result = await showDeleteConfirm(
+      "Esta ação não pode ser desfeita. O cliente será removido do sistema.",
+    );
+    if (!result.isConfirmed) return;
 
     try {
       await deleteDoc(doc(db, CLIENTES_COLLECTION, id));
       loadClientes();
+      showSuccess("Sucesso!", "Cliente excluído com êxito.");
     } catch (error) {
+      showError("Erro", "Não foi possível excluir o cliente.");
       console.error("Erro ao excluir cliente:", error);
     }
   };
@@ -409,7 +415,9 @@ function Clientes() {
                 </div>
                 <div className={styles.metaItem}>
                   <span className={styles.metaLabel}>Pontos</span>
-                  <span className={styles.metaValue}>{cliente.pontos || 0}</span>
+                  <span className={styles.metaValue}>
+                    {cliente.pontos || 0}
+                  </span>
                 </div>
                 <div className={styles.metaItem}>
                   <span className={styles.metaLabel}>Total Compras</span>

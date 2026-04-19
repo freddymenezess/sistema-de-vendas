@@ -11,6 +11,12 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { secondaryAuth, db, storage } from "@services/firebase";
 import { Plus, X, Camera, User } from "lucide-react";
+import {
+  showError,
+  showWarning,
+  showDeleteConfirm,
+  showSuccess,
+} from "@utils/sweetAlert";
 import styles from "./Funcionarios.module.css";
 import modalStyles from "./Modal.module.css";
 
@@ -135,13 +141,13 @@ function Funcionarios() {
 
     // Validar tipo de arquivo
     if (!file.type.startsWith("image/")) {
-      alert("Por favor, selecione uma imagem.");
+      showWarning("Arquivo inválido", "Por favor, selecione uma imagem.");
       return;
     }
 
     // Validar tamanho (max 2MB)
     if (file.size > MAX_FILE_SIZE) {
-      alert("A imagem deve ter no maximo 2MB.");
+      showWarning("Arquivo muito grande", "A imagem deve ter no máximo 2MB.");
       return;
     }
 
@@ -164,7 +170,10 @@ function Funcionarios() {
       setFormData({ ...formData, fotoUrl: downloadUrl });
     } catch (error) {
       console.error("Erro ao fazer upload da foto:", error);
-      alert("Erro ao fazer upload da foto.");
+      showError(
+        "Erro no upload",
+        "Não foi possível fazer upload da foto. Tente novamente.",
+      );
     } finally {
       setUploading(false);
     }
@@ -193,14 +202,17 @@ function Funcionarios() {
           contatoEmergenciaTelefone: formData.contatoEmergenciaTelefone,
           fotoUrl: formData.fotoUrl,
           updatedAt: new Date(),
-        }
-        await updateDoc(doc(db, 'usuarios', editingFuncionario.id), updateData)
+        };
+        await updateDoc(doc(db, "usuarios", editingFuncionario.id), updateData);
       } else {
         // Criar novo funcionário
         if (!formData.senha || formData.senha.length < 6) {
-          alert('A senha deve ter pelo menos 6 caracteres')
-          setSubmitting(false)
-          return
+          showWarning(
+            "Senha fraca",
+            "A senha deve ter pelo menos 6 caracteres.",
+          );
+          setSubmitting(false);
+          return;
         }
 
         const userCredential = await createUserWithEmailAndPassword(
@@ -234,29 +246,37 @@ function Funcionarios() {
         });
       }
 
-      closeModal()
-      loadFuncionarios()
+      closeModal();
+      loadFuncionarios();
     } catch (error) {
-      if (error.code === 'auth/email-already-in-use') {
-        alert('Este email já está em uso')
+      if (error.code === "auth/email-already-in-use") {
+        showError("Email em uso", "Este email já está cadastrado no sistema.");
       } else {
-        alert('Erro ao salvar funcionário: ' + error.message)
+        showError(
+          "Erro ao salvar",
+          "Erro ao salvar funcionário: " + error.message,
+        );
       }
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('Tem certeza que deseja excluir este funcionário?')) return
+    const result = await showDeleteConfirm(
+      "Esta ação não pode ser desfeita. O funcionário será removido do sistema.",
+    );
+    if (!result.isConfirmed) return;
 
     try {
-      await deleteDoc(doc(db, 'usuarios', id))
-      loadFuncionarios()
+      await deleteDoc(doc(db, "usuarios", id));
+      showSuccess("Sucesso!", "Funcionário excluído com êxito.");
+      loadFuncionarios();
     } catch (error) {
-      console.error('Erro ao excluir funcionário:', error)
+      console.error("Erro ao excluir funcionário:", error);
+      showError("Erro", "Não foi possível excluir o funcionário.");
     }
-  }
+  };
 
   const getInitials = (name) => {
     if (!name) return "U";
@@ -270,23 +290,23 @@ function Funcionarios() {
 
   const getBadgeClass = (cargo) => {
     switch (cargo) {
-    case "admin":
-      return styles.badgeAdmin;
-    case "manager":
-      return styles.badgeGerente;
-    default:
-      return styles.badgeVendedor;
+      case "admin":
+        return styles.badgeAdmin;
+      case "manager":
+        return styles.badgeGerente;
+      default:
+        return styles.badgeVendedor;
     }
   };
 
   const getRoleLabel = (cargo) => {
     switch (cargo) {
-    case "admin":
-      return "Admin";
-    case "manager":
-      return "Gerente";
-    default:
-      return "Vendedor";
+      case "admin":
+        return "Admin";
+      case "manager":
+        return "Gerente";
+      default:
+        return "Vendedor";
     }
   };
 
@@ -326,7 +346,11 @@ function Funcionarios() {
               <div className={styles.cardHeader}>
                 <div className={styles.avatar}>
                   {funcionario.fotoUrl ? (
-                    <img src={funcionario.fotoUrl} alt={funcionario.nome} className={styles.avatarImg} />
+                    <img
+                      src={funcionario.fotoUrl}
+                      alt={funcionario.nome}
+                      className={styles.avatarImg}
+                    />
                   ) : (
                     getInitials(funcionario.nome)
                   )}
@@ -393,12 +417,16 @@ function Funcionarios() {
                 <div className={modalStyles.form}>
                   {/* Foto de Perfil */}
                   <div className={styles.photoUploadSection}>
-                    <div 
+                    <div
                       className={styles.photoUploadWrapper}
                       onClick={() => fileInputRef.current?.click()}
                     >
                       {previewUrl ? (
-                        <img src={previewUrl} alt="Preview" className={styles.photoPreview} />
+                        <img
+                          src={previewUrl}
+                          alt="Preview"
+                          className={styles.photoPreview}
+                        />
                       ) : (
                         <div className={styles.photoPlaceholder}>
                           <User size={32} />
@@ -520,12 +548,17 @@ function Funcionarios() {
                   </div>
                   <div className={modalStyles.fieldRow}>
                     <div className={modalStyles.field}>
-                      <label className={modalStyles.label}>Data de Nascimento</label>
+                      <label className={modalStyles.label}>
+                        Data de Nascimento
+                      </label>
                       <input
                         type="date"
                         value={formData.dataNascimento}
                         onChange={(e) =>
-                          setFormData({ ...formData, dataNascimento: e.target.value })
+                          setFormData({
+                            ...formData,
+                            dataNascimento: e.target.value,
+                          })
                         }
                         className={modalStyles.input}
                       />
@@ -575,11 +608,16 @@ function Funcionarios() {
                   </div>
                   <div className={modalStyles.fieldRow}>
                     <div className={modalStyles.field}>
-                      <label className={modalStyles.label}>Tipo de Contrato</label>
+                      <label className={modalStyles.label}>
+                        Tipo de Contrato
+                      </label>
                       <select
                         value={formData.tipoContrato}
                         onChange={(e) =>
-                          setFormData({ ...formData, tipoContrato: e.target.value })
+                          setFormData({
+                            ...formData,
+                            tipoContrato: e.target.value,
+                          })
                         }
                         className={modalStyles.select}
                       >
@@ -590,12 +628,17 @@ function Funcionarios() {
                       </select>
                     </div>
                     <div className={modalStyles.field}>
-                      <label className={modalStyles.label}>Data de Admissão</label>
+                      <label className={modalStyles.label}>
+                        Data de Admissão
+                      </label>
                       <input
                         type="date"
                         value={formData.dataAdmissao}
                         onChange={(e) =>
-                          setFormData({ ...formData, dataAdmissao: e.target.value })
+                          setFormData({
+                            ...formData,
+                            dataAdmissao: e.target.value,
+                          })
                         }
                         className={modalStyles.input}
                       />
@@ -611,7 +654,10 @@ function Funcionarios() {
                         type="text"
                         value={formData.contatoEmergenciaNome}
                         onChange={(e) =>
-                          setFormData({ ...formData, contatoEmergenciaNome: e.target.value })
+                          setFormData({
+                            ...formData,
+                            contatoEmergenciaNome: e.target.value,
+                          })
                         }
                         className={modalStyles.input}
                         placeholder="Nome do contato"
@@ -623,7 +669,10 @@ function Funcionarios() {
                         type="tel"
                         value={formData.contatoEmergenciaTelefone}
                         onChange={(e) =>
-                          setFormData({ ...formData, contatoEmergenciaTelefone: e.target.value })
+                          setFormData({
+                            ...formData,
+                            contatoEmergenciaTelefone: e.target.value,
+                          })
                         }
                         className={modalStyles.input}
                         placeholder="(+244) 912 345 678"

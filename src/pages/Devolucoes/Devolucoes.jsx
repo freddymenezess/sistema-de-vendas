@@ -7,7 +7,11 @@ import {
   doc,
 } from "firebase/firestore";
 import { db } from "@services/firebase";
-import { getVendas, updateProducts, getProducts } from "@services/firebaseData.service.js";
+import {
+  getVendas,
+  updateProducts,
+  getProducts,
+} from "@services/firebaseData.service.js";
 import {
   Plus,
   X,
@@ -21,6 +25,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
+import { showWarning, showError, showSuccess } from "@utils/sweetAlert";
 import styles from "./Devolucoes.module.css";
 import modalStyles from "./Modal.module.css";
 
@@ -87,7 +92,7 @@ function Devolucoes() {
     (d) =>
       d.numero?.toLowerCase().includes(search.toLowerCase()) ||
       d.clienteNome?.toLowerCase().includes(search.toLowerCase()) ||
-      d.vendaNumero?.toString().includes(search)
+      d.vendaNumero?.toString().includes(search),
   );
 
   const openModal = () => {
@@ -147,7 +152,7 @@ function Devolucoes() {
     const max = newProdutos[index].quantidade;
     newProdutos[index].quantidadeDevolver = Math.min(
       Math.max(0, parseInt(value) || 0),
-      max
+      max,
     );
     setFormData({ ...formData, produtosDevolvidos: newProdutos });
   };
@@ -162,16 +167,16 @@ function Devolucoes() {
     e.preventDefault();
 
     const produtosADevolver = formData.produtosDevolvidos.filter(
-      (p) => p.devolver && p.quantidadeDevolver > 0
+      (p) => p.devolver && p.quantidadeDevolver > 0,
     );
 
     if (produtosADevolver.length === 0) {
-      alert("Selecione pelo menos um produto para devolver.");
+      showWarning("Atenção!", "Selecione pelo menos um produto para devolver.");
       return;
     }
 
     if (!formData.motivo) {
-      alert("Selecione um motivo para a devolução.");
+      showWarning("Atenção!", "Selecione um motivo para a devolução.");
       return;
     }
 
@@ -224,7 +229,10 @@ function Devolucoes() {
       loadData();
     } catch (error) {
       console.error("Erro ao criar devolução:", error);
-      alert("Erro ao criar devolução: " + error.message);
+      showError(
+        "Erro ao criar devolução",
+        "Erro ao criar devolução: " + error.message,
+      );
     } finally {
       setSubmitting(false);
     }
@@ -245,9 +253,17 @@ function Devolucoes() {
   const getStatusBadge = (status) => {
     switch (status) {
       case "aprovada":
-        return { class: styles.badgeAprovada, icon: CheckCircle, label: "Aprovada" };
+        return {
+          class: styles.badgeAprovada,
+          icon: CheckCircle,
+          label: "Aprovada",
+        };
       case "recusada":
-        return { class: styles.badgeRecusada, icon: XCircle, label: "Recusada" };
+        return {
+          class: styles.badgeRecusada,
+          icon: XCircle,
+          label: "Recusada",
+        };
       default:
         return { class: styles.badgePendente, icon: Clock, label: "Pendente" };
     }
@@ -385,7 +401,7 @@ function Devolucoes() {
               {handleFormatCoin(
                 devolucoes
                   .filter((d) => d.status === "aprovada")
-                  .reduce((acc, d) => acc + (d.total || 0), 0)
+                  .reduce((acc, d) => acc + (d.total || 0), 0),
               )}
             </strong>
           </div>
@@ -410,7 +426,9 @@ function Devolucoes() {
                 <div key={devolucao.id} className={styles.card}>
                   <div className={styles.cardHeader}>
                     <div>
-                      <span className={styles.cardNumero}>{devolucao.numero}</span>
+                      <span className={styles.cardNumero}>
+                        {devolucao.numero}
+                      </span>
                       <span className={styles.cardDate}>
                         {formatDate(devolucao.dataDevolucao)}
                       </span>
@@ -422,7 +440,9 @@ function Devolucoes() {
                   </div>
 
                   <div className={styles.cardBody}>
-                    <p className={styles.cardCliente}>{devolucao.clienteNome}</p>
+                    <p className={styles.cardCliente}>
+                      {devolucao.clienteNome}
+                    </p>
                     <p className={styles.cardMotivo}>
                       <strong>Motivo:</strong> {devolucao.motivo}
                     </p>
@@ -445,13 +465,17 @@ function Devolucoes() {
                     {devolucao.status === "pendente" && (
                       <>
                         <button
-                          onClick={() => handleUpdateStatus(devolucao, "aprovada")}
+                          onClick={() =>
+                            handleUpdateStatus(devolucao, "aprovada")
+                          }
                           className={`${styles.actionButton} ${styles.actionButtonSuccess}`}
                         >
                           Aprovar
                         </button>
                         <button
-                          onClick={() => handleUpdateStatus(devolucao, "recusada")}
+                          onClick={() =>
+                            handleUpdateStatus(devolucao, "recusada")
+                          }
                           className={`${styles.actionButton} ${styles.actionButtonDanger}`}
                         >
                           Recusar
@@ -542,7 +566,10 @@ function Devolucoes() {
                                     max={prod.quantidade}
                                     value={prod.quantidadeDevolver}
                                     onChange={(e) =>
-                                      handleQuantidadeChange(index, e.target.value)
+                                      handleQuantidadeChange(
+                                        index,
+                                        e.target.value,
+                                      )
                                     }
                                     className={styles.produtoInput}
                                   />
@@ -554,7 +581,9 @@ function Devolucoes() {
 
                         <div className={styles.totalDevolucao}>
                           <span>Total a Reembolsar:</span>
-                          <strong>{handleFormatCoin(calcularTotalDevolucao())}</strong>
+                          <strong>
+                            {handleFormatCoin(calcularTotalDevolucao())}
+                          </strong>
                         </div>
                       </div>
 
@@ -600,7 +629,9 @@ function Devolucoes() {
 
                       {/* Tipo de Reembolso */}
                       <div className={modalStyles.field}>
-                        <label className={modalStyles.label}>Tipo de Resolução</label>
+                        <label className={modalStyles.label}>
+                          Tipo de Resolução
+                        </label>
                         <select
                           value={formData.tipoReembolso}
                           onChange={(e) =>
@@ -611,7 +642,9 @@ function Devolucoes() {
                           }
                           className={modalStyles.select}
                         >
-                          <option value="reembolso">Reembolso em Dinheiro</option>
+                          <option value="reembolso">
+                            Reembolso em Dinheiro
+                          </option>
                           <option value="troca">Troca de Produto</option>
                           <option value="credito">Crédito na Loja</option>
                         </select>
@@ -652,7 +685,10 @@ function Devolucoes() {
               <h2 className={modalStyles.title}>
                 Nota de Devolução - {selectedDevolucao.numero}
               </h2>
-              <button onClick={closeNotaModal} className={modalStyles.closeButton}>
+              <button
+                onClick={closeNotaModal}
+                className={modalStyles.closeButton}
+              >
                 <X size={20} />
               </button>
             </div>
@@ -762,7 +798,9 @@ function Devolucoes() {
 
                 {/* Footer */}
                 <div className={styles.notaFooter}>
-                  <p>Documento gerado em {new Date().toLocaleString("pt-BR")}</p>
+                  <p>
+                    Documento gerado em {new Date().toLocaleString("pt-BR")}
+                  </p>
                   <p>Mamev Cosméticos - Sua beleza, nossa missão</p>
                 </div>
               </div>

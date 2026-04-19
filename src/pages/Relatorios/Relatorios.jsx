@@ -8,10 +8,11 @@ import {
   Users,
   Loader2,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@services/firebase";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
+import { showError } from "@utils/sweetAlert";
 import styles from "./Relatorios.module.css";
 
 function Relatorios() {
@@ -48,6 +49,10 @@ function Relatorios() {
         setUsers(usersSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
+        showError(
+          "Erro ao carregar",
+          "Não foi possível carregar os dados dos relatórios. Tente novamente.",
+        );
       } finally {
         setLoading(false);
       }
@@ -56,17 +61,7 @@ function Relatorios() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (!loading) calcularRelatorios();
-  }, [periodo, vendas, produtos, users, loading]);
-
-  const normalizeDate = (value) => {
-    if (!value) return null;
-    if (value?.toDate) return value.toDate();
-    return new Date(value);
-  };
-
-  const calcularRelatorios = () => {
+  const calcularRelatorios = useCallback(() => {
     const now = new Date();
     let dataInicio, dataInicioAnterior, dataFimAnterior;
 
@@ -166,6 +161,16 @@ function Relatorios() {
       produtoTop,
       comparativo: { atual: totalVendas, anterior: totalAnterior },
     });
+  }, [periodo, vendas, produtos, users]);
+
+  useEffect(() => {
+    if (!loading) calcularRelatorios();
+  }, [periodo, vendas, produtos, users, loading, calcularRelatorios]);
+
+  const normalizeDate = (value) => {
+    if (!value) return null;
+    if (value?.toDate) return value.toDate();
+    return new Date(value);
   };
 
   const calcularVariacao = () => {
