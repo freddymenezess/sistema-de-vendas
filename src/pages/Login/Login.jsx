@@ -12,8 +12,9 @@ function Login() {
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const { user, loading, setLoading } = useAuth();
+  const { user } = useAuth();
 
   if (user) {
     if (user.cargo === "admin" || user.cargo === "manager") {
@@ -64,13 +65,12 @@ function Login() {
       default:
         setMessage("Erro inesperado. Tente novamente.");
       }
-    } finally {
-      setLoading(false);
     }
   }
 
   function handleSetCorrectData() {
     setError(false);
+    setLoading(false)
   }
 
   return (

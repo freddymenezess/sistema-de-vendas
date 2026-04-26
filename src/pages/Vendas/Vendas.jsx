@@ -163,9 +163,9 @@ function Vendas() {
                   {filteredVendas.map((venda) => (
                     <tr key={venda.idCompra}>
                       <td>{formatDate(venda.data)}</td>
-                      <td>{venda.vendedorNome || "-"}</td>
+                      <td>{venda.vendedor || "-"}</td>
                       <td>{venda.produtos?.length || 0} itens</td>
-                      <td>{formatPayment(venda.formaPagamento)}</td>
+                      <td>{formatPayment(venda.pagamento)}</td>
                       <td>
                         <span
                           className={`${styles.badge} ${

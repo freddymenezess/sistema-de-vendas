@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { MenuProvider } from "@context/MenuProvider";
 import AuthProvider from "@auth/AuthContext";
 import AppRoutes from "@routes/AppRoutes";
-import Alerts from "@components/Alerts";
 import { pathTitles } from "@data/path-titles";
 import "@utils/sweetAlert.css";
 
@@ -23,7 +22,6 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <PageTitleSetter />
-        <Alerts />
         <MenuProvider>
           <AppRoutes />
         </MenuProvider>

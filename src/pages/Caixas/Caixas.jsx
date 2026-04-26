@@ -18,6 +18,7 @@ function Caixas({ isVendedorView = false }) {
   const [caixas, setCaixas] = useState([]);
   const [meuCaixa, setMeuCaixa] = useState(null);
   const [vendedores, setVendedores] = useState([]);
+  const [isLoadingVendedores, setIsLoadingVendedores] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("abrir");
   const [selectedVendedor, setSelectedVendedor] = useState("");
@@ -66,6 +67,7 @@ function Caixas({ isVendedorView = false }) {
   }, []);
 
   const loadVendedores = useCallback(async () => {
+    setIsLoadingVendedores(true);
     try {
       const usuariosRef = collection(db, "usuarios");
       const snapshot = await getDocs(usuariosRef);
@@ -75,6 +77,8 @@ function Caixas({ isVendedorView = false }) {
       setVendedores(vendedoresData);
     } catch (error) {
       console.error("Erro ao carregar vendedores:", error);
+    } finally {
+      setIsLoadingVendedores(false);
     }
   }, []);
 
@@ -366,13 +370,20 @@ function Caixas({ isVendedorView = false }) {
                     value={selectedVendedor}
                     onChange={(e) => setSelectedVendedor(e.target.value)}
                     className={styles.modalInput}
+                    disabled={isLoadingVendedores}
                   >
-                    <option value="">Selecione...</option>
-                    {vendedores.map((v) => (
-                      <option key={v.id} value={v.id}>
-                        {v.nome}
-                      </option>
-                    ))}
+                    {isLoadingVendedores ? (
+                      <option>Carregando vendedores...</option>
+                    ) : (
+                      <>
+                        <option value="">Selecione...</option>
+                        {vendedores.map((v) => (
+                          <option key={v.id} value={v.id}>
+                            {v.nome}
+                          </option>
+                        ))}
+                      </>
+                    )}
                   </select>
                 </div>
                 <div className={styles.modalField}>

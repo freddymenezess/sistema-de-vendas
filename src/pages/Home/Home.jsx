@@ -1,12 +1,15 @@
-import { useState, useMemo, useEffect, useContext } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@services/firebase";
 import Products from "@components/Products/Products";
 import { useSelectedProduct } from "@context/SelectedProductProvider";
-import { AuthContext } from "@auth/AuthContext";
+import useAuth from "@hooks/useAuth";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
-import { updateProducts, addVenda, getVendas } from "@services/firebaseData.service.js";
-import { showAlert } from "@components/Alerts";
+import {
+  updateProducts,
+  addVenda,
+} from "@services/firebaseData.service.js";
+import { showSuccess, showError, showWarning } from "@utils/sweetAlert";
 import {
   Search,
   CreditCard,
@@ -22,8 +25,8 @@ import {
 import styles from "./Home.module.css";
 
 function Home() {
+  const { user } = useAuth()
   const { products, setProducts, handleInc, handleDec } = useSelectedProduct();
-  const { user } = useContext(AuthContext);
 
   const [search, setSearch] = useState("");
   const [formaPagamento, setFormaPagamento] = useState("dinheiro");
@@ -58,7 +61,7 @@ function Home() {
         (c) =>
           c.nome?.toLowerCase().includes(searchCliente.toLowerCase()) ||
           c.telefone?.includes(searchCliente) ||
-          c.nif?.includes(searchCliente)
+          c.nif?.includes(searchCliente),
       )
       .slice(0, 5);
   }, [clientes, searchCliente]);
@@ -90,7 +93,10 @@ function Home() {
 
   async function handleFinalize() {
     if (carrinho.length === 0) {
-      showAlert("Carrinho vazio!", "error");
+      showWarning(
+        "Carrinho Vazio",
+        "Adicione produtos ao carrinho antes de finalizar a venda.",
+      );
       return;
     }
 
@@ -107,9 +113,9 @@ function Home() {
 
     if (stockErrors.length > 0) {
       stockErrors.forEach((p) =>
-        showAlert(
-          `${p.name}: Solicitado ${p.quantidade}, Estoque minimo ${p.minStock}`,
-          "error",
+        showError(
+          "Estoque Insuficiente",
+          `${p.name}: Solicitado ${p.quantidade}, Estoque mínimo ${p.minStock}`,
         ),
       );
       setLoading(false);
@@ -121,8 +127,11 @@ function Home() {
 
     const novaVenda = {
       idCompra: Date.now(),
+      vendedor: user.nome || user.email || "-",
       data: new Date().toISOString(),
       pagamento: formaPagamento,
+      clienteId: clienteSelecionado?.id || "indiferente",
+      clienteNome: clienteSelecionado?.nome || "Consumidor Final",
       produtos: carrinho.map((item) => ({
         id: item.id,
         name: item.nome,
@@ -146,16 +155,21 @@ function Home() {
       // Atualiza produtos no Firebase
       await updateProducts(newProds);
       setProducts(newProds.map((p) => ({ ...p, quantity: 0 })));
-      
+
       // Adiciona venda no Firebase
       await addVenda(novaVenda);
-      
+
       setLoading(false);
-      showAlert("Venda finalizada com sucesso!", "success");
+      setClienteSelecionado(null);
+      setSearchCliente("");
+      showSuccess("Venda Finalizada!", "Sua venda foi registrada com sucesso.");
     } catch (error) {
       console.error("[v0] Erro ao finalizar venda:", error);
       setLoading(false);
-      showAlert("Erro ao finalizar venda. Tente novamente.", "error");
+      showError(
+        "Erro na Venda",
+        "Não foi possível finalizar a venda. Tente novamente.",
+      );
     }
   }
 
@@ -298,6 +312,74 @@ function Home() {
               <div className={`${styles.cartRow} ${styles.cartRowTotal}`}>
                 <span>Total</span>
                 <span>{handleFormatCoin(total)}</span>
+              </div>
+            </div>
+
+            <div className={styles.customerSection}>
+              <label className={styles.paymentLabel}>Identificar Comprador</label>
+              <div className={styles.customerSearchWrapper}>
+                {clienteSelecionado ? (
+                  <div className={styles.selectedCustomer}>
+                    <div className={styles.customerInfo}>
+                      <div className={styles.customerAvatar}>
+                        <UserCheck size={18} />
+                      </div>
+                      <div className={styles.customerDetails}>
+                        <span className={styles.customerName}>{clienteSelecionado.nome}</span>
+                        <span className={styles.customerSub}>
+                          {clienteSelecionado.telefone || clienteSelecionado.nif || "Cliente Identificado"}
+                        </span>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => setClienteSelecionado(null)}
+                      className={styles.removeCustomer}
+                      title="Remover cliente"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className={styles.customerInputContainer}>
+                    <div className={styles.customerInputWrapper}>
+                      <User size={18} className={styles.searchIcon} />
+                      <input
+                        type="text"
+                        placeholder="Buscar cliente (nome, tel, NIF)..."
+                        value={searchCliente}
+                        onChange={(e) => {
+                          setSearchCliente(e.target.value);
+                          setShowClienteDropdown(true);
+                        }}
+                        onFocus={() => setShowClienteDropdown(true)}
+                        className={styles.customerInput}
+                      />
+                    </div>
+                    {showClienteDropdown && searchCliente && (
+                      <div className={styles.customerDropdown}>
+                        {clientesFiltrados.map((c) => (
+                          <div
+                            key={c.id}
+                            className={styles.dropdownItem}
+                            onClick={() => {
+                              setClienteSelecionado(c);
+                              setSearchCliente("");
+                              setShowClienteDropdown(false);
+                            }}
+                          >
+                            <div className={styles.dropdownItemInfo}>
+                              <strong>{c.nome}</strong>
+                              <span>{c.telefone || c.nif || ""}</span>
+                            </div>
+                          </div>
+                        ))}
+                        {clientesFiltrados.length === 0 && (
+                          <div className={styles.noResults}>Nenhum cliente encontrado</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 

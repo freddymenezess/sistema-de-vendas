@@ -6,11 +6,9 @@ function ProtectedRoute({ children, requiredRoles }) {
   const { user, loading } = useAuth();
 
   if (loading) return <Loading />;
-
   if (!user) return <Navigate to="/login" replace />;
-  
   if (requiredRoles && !requiredRoles.includes(user.cargo)) {
-    return <Navigate to="/nao-authorized" replace />;
+    return <Navigate to="/nao-authorizado" replace />;
   }
 
   return children;

@@ -1,5 +1,7 @@
 {
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
-  "editor.detectIndentation": false
+  "editor.detectIndentation": false,
+  "openclaudeCode.apiKey": "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",
+  "openclaudeCode.baseUrl": "https://openrouter.ai/api/v1"
 }

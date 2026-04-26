@@ -17,10 +17,8 @@ const swalConfig = {
   customClass: {
     container: "swal2-custom-container",
     popup: "swal2-custom-popup",
-    header: "swal2-custom-header",
     title: "swal2-custom-title",
     closeButton: "swal2-custom-close",
-    content: "swal2-custom-content",
     input: "swal2-custom-input",
     confirmButton: "swal2-custom-confirm-btn",
     denyButton: "swal2-custom-deny-btn",
@@ -42,12 +40,10 @@ export function showSuccess(title = "Sucesso!", message = "", timer = 2000) {
     iconColor: colors.success,
     confirmButtonColor: colors.success,
     confirmButtonText: "OK",
-    timer,
-    timerProgressBar: timer > 0,
+    // ✅ timer só entra se for > 0
+    ...(timer > 0 && { timer, timerProgressBar: true }),
     didOpen: (modal) => {
-      if (timer > 0) {
-        modal.style.borderLeft = `4px solid ${colors.success}`;
-      }
+      modal.style.borderLeft = `4px solid ${colors.success}`;
     },
   });
 }

@@ -9,7 +9,8 @@
   border-radius: 1rem;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   padding: 2rem;
-  border-left: 4px solid #3b82f6;
+  /* ✅ FIX: removido o "border: none" que vinha entre os dois border-left
+     e zerava tudo. Agora a borda padrão é definida corretamente. */
   border: none;
   border-left: 4px solid #3b82f6;
   background: #ffffff;
@@ -32,10 +33,12 @@
   text-align: center;
 }
 
-/* Ícones */
+/* ✅ FIX PRINCIPAL: removido width/height fixos do ícone.
+   O SweetAlert2 usa "5em" internamente para todos os elementos do ícone
+   (anel, linhas do check, etc.). Forçar "3rem" quebra essas proporções,
+   faz o checkmark vazar para fora do círculo e cria uma área invisível
+   que bloqueia os cliques nos botões abaixo. */
 .swal2-icon {
-  width: 3rem;
-  height: 3rem;
   border-width: 2px;
 }
 
@@ -44,7 +47,7 @@
 }
 
 .swal2-icon.swal2-success .swal2-success-ring {
-  border-color: #059669 !important;
+  border-color: rgba(5, 150, 105, 0.3) !important;
 }
 
 .swal2-icon.swal2-success [class*="swal2-success-line"] {
@@ -254,20 +257,6 @@
 }
 
 .swal2-popup.swal2-show {
-  animation: slideInDown 0.3s ease-out;
-}
-
-@keyframes pulse-border {
-  0%,
-  100% {
-    border-left-width: 4px;
-  }
-  50% {
-    border-left-width: 5px;
-  }
-}
-
-.swal2-popup:has(.swal2-icon.swal2-success) {
   animation: slideInDown 0.3s ease-out;
 }
 

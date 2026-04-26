@@ -31,12 +31,13 @@ function Estoque({ readOnly = false }) {
   const [categoria, setCategoria] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingProduto, setEditingProduto] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     categoria: "",
     preco: "",
     precoCusto: "",
-    quantidade: "",
+    stock: "",
     minStock: "",
     code: "",
     descricao: "",
@@ -56,6 +57,8 @@ function Estoque({ readOnly = false }) {
       setProdutos(products);
     } catch (error) {
       console.error("[v0] Erro ao carregar produtos:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,7 +92,7 @@ function Estoque({ readOnly = false }) {
         categoria: produto.categoria || "",
         preco: produto.preco?.toString() || "",
         precoCusto: produto.precoCusto?.toString() || "",
-        quantidade: produto.quantidade?.toString() || "",
+        stock: produto.stock?.toString() || "",
         minStock: produto.minStock?.toString() || "",
         code: produto.code || "",
         descricao: produto.descricao || "",
@@ -103,7 +106,7 @@ function Estoque({ readOnly = false }) {
         categoria: "",
         preco: "",
         precoCusto: "",
-        quantidade: "",
+        stock: "",
         minStock: "",
         code: "",
         descricao: "",
@@ -172,7 +175,7 @@ function Estoque({ readOnly = false }) {
       categoria: formData.categoria,
       preco: parseFloat(formData.preco),
       precoCusto: parseFloat(formData.precoCusto) || 0,
-      quantidade: parseInt(formData.quantidade) || 0,
+      stock: parseInt(formData.stock) || 0,
       minStock: parseInt(formData.minStock) || 0,
       code: formData.code,
       descricao: formData.descricao,
@@ -216,14 +219,16 @@ function Estoque({ readOnly = false }) {
       setProdutos(updated);
       showSuccess("Sucesso!", "Produto excluído com êxito.");
     } catch (error) {
-      console.error("[v0] Erro ao excluir produto:", error);
+      console.error("Erro ao excluir produto:", error);
       showError("Erro", "Não foi possível excluir o produto.");
     }
   };
 
   const canEdit = !readOnly;
 
-  return (
+  return loading ? (
+    <div className={styles.empty}>Carregando produtos...</div>
+  ) : (
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>
@@ -272,13 +277,14 @@ function Estoque({ readOnly = false }) {
                   {handleFormatCoin(produto.preco || 0)}
                 </span>
                 <span
-                  className={`${styles.productStock} ${(produto.quantidade || 0) <= (produto.minStock || 0) ? styles.stockLow : ""}`}
+                  className={`${styles.productStock} ${(produto.stock || 0) <= (produto.minStock || 0) ? styles.stockLow : ""}`}
                 >
-                  {produto.quantidade || 0} un.
+                  {produto.stock || 0} un.
                 </span>
               </div>
               {produto.minStock > 0 &&
-                (produto.quantidade || 0) <= produto.minStock && (
+                (produto.stock || 0) <= produto.minStock &&
+                (
                   <div className={styles.stockAlert}>
                     <AlertTriangle size={14} />
                     <span>Stock baixo (min: {produto.minStock})</span>
@@ -423,11 +429,11 @@ function Estoque({ readOnly = false }) {
                       <label className={modalStyles.label}>Quantidade</label>
                       <input
                         type="number"
-                        value={formData.quantidade}
+                        value={formData.stock}
                         onChange={(e) =>
                           setFormData({
                             ...formData,
-                            quantidade: e.target.value,
+                            stock: e.target.value,
                           })
                         }
                         className={modalStyles.input}
