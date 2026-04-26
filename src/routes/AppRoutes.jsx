@@ -32,37 +32,37 @@ function AppRoutes() {
         }
       >
         <Route path="/carrinho" element={<Home />} />
+        <Route path="/meu-caixa" element={<Caixas isVendedorView={true} />} />
+        <Route path="/stock-consulta" element={<Estoque readOnly={true} />} />
+        <Route path="/devolucoes" element={<Devolucoes />} />
+        <Route path="/clientes" element={<Clientes />} />
+        <Route path="/perfil" element={<Perfil />} />
       </Route>
 
       <Route
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiredRoles={["admin"]}>
             <MainLayout />
           </ProtectedRoute>
         }
       >
-        <Route path="/stock" element={<Estoque />} />
-        <Route path="/stock-consulta" element={<Estoque readOnly={true} />} />
-        <Route path="/vendas" element={<Vendas />} />
+        <Route path="/funcionarios" element={<Funcionarios />} />
+        <Route path="/fornecedores" element={<Fornecedores />} />
+        <Route path="/encomendas" element={<Encomendas />} />
       </Route>
 
       <Route
         element={
-          <ProtectedRoute>
+          <ProtectedRoute requiredRoles={["admin", "manager"]}>
             <MainLayout />
           </ProtectedRoute>
         }
       >
         <Route path="/painel" element={<Dashboard />} />
-        <Route path="/funcionarios" element={<Funcionarios />} />
-        <Route path="/fornecedores" element={<Fornecedores />} />
+        <Route path="/vendas" element={<Vendas />} />
+        <Route path="/stock" element={<Estoque />} />
         <Route path="/caixas" element={<Caixas />} />
-        <Route path="/meu-caixa" element={<Caixas isVendedorView={true} />} />
         <Route path="/relatorios" element={<Relatorios />} />
-        <Route path="/perfil" element={<Perfil />} />
-        <Route path="/encomendas" element={<Encomendas />} />
-        <Route path="/clientes" element={<Clientes />} />
-        <Route path="/devolucoes" element={<Devolucoes />} />
       </Route>
     </Routes>
   );

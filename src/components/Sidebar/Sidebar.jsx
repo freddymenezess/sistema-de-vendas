@@ -33,7 +33,6 @@ const menuItems = {
       items: [
         { name: "Funcionários", icon: Users, to: "/funcionarios" },
         { name: "Clientes", icon: UserCheck, to: "/clientes" },
-        { name: "Devoluções", icon: RotateCcw, to: "/devolucoes" },
         { name: "Estoque", icon: Package, to: "/stock" },
         { name: "Encomendas", icon: Truck, to: "/encomendas" },
         { name: "Caixas", icon: CreditCard, to: "/caixas" },
@@ -54,6 +53,13 @@ const menuItems = {
       ],
     },
     {
+      section: "Gestão",
+      items: [
+        { name: "Clientes", icon: UserCheck, to: "/clientes" },
+        { name: "Devoluções", icon: RotateCcw, to: "/devolucoes" },
+      ],
+    },
+    {
       section: "Operações",
       items: [
         { name: "Estoque", icon: Package, to: "/stock" },
@@ -68,6 +74,13 @@ const menuItems = {
       items: [
         { name: "PDV", icon: ShoppingCart, to: "/carrinho" },
         { name: "Meu Caixa", icon: CreditCard, to: "/meu-caixa" },
+      ],
+    },
+    {
+      section: "Gestão",
+      items: [
+        { name: "Clientes", icon: UserCheck, to: "/clientes" },
+        { name: "Devoluções", icon: RotateCcw, to: "/devolucoes" },
       ],
     },
     {
