@@ -13,10 +13,10 @@
   --border-hover: #e2e8f0;
 
   /* Cores principais - tema azul royal */
-  --primary: #3b82f6;
-  --primary-dark: #1d4ed8;
+  --primary:  #D4A373;;
+  --primary-dark:  #B37C5F;;
   --primary-light: #eff6ff;
-  --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  --primary-gradient: linear-gradient(135deg, #FFEBD2 0%, #B37C5F 100%);
 
   /* Cores de status */
   --success: #059669;

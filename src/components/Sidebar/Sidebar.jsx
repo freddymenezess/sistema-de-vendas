@@ -33,7 +33,7 @@ const menuItems = {
         { name: "Funcionários", icon: Users, to: "/funcionarios" },
         { name: "Clientes", icon: UserCheck, to: "/clientes" },
         { name: "Devoluções", icon: RotateCcw, to: "/devolucoes" },
-        { name: "Estoque", icon: Package, to: "/stock" },
+        { name: "Stock", icon: Package, to: "/stock" },
         { name: "Encomendas", icon: Truck, to: "/encomendas" },
         { name: "Caixas", icon: CreditCard, to: "/caixas" },
         { name: "Fornecedores", icon: LucideSquareUser, to: "/fornecedores" },
@@ -102,9 +102,9 @@ function Sidebar({ isOpen, onClose }) {
       >
         <div className={styles.header}>
           <div className={styles.logoIcon}>
-            <Heart size={20} />
+            <icon  size={20} />
           </div>
-          <span className={styles.brandName}>Mamev Cosmeticos</span>
+          <span className={styles.brandName}>Mamev Cosmetics</span>
         </div>
 
         <nav className={styles.nav}>
