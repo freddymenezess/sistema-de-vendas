@@ -1,5 +1,9 @@
 export function handleFormatCoin(price) {
-  return price.toLocaleString("pt-AO", {
+  const value = Number(price);
+
+  if (isNaN(value)) return "Kz 0,00";
+
+  return value.toLocaleString("pt-AO", {
     style: "currency",
     currency: "AOA",
     minimumFractionDigits: 2,
