@@ -27,12 +27,4 @@ export const storage = getStorage(app);
 const secondaryApp = initializeApp(firebaseConfig, "Secondary");
 export const secondaryAuth = getAuth(secondaryApp);
 
-import { initializeFirestore, enableIndexedDbPersistence } from "firebase/firestore";
-
-const db = initializeFirestore(app, {});
-
-enableIndexedDbPersistence(db).catch((err) => {
-  console.warn("Cache offline não disponível:", err.code);
-});
-
-export { db };
+ 
