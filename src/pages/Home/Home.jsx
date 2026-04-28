@@ -10,7 +10,7 @@ import {
   updateProducts,
   addVenda,
 } from "@services/firebaseData.service.js";
-import { showSuccess, showError, showWarning } from "@utils/sweetAlert";
+import { showError, showWarning } from "@utils/sweetAlert";
 import {
   Search,
   CreditCard,
@@ -104,6 +104,10 @@ function Home() {
   function handleClearCart() {
     setProducts((prev) => prev.map((p) => ({ ...p, quantity: 0 })));
   }
+
+  const subtotal = carrinho.reduce((acc, i) => acc + i.subtotal, 0);
+  const total = subtotal;
+  const totalItems = carrinho.reduce((acc, item) => acc + item.qtd, 0);
 
   // Calcular troco quando valor pago muda
   useEffect(() => {
@@ -291,10 +295,6 @@ function Home() {
     printWindow.document.close();
     printWindow.print();
   };
-
-  const subtotal = carrinho.reduce((acc, i) => acc + i.subtotal, 0);
-  const total = subtotal;
-  const totalItems = carrinho.reduce((acc, item) => acc + item.qtd, 0);
 
   return (
     <div className={styles.container}>
