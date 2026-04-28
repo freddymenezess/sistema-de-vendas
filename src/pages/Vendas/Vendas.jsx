@@ -2,11 +2,13 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { ShoppingCart, Eye, Printer, X } from "lucide-react";
 import { getVendas } from "@services/firebaseData.service.js";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
+import useAuth from "@hooks/useAuth";
 import Fatura from "@components/Fatura/Fatura";
 import styles from "./Vendas.module.css";
 import modalStyles from "./Modal.module.css";
 
-function Vendas() {
+function Vendas({ isVendedorView = false }) {
+  const { user } = useAuth();
   const [vendas, setVendas] = useState([]);
   const [filtro, setFiltro] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +23,14 @@ function Vendas() {
   const loadVendas = async () => {
     try {
       const compras = await getVendas();
-      const vendasOrdenadas = [...compras].sort((a, b) => {
+      let vendasFiltradas = compras;
+      
+      // Se for visao do vendedor, filtrar apenas as vendas dele
+      if (isVendedorView && user?.uid) {
+        vendasFiltradas = compras.filter(v => v.vendedorId === user.uid);
+      }
+      
+      const vendasOrdenadas = [...vendasFiltradas].sort((a, b) => {
         const dateA = new Date(a.data);
         const dateB = new Date(b.data);
         return dateB - dateA;
@@ -118,15 +127,21 @@ function Vendas() {
   return (
     <div className={styles.container}>
       <div className={styles.welcome}>
-        <h1 className={styles.welcomeTitle}>Historico de Vendas</h1>
+        <h1 className={styles.welcomeTitle}>
+          {isVendedorView ? "Minhas Vendas" : "Historico de Vendas"}
+        </h1>
         <p className={styles.welcomeSubtitle}>
-          Visualize todas as vendas realizadas
+          {isVendedorView 
+            ? "Visualize todas as suas vendas realizadas" 
+            : "Visualize todas as vendas realizadas"}
         </p>
       </div>
 
       <div className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Todas as Vendas</h2>
+          <h2 className={styles.sectionTitle}>
+            {isVendedorView ? "As Minhas Vendas" : "Todas as Vendas"}
+          </h2>
           <input
             type="text"
             placeholder="Buscar por vendedor ou ID..."
@@ -137,7 +152,8 @@ function Vendas() {
         </div>
         <div className={styles.sectionContent}>
           {loading ? (
-            <div className={styles.emptyState}>
+            <div className={styles.loadingState}>
+              <div className={styles.loadingSpinner} />
               <p>Carregando vendas...</p>
             </div>
           ) : filteredVendas.length === 0 ? (

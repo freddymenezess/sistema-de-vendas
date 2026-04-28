@@ -1,24 +1,29 @@
-import { useState, useEffect, useCallback } from "react";
-import { CreditCard } from "lucide-react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { CreditCard, TrendingUp, Eye, ShoppingCart } from "lucide-react";
 import {
   collection,
   getDocs,
   addDoc,
   updateDoc,
   doc,
+  query,
+  where,
 } from "firebase/firestore";
 import { db } from "@services/firebase";
 import useAuth from "@hooks/useAuth";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import { showWarning, showError, showSuccess } from "@utils/sweetAlert";
+import { getVendas } from "@services/firebaseData.service.js";
 import styles from "./Caixas.module.css";
 
 function Caixas({ isVendedorView = false }) {
   const { user } = useAuth();
   const [caixas, setCaixas] = useState([]);
   const [meuCaixa, setMeuCaixa] = useState(null);
+  const [minhasVendas, setMinhasVendas] = useState([]);
   const [vendedores, setVendedores] = useState([]);
   const [isLoadingVendedores, setIsLoadingVendedores] = useState(false);
+  const [isLoadingCaixa, setIsLoadingCaixa] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("abrir");
   const [selectedVendedor, setSelectedVendedor] = useState("");
@@ -26,19 +31,53 @@ function Caixas({ isVendedorView = false }) {
   const [selectedCaixa, setSelectedCaixa] = useState(null);
 
   const loadMeuCaixa = useCallback(async () => {
+    setIsLoadingCaixa(true);
     try {
       const caixasRef = collection(db, "caixas");
       const snapshot = await getDocs(caixasRef);
-      const caixaAtivo = snapshot.docs.find((doc) => {
-        const data = doc.data();
+      const caixaAtivo = snapshot.docs.find((d) => {
+        const data = d.data();
         return data.vendedorId === user?.uid && data.status === "aberto";
       });
 
       if (caixaAtivo) {
-        setMeuCaixa({ id: caixaAtivo.id, ...caixaAtivo.data() });
+        const caixaData = { id: caixaAtivo.id, ...caixaAtivo.data() };
+        
+        // Carregar vendas deste vendedor para calcular totais corretos
+        const todasVendas = await getVendas();
+        const vendasDoVendedor = todasVendas.filter(v => v.vendedorId === user?.uid);
+        
+        // Filtrar vendas do dia do caixa aberto
+        const dataAbertura = caixaData.dataAbertura?.toDate 
+          ? caixaData.dataAbertura.toDate() 
+          : new Date(caixaData.dataAbertura);
+        
+        const vendasDoCaixa = vendasDoVendedor.filter(v => {
+          const dataVenda = new Date(v.data);
+          return dataVenda >= dataAbertura;
+        });
+
+        // Calcular totais das vendas
+        const totalVendas = vendasDoCaixa.reduce((acc, v) => acc + (v.total || 0), 0);
+        const totalTroco = vendasDoCaixa.reduce((acc, v) => acc + (v.troco || 0), 0);
+        const quantidadeVendas = vendasDoCaixa.length;
+
+        setMeuCaixa({
+          ...caixaData,
+          totalVendas,
+          totalTroco,
+          quantidadeVendas,
+          totalEmCaixa: (caixaData.valorInicial || 0) + totalVendas - totalTroco,
+        });
+        setMinhasVendas(vendasDoCaixa);
+      } else {
+        setMeuCaixa(null);
+        setMinhasVendas([]);
       }
     } catch (error) {
       console.error("Erro ao carregar meu caixa:", error);
+    } finally {
+      setIsLoadingCaixa(false);
     }
   }, [user?.uid]);
 
@@ -183,66 +222,139 @@ function Caixas({ isVendedorView = false }) {
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>Meu Caixa</h1>
-          <p className={styles.subtitle}>Acompanhe o status do seu caixa</p>
+          <p className={styles.subtitle}>Acompanhe o estado do seu caixa e as suas vendas</p>
         </div>
 
-        <div className={styles.statusCard}>
-          <div className={styles.statusHeader}>
-            <div
-              className={`${styles.statusBadge} ${meuCaixa ? styles.statusOpen : styles.statusClosed}`}
-            >
-              <span className={styles.statusDot} />
-              {meuCaixa ? "Caixa Aberto" : "Caixa Fechado"}
+        {isLoadingCaixa ? (
+          <div className={styles.loadingContainer}>
+            <h2 className={styles.sectionTitle}>Estado do Caixa</h2>
+            <div className={styles.loadingState}>
+              <div className={styles.loadingSpinner} />
+              <p>Carregando dados do caixa...</p>
             </div>
           </div>
+        ) : (
+          <>
+            <div className={styles.statusCard}>
+              <div className={styles.statusHeader}>
+                <div
+                  className={`${styles.statusBadge} ${meuCaixa ? styles.statusOpen : styles.statusClosed}`}
+                >
+                  <span className={styles.statusDot} />
+                  {meuCaixa ? "Caixa Aberto" : "Caixa Fechado"}
+                </div>
+              </div>
 
-          {meuCaixa ? (
-            <>
-              <div className={styles.caixaInfo}>
-                <div className={styles.infoItem}>
-                  <div className={styles.infoLabel}>Valor Inicial</div>
-                  <div className={styles.infoValue}>
-                    {handleFormatCoin(meuCaixa.valorInicial)}
+              {meuCaixa ? (
+                <>
+                  <div className={styles.caixaInfo}>
+                    <div className={styles.infoItem}>
+                      <div className={styles.infoLabel}>Fundo de Troco</div>
+                      <div className={styles.infoValue}>
+                        {handleFormatCoin(meuCaixa.valorInicial)}
+                      </div>
+                    </div>
+                    <div className={styles.infoItem}>
+                      <div className={styles.infoLabel}>Total em Vendas</div>
+                      <div className={`${styles.infoValue} ${styles.infoValueSuccess}`}>
+                        {handleFormatCoin(meuCaixa.totalVendas || 0)}
+                      </div>
+                    </div>
+                    <div className={styles.infoItem}>
+                      <div className={styles.infoLabel}>Troco Devolvido</div>
+                      <div className={`${styles.infoValue} ${styles.infoValueWarning}`}>
+                        {handleFormatCoin(meuCaixa.totalTroco || 0)}
+                      </div>
+                    </div>
+                    <div className={styles.infoItem}>
+                      <div className={styles.infoLabel}>Quantidade Vendas</div>
+                      <div className={styles.infoValue}>
+                        {meuCaixa.quantidadeVendas || 0}
+                      </div>
+                    </div>
+                    <div className={`${styles.infoItem} ${styles.infoItemHighlight}`}>
+                      <div className={styles.infoLabel}>Total em Caixa</div>
+                      <div className={`${styles.infoValue} ${styles.infoValuePrimary}`}>
+                        {handleFormatCoin(meuCaixa.totalEmCaixa || 0)}
+                      </div>
+                    </div>
                   </div>
+                  <p className={styles.caixaMeta}>
+                    Aberto em: {formatDate(meuCaixa.dataAbertura)} por{" "}
+                    {meuCaixa.abertoPor}
+                  </p>
+                </>
+              ) : (
+                <p className={styles.caixaEmpty}>
+                  O seu caixa ainda nao foi aberto hoje.
+                  <br />
+                  Solicite a abertura ao gerente.
+                </p>
+              )}
+            </div>
+
+            {/* Vendas do Vendedor */}
+            {meuCaixa && minhasVendas.length > 0 && (
+              <div className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>
+                    <TrendingUp size={20} />
+                    Minhas Vendas de Hoje ({minhasVendas.length})
+                  </h2>
                 </div>
-                <div className={styles.infoItem}>
-                  <div className={styles.infoLabel}>Total Vendas</div>
-                  <div className={styles.infoValue}>
-                    {handleFormatCoin(meuCaixa.totalVendas)}
-                  </div>
-                </div>
-                <div className={styles.infoItem}>
-                  <div className={styles.infoLabel}>Qtd. Vendas</div>
-                  <div className={styles.infoValue}>
-                    {meuCaixa.quantidadeVendas || 0}
-                  </div>
-                </div>
-                <div className={styles.infoItem}>
-                  <div className={styles.infoLabel}>Total em Caixa</div>
-                  <div className={styles.infoValue}>
-                    {handleFormatCoin(
-                      (meuCaixa.valorInicial || 0) +
-                        (meuCaixa.totalVendas || 0),
-                    )}
+                <div className={styles.sectionContent}>
+                  <div className={styles.movimentacaoList}>
+                    {minhasVendas.slice(0, 10).map((venda) => (
+                      <div key={venda.idCompra || venda.docId} className={styles.movimentacaoItem}>
+                        <div className={`${styles.movimentacaoIcon} ${styles.movimentacaoIn}`}>
+                          <ShoppingCart size={18} />
+                        </div>
+                        <div className={styles.movimentacaoInfo}>
+                          <div className={styles.movimentacaoDesc}>
+                            {venda.produtos?.length || 0} {venda.produtos?.length === 1 ? 'item' : 'itens'} - {venda.clienteNome || 'Consumidor Final'}
+                          </div>
+                          <div className={styles.movimentacaoTime}>
+                            {formatDate(venda.data)} | {formatPayment(venda.pagamento || venda.formaPagamento)}
+                          </div>
+                        </div>
+                        <div className={`${styles.movimentacaoValue} ${styles.valuePositive}`}>
+                          {handleFormatCoin(venda.total || 0)}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
-              <p className={styles.caixaMeta}>
-                Aberto em: {formatDate(meuCaixa.dataAbertura)} por{" "}
-                {meuCaixa.abertoPor}
-              </p>
-            </>
-          ) : (
-            <p className={styles.caixaEmpty}>
-              Seu caixa ainda não foi aberto hoje.
-              <br />
-              Solicite a abertura ao gerente.
-            </p>
-          )}
-        </div>
+            )}
+
+            {meuCaixa && minhasVendas.length === 0 && (
+              <div className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  <h2 className={styles.sectionTitle}>Minhas Vendas de Hoje</h2>
+                </div>
+                <div className={styles.sectionContent}>
+                  <div className={styles.emptyState}>
+                    <ShoppingCart size={48} className={styles.emptyStateIcon} />
+                    <p>Nenhuma venda realizada ainda</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </div>
     );
   }
+
+  const formatPayment = (payment) => {
+    const labels = {
+      dinheiro: "Dinheiro",
+      cartao_credito: "Credito",
+      cartao_debito: "Debito",
+      multicaixa: "Multicaixa",
+    };
+    return labels[payment] || payment || "-";
+  };
 
   const caixasAbertos = caixas.filter((c) => c.status === "aberto");
   const caixasFechados = caixas

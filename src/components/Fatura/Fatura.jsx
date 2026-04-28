@@ -18,8 +18,8 @@ const Fatura = forwardRef(({ venda, empresa }, ref) => {
   const formatPayment = (payment) => {
     const labels = {
       dinheiro: "Dinheiro",
-      cartao_credito: "Cartão de Crédito",
-      cartao_debito: "Cartão de Débito",
+      cartao_credito: "Cartao de Credito",
+      cartao_debito: "Cartao de Debito",
       pix: "PIX",
       multicaixa: "Multicaixa Express",
     };
@@ -27,23 +27,36 @@ const Fatura = forwardRef(({ venda, empresa }, ref) => {
   };
 
   const empresaInfo = empresa || {
-    nome: "Mamev Cosméticos",
+    nome: "Mamev Cosmeticos",
     nif: "5417289401",
     endereco: "Luanda, Angola",
     telefone: "+244 923 456 789",
     email: "contato@mamevcos.ao",
   };
 
-  const calcularSubtotal = () => {
-    return (venda?.produtos || []).reduce(
-      (acc, item) => acc + (item.preco || 0) * (item.quantidade || 1),
-      0
-    );
+  // Calcular subtotal base (sem IVA)
+  const calcularSubtotalBase = () => {
+    return (venda?.produtos || []).reduce((acc, item) => {
+      const precoBase = item.precoBase || (item.preco / 1.14);
+      return acc + precoBase * (item.quantidade || 1);
+    }, 0);
   };
 
-  const subtotal = calcularSubtotal();
+  // Calcular IVA total
+  const calcularIVA = () => {
+    return (venda?.produtos || []).reduce((acc, item) => {
+      const precoBase = item.precoBase || (item.preco / 1.14);
+      const iva = (item.preco || 0) - precoBase;
+      return acc + iva * (item.quantidade || 1);
+    }, 0);
+  };
+
+  const subtotalBase = calcularSubtotalBase();
+  const totalIVA = calcularIVA();
   const desconto = venda?.desconto || 0;
-  const total = venda?.total || subtotal - desconto;
+  const total = venda?.total || (subtotalBase + totalIVA - desconto);
+  const valorPago = venda?.valorPago || total;
+  const troco = venda?.troco || 0;
 
   return (
     <div ref={ref} className={styles.fatura}>
@@ -58,7 +71,7 @@ const Fatura = forwardRef(({ venda, empresa }, ref) => {
         <div className={styles.faturaInfo}>
           <h2 className={styles.faturaTitle}>FATURA</h2>
           <p className={styles.faturaNumero}>
-            Nº: {venda?.idCompra || venda?.numero || "-"}
+            Nr: {venda?.idCompra || venda?.numero || "-"}
           </p>
           <p className={styles.faturaData}>Data: {formatDate(venda?.data)}</p>
         </div>
@@ -74,13 +87,13 @@ const Fatura = forwardRef(({ venda, empresa }, ref) => {
         </div>
       )}
 
-      {/* Vendedor */}
+      {/* Vendedor e Pagamento */}
       <div className={styles.vendedor}>
         <p>
-          <strong>Vendedor:</strong> {venda?.vendedorNome || "-"}
+          <strong>Vendedor:</strong> {venda?.vendedorNome || venda?.vendedor || "-"}
         </p>
         <p>
-          <strong>Forma de Pagamento:</strong> {formatPayment(venda?.formaPagamento)}
+          <strong>Forma de Pagamento:</strong> {formatPayment(venda?.formaPagamento || venda?.pagamento)}
         </p>
       </div>
 
@@ -90,29 +103,41 @@ const Fatura = forwardRef(({ venda, empresa }, ref) => {
           <tr>
             <th className={styles.thProduto}>Produto</th>
             <th className={styles.thQtd}>Qtd</th>
-            <th className={styles.thPreco}>Preço Unit.</th>
+            <th className={styles.thPreco}>Preco Unit.</th>
+            <th className={styles.thIva}>IVA (14%)</th>
             <th className={styles.thSubtotal}>Subtotal</th>
           </tr>
         </thead>
         <tbody>
-          {(venda?.produtos || []).map((item, index) => (
-            <tr key={index}>
-              <td className={styles.tdProduto}>{item.name || item.nome}</td>
-              <td className={styles.tdQtd}>{item.quantidade || 1}</td>
-              <td className={styles.tdPreco}>{handleFormatCoin(item.preco || 0)}</td>
-              <td className={styles.tdSubtotal}>
-                {handleFormatCoin((item.preco || 0) * (item.quantidade || 1))}
-              </td>
-            </tr>
-          ))}
+          {(venda?.produtos || []).map((item, index) => {
+            const precoBase = item.precoBase || (item.preco / 1.14);
+            const ivaUnitario = (item.preco || 0) - precoBase;
+            const qtd = item.quantidade || 1;
+            
+            return (
+              <tr key={index}>
+                <td className={styles.tdProduto}>{item.name || item.nome}</td>
+                <td className={styles.tdQtd}>{qtd}</td>
+                <td className={styles.tdPreco}>{handleFormatCoin(precoBase)}</td>
+                <td className={styles.tdIva}>{handleFormatCoin(ivaUnitario * qtd)}</td>
+                <td className={styles.tdSubtotal}>
+                  {handleFormatCoin((item.preco || 0) * qtd)}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 
       {/* Totais */}
       <div className={styles.totais}>
         <div className={styles.totalRow}>
-          <span>Subtotal:</span>
-          <span>{handleFormatCoin(subtotal)}</span>
+          <span>Subtotal (sem IVA):</span>
+          <span>{handleFormatCoin(subtotalBase)}</span>
+        </div>
+        <div className={styles.totalRow}>
+          <span>IVA (14%):</span>
+          <span>{handleFormatCoin(totalIVA)}</span>
         </div>
         {desconto > 0 && (
           <div className={styles.totalRow}>
@@ -126,42 +151,61 @@ const Fatura = forwardRef(({ venda, empresa }, ref) => {
         </div>
       </div>
 
-      {/* Nota de Devolução */}
+      {/* Informacoes de Pagamento */}
+      {(venda?.formaPagamento === "dinheiro" || venda?.pagamento === "dinheiro") && (
+        <div className={styles.pagamentoInfo}>
+          <h4 className={styles.pagamentoTitle}>Informacoes de Pagamento</h4>
+          <div className={styles.pagamentoGrid}>
+            <div className={styles.pagamentoItem}>
+              <span className={styles.pagamentoLabel}>Valor Recebido</span>
+              <span className={styles.pagamentoValue}>{handleFormatCoin(valorPago)}</span>
+            </div>
+            <div className={styles.pagamentoItem}>
+              <span className={styles.pagamentoLabel}>Troco</span>
+              <span className={`${styles.pagamentoValue} ${styles.trocoValue}`}>
+                {handleFormatCoin(troco)}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Nota de Devolucao */}
       <div className={styles.notaDevolucao}>
-        <h4 className={styles.notaTitulo}>Nota Informativa de Devolução</h4>
+        <h4 className={styles.notaTitulo}>Nota Informativa de Devolucao</h4>
         <p className={styles.notaTexto}>
-          Aceitamos devoluções apenas em caso de produto danificado ou com defeito de fabrico.
+          Aceitamos devolucoes apenas em caso de produto danificado ou com defeito de fabrico.
         </p>
         <ul className={styles.notaLista}>
           <li>
-            Prazo para devolução: até <strong>7 dias</strong> após a compra
+            Prazo para devolucao: ate <strong>7 dias</strong> apos a compra
           </li>
           <li>
-            Obrigatória a apresentação da <strong>fatura original</strong>
+            Obrigatoria a apresentacao da <strong>fatura original</strong>
           </li>
           <li>
-            O produto deve estar em <strong>condições adequadas para verificação</strong>
+            O produto deve estar em <strong>condicoes adequadas para verificacao</strong>
           </li>
           <li>
-            Produtos abertos ou usados <strong>não são elegíveis</strong>, salvo em caso de
+            Produtos abertos ou usados <strong>nao sao elegiveis</strong>, salvo em caso de
             defeito comprovado
           </li>
         </ul>
         <p className={styles.notaTexto}>
           A empresa reserva-se o direito de <strong>verificar o estado do produto</strong>{" "}
-          antes da aprovação da devolução.
+          antes da aprovacao da devolucao.
         </p>
         <p className={styles.notaTexto}>
-          Em caso de validação, poderá ser realizada <strong>troca ou reembolso</strong>,
-          conforme aplicável.
+          Em caso de validacao, podera ser realizada <strong>troca ou reembolso</strong>,
+          conforme aplicavel.
         </p>
       </div>
 
       {/* Footer */}
       <div className={styles.footer}>
-        <p className={styles.footerMessage}>Obrigado pela preferência!</p>
+        <p className={styles.footerMessage}>Obrigado pela preferencia!</p>
         <p className={styles.footerSubtext}>
-          {empresaInfo.nome} - Sua beleza, nossa missão
+          {empresaInfo.nome} - A sua beleza, a nossa missao
           <br />
           Volte sempre!
         </p>

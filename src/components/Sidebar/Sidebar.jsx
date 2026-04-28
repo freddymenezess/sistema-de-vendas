@@ -74,13 +74,14 @@ const menuItems = {
       items: [
         { name: "PDV", icon: ShoppingCart, to: "/carrinho" },
         { name: "Meu Caixa", icon: CreditCard, to: "/meu-caixa" },
+        { name: "Minhas Vendas", icon: TrendingUp, to: "/minhas-vendas" },
       ],
     },
     {
-      section: "Gestão",
+      section: "Gestao",
       items: [
         { name: "Clientes", icon: UserCheck, to: "/clientes" },
-        { name: "Devoluções", icon: RotateCcw, to: "/devolucoes" },
+        { name: "Devolucoes", icon: RotateCcw, to: "/devolucoes" },
       ],
     },
     {

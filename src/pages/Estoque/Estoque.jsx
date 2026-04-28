@@ -87,10 +87,13 @@ function Estoque({ readOnly = false }) {
   const openModal = (produto = null) => {
     if (produto) {
       setEditingProduto(produto);
+      // Se o produto ja tem preco com IVA, calcular o preco base (sem IVA)
+      const precoComIva = produto.preco || 0;
+      const precoBase = produto.precoBase || (precoComIva / 1.14);
       setFormData({
         name: produto.name || "",
         categoria: produto.categoria || "",
-        preco: produto.preco?.toString() || "",
+        preco: precoBase.toFixed(2), // Mostrar preco sem IVA no formulario
         precoCusto: produto.precoCusto?.toString() || "",
         stock: produto.stock?.toString() || "",
         minStock: produto.minStock?.toString() || "",
@@ -170,10 +173,17 @@ function Estoque({ readOnly = false }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Preco inserido e o preco base (sem IVA)
+    // Preco final = preco base + 14% IVA
+    const precoBase = parseFloat(formData.preco) || 0;
+    const precoComIva = precoBase * 1.14; // Adiciona 14% de IVA
+
     const produtoData = {
       name: formData.name,
       categoria: formData.categoria,
-      preco: parseFloat(formData.preco),
+      precoBase: precoBase, // Preco sem IVA
+      preco: precoComIva, // Preco com IVA (preco de venda)
+      price: precoComIva, // Alias para compatibilidade
       precoCusto: parseFloat(formData.precoCusto) || 0,
       stock: parseInt(formData.stock) || 0,
       minStock: parseInt(formData.minStock) || 0,
@@ -396,7 +406,7 @@ function Estoque({ readOnly = false }) {
                   </div>
                   <div className={modalStyles.fieldRow}>
                     <div className={modalStyles.field}>
-                      <label className={modalStyles.label}>Preco Venda</label>
+                      <label className={modalStyles.label}>Preco Base (sem IVA)</label>
                       <input
                         type="number"
                         step="0.01"
@@ -405,11 +415,17 @@ function Estoque({ readOnly = false }) {
                           setFormData({ ...formData, preco: e.target.value })
                         }
                         className={modalStyles.input}
+                        placeholder="Preco final = base + 14% IVA"
                         required
                       />
+                      {formData.preco && (
+                        <small className={styles.ivaHint}>
+                          Preco de venda: {handleFormatCoin(parseFloat(formData.preco) * 1.14)} (com IVA 14%)
+                        </small>
+                      )}
                     </div>
                     <div className={modalStyles.field}>
-                      <label className={modalStyles.label}>Preco Custo</label>
+                      <label className={modalStyles.label}>Preco de Custo</label>
                       <input
                         type="number"
                         step="0.01"

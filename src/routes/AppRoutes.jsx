@@ -33,6 +33,7 @@ function AppRoutes() {
       >
         <Route path="/carrinho" element={<Home />} />
         <Route path="/meu-caixa" element={<Caixas isVendedorView={true} />} />
+        <Route path="/minhas-vendas" element={<Vendas isVendedorView={true} />} />
         <Route path="/stock-consulta" element={<Estoque readOnly={true} />} />
         <Route path="/devolucoes" element={<Devolucoes />} />
         <Route path="/clientes" element={<Clientes />} />

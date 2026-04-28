@@ -165,6 +165,59 @@
   color: var(--success, #16a34a);
 }
 
+/* IVA Column */
+.thIva,
+.tdIva {
+  width: 15%;
+  text-align: right;
+}
+
+/* Pagamento Info */
+.pagamentoInfo {
+  background: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.pagamentoTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0369a1;
+  margin: 0 0 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.pagamentoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.pagamentoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pagamentoLabel {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.pagamentoValue {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.trocoValue {
+  color: #059669;
+}
+
 /* Nota de Devolução */
 .notaDevolucao {
   background: #fef3c7;
