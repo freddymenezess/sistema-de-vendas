@@ -1,5 +1,5 @@
 // Exemplo em qualquer componente de venda
-import { useOnlineStatus } from "../hooks/useOnlineStatus";
+import { useOnlineStatus } from "./useOnlineStatus";
 import { salvarOffline, sincronizarComFirebase } from "../services/syncService";
 import { useEffect } from "react";
 
