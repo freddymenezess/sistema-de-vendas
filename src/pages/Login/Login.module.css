@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: var(--primary-gradient);
+  background-image: url(prods/login-image.jpg);
 }
  
 .card {
