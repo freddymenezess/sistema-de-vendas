@@ -62,7 +62,7 @@ function Products({ searchQuery = "" }) {
 
             <div className={styles.productFooter}>
               <span className={styles.price}>
-                {handleFormatCoin(prod.price)}
+                {handleFormatCoin(prod?.price ?? 0)}
               </span>
               <button
                 type="button"
