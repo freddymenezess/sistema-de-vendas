@@ -71,9 +71,9 @@ function Home() {
           id: p.id,
           nome: p.name,
           src: p.src,
-          preco: p.price,
-          qtd: p.quantity,
-          subtotal: p.price * p.quantity,
+         preco: p.price ?? p.preco,
+         qtd: p.quantity,
+        subtotal: (p.price ?? p.preco) * p.quantity,
         })),
     [products],
   );

@@ -23,9 +23,9 @@ function Menu({ className = "" }) {
       .map((p) => ({
         id: p.id,
         name: p.name,
-        preco: p.price,
+        preco: p.price ?? p.preco,
         quantidade: p.quantity,
-        preco_pagar: p.price * p.quantity,
+        preco_pagar: (p.price ?? p.preco) * p.quantity,
       }));
     setVenda(newVenda);
   }, [products]);
