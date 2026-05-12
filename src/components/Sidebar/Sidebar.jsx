@@ -148,7 +148,17 @@ function Sidebar({ isOpen, onClose }) {
         <div className={styles.userSection}>
           <div className={styles.userInfo}>
             <div className={styles.avatar}>
-              {user?.nome?.charAt(0).toUpperCase()}
+              <div className={styles.productImage}>
+                {user.fotoUrl ? (
+                  <img
+                    src={user.fotoUrl}
+                    alt={user.nome}
+                    className={styles.productImg}
+                  />
+                ) : (
+                  user?.nome?.charAt(0).toUpperCase()
+                )}
+              </div>
             </div>
             <div className={styles.userDetails}>
               <div className={styles.userName}>{user?.nome || "Usuario"}</div>

@@ -1,7 +1,7 @@
 import { useState, useContext, useRef } from "react";
 import { doc, updateDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "@services/firebase";
+import { db } from "@services/firebase";
+import { uploadImagem } from "@services/supabase";
 import { AuthContext } from "@auth/AuthContext";
 import { Camera, Save, User } from "lucide-react";
 import { showError, showSuccess, showWarning } from "@utils/sweetAlert";
@@ -17,7 +17,7 @@ function Perfil() {
     telefone: user?.telefone || "",
     endereco: user?.endereco || "",
     dataNascimento: user?.dataNascimento || "",
-    fotoUrl: user?.fotoUrl || "",
+    src: user?.fotoUrl || "",
   });
 
   const handlePhotoClick = () => {
@@ -43,15 +43,12 @@ function Perfil() {
     setUploading(true);
 
     try {
-      const storageRef = ref(storage, `profile-photos/${userData.uid}`);
-      await uploadBytes(storageRef, file);
-      const downloadUrl = await getDownloadURL(storageRef);
+      const url = await uploadImagem(file, "perfil");
 
-      setFormData({ ...formData, fotoUrl: downloadUrl });
+      setFormData({ ...formData, src: url });
 
-      // Atualizar no Firestore
       await updateDoc(doc(db, "usuarios", userData.uid), {
-        fotoUrl: downloadUrl,
+        fotoUrl: url,
       });
 
       showSuccess("Sucesso!", "Foto atualizada com êxito!");
@@ -87,12 +84,12 @@ function Perfil() {
 
   const getRoleLabel = (cargo) => {
     switch (cargo) {
-      case "admin":
-        return "Administrador";
-      case "manager":
-        return "Gerente";
-      default:
-        return "Vendedor";
+    case "admin":
+      return "Administrador";
+    case "manager":
+      return "Gerente";
+    default:
+      return "Vendedor";
     }
   };
 
@@ -105,9 +102,9 @@ function Perfil() {
       <div className={styles.content}>
         <div className={styles.photoSection}>
           <div className={styles.photoWrapper} onClick={handlePhotoClick}>
-            {formData.fotoUrl ? (
+            {formData.src ? (
               <img
-                src={formData.fotoUrl}
+                src={formData.src}
                 alt="Foto de perfil"
                 className={styles.photo}
               />

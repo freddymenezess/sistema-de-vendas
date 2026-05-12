@@ -1,13 +1,11 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { CreditCard, TrendingUp, Eye, ShoppingCart } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { CreditCard, TrendingUp, ShoppingCart } from "lucide-react";
 import {
   collection,
   getDocs,
   addDoc,
   updateDoc,
   doc,
-  query,
-  where,
 } from "firebase/firestore";
 import { db } from "@services/firebase";
 import useAuth from "@hooks/useAuth";
@@ -29,6 +27,7 @@ function Caixas({ isVendedorView = false }) {
   const [selectedVendedor, setSelectedVendedor] = useState("");
   const [valorInicial, setValorInicial] = useState("");
   const [selectedCaixa, setSelectedCaixa] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const loadMeuCaixa = useCallback(async () => {
     setIsLoadingCaixa(true);
@@ -40,40 +39,67 @@ function Caixas({ isVendedorView = false }) {
         return data.vendedorId === user?.uid && data.status === "aberto";
       });
 
-      if (caixaAtivo) {
-        const caixaData = { id: caixaAtivo.id, ...caixaAtivo.data() };
-        
-        // Carregar vendas deste vendedor para calcular totais corretos
-        const todasVendas = await getVendas();
-        const vendasDoVendedor = todasVendas.filter(v => v.vendedorId === user?.uid);
-        
-        // Filtrar vendas do dia do caixa aberto
-        const dataAbertura = caixaData.dataAbertura?.toDate 
-          ? caixaData.dataAbertura.toDate() 
-          : new Date(caixaData.dataAbertura);
-        
-        const vendasDoCaixa = vendasDoVendedor.filter(v => {
-          const dataVenda = new Date(v.data);
-          return dataVenda >= dataAbertura;
-        });
-
-        // Calcular totais das vendas
-        const totalVendas = vendasDoCaixa.reduce((acc, v) => acc + (v.total || 0), 0);
-        const totalTroco = vendasDoCaixa.reduce((acc, v) => acc + (v.troco || 0), 0);
-        const quantidadeVendas = vendasDoCaixa.length;
-
-        setMeuCaixa({
-          ...caixaData,
-          totalVendas,
-          totalTroco,
-          quantidadeVendas,
-          totalEmCaixa: (caixaData.valorInicial || 0) + totalVendas - totalTroco,
-        });
-        setMinhasVendas(vendasDoCaixa);
-      } else {
+      if (!caixaAtivo) {
         setMeuCaixa(null);
         setMinhasVendas([]);
+        return;
       }
+
+      const caixaData = { id: caixaAtivo.id, ...caixaAtivo.data() };
+
+      // 👇 Recolher todas as sessões de hoje deste vendedor (abertas e fechadas)
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+
+      const todasSessoes = snapshot.docs
+        .filter((d) => {
+          const data = d.data();
+          const abertura = data.dataAbertura?.toDate
+            ? data.dataAbertura.toDate()
+            : new Date(data.dataAbertura);
+          return data.vendedorId === user?.uid && abertura >= hoje;
+        })
+        .map((d) => ({ id: d.id, ...d.data() }));
+
+      const todasVendas = await getVendas();
+      const vendasDoVendedor = todasVendas.filter(
+        (v) => v.vendedorId === user?.uid,
+      );
+
+      // 👇 Incluir vendas que caiam dentro de qualquer sessão do dia
+      const vendasDoCaixa = vendasDoVendedor.filter((v) => {
+        const dataVenda = v.data?.toDate ? v.data.toDate() : new Date(v.data);
+        return todasSessoes.some((sessao) => {
+          const abertura = sessao.dataAbertura?.toDate
+            ? sessao.dataAbertura.toDate()
+            : new Date(sessao.dataAbertura);
+          const fechamento = sessao.dataFechamento
+            ? sessao.dataFechamento?.toDate
+              ? sessao.dataFechamento.toDate()
+              : new Date(sessao.dataFechamento)
+            : new Date(); // sessão ainda aberta
+          return dataVenda >= abertura && dataVenda <= fechamento;
+        });
+      });
+
+      const totalVendas = vendasDoCaixa.reduce(
+        (acc, v) => acc + (v.total || 0),
+        0,
+      );
+      const totalTroco = vendasDoCaixa.reduce(
+        (acc, v) => acc + (v.troco || 0),
+        0,
+      );
+      const quantidadeVendas = vendasDoCaixa.length;
+
+      setMeuCaixa({
+        ...caixaData,
+        totalVendas,
+        totalTroco,
+        quantidadeVendas,
+        totalEmCaixa: (caixaData.valorInicial || 0) + totalVendas - totalTroco,
+      });
+      setMinhasVendas(vendasDoCaixa);
     } catch (error) {
       console.error("Erro ao carregar meu caixa:", error);
     } finally {
@@ -148,8 +174,6 @@ function Caixas({ isVendedorView = false }) {
     }
 
     const vendedor = vendedores.find((v) => v.id === selectedVendedor);
-
-    // Verificar se vendedor já tem caixa aberto
     const caixaExistente = caixas.find(
       (c) => c.vendedorId === selectedVendedor && c.status === "aberto",
     );
@@ -161,6 +185,7 @@ function Caixas({ isVendedorView = false }) {
       return;
     }
 
+    setIsSubmitting(true); // 👈 bloqueia
     try {
       await addDoc(collection(db, "caixas"), {
         vendedorId: selectedVendedor,
@@ -182,6 +207,8 @@ function Caixas({ isVendedorView = false }) {
     } catch (error) {
       console.error("Erro ao abrir caixa:", error);
       showError("Erro", "Não foi possível abrir o caixa. Tente novamente.");
+    } finally {
+      setIsSubmitting(false); // 👈 liberta sempre, mesmo em erro
     }
   };
 
@@ -193,8 +220,13 @@ function Caixas({ isVendedorView = false }) {
         status: "fechado",
         dataFechamento: new Date(),
         fechadoPor: user?.nome || "Gerente",
+        valorFinal:
+          (selectedCaixa.valorInicial || 0) +
+          (selectedCaixa.totalVendas || 0) -
+          (selectedCaixa.totalTroco || 0), // totalTroco pode ser 0 na vista do gerente — ver nota abaixo
       });
-
+      setShowModal(false);
+      loadCaixas();
       showSuccess(
         "Caixa Fechado!",
         `Caixa de ${selectedCaixa.vendedorNome} foi fechado com êxito.`,
@@ -217,12 +249,47 @@ function Caixas({ isVendedorView = false }) {
     }).format(d);
   };
 
+  const formatPayment = (payment) => {
+    const labels = {
+      dinheiro: "Dinheiro",
+      cartao_credito: "Cartão de Crédito",
+    };
+    return labels[payment] || payment || "-";
+  };
+
+  const handleVendedorChange = (e) => {
+    const id = e.target.value;
+    setSelectedVendedor(id);
+
+    // Buscar o último caixa fechado deste vendedor
+    const ultimoCaixa = caixas
+      .filter(
+        (c) =>
+          c.vendedorId === id && c.status === "fechado" && c.valorFinal != null,
+      )
+      .sort((a, b) => {
+        const dateA = a.dataFechamento?.toDate
+          ? a.dataFechamento.toDate()
+          : new Date(a.dataFechamento);
+        const dateB = b.dataFechamento?.toDate
+          ? b.dataFechamento.toDate()
+          : new Date(b.dataFechamento);
+        return dateB - dateA;
+      })[0];
+
+    setValorInicial(
+      ultimoCaixa?.valorFinal != null ? String(ultimoCaixa.valorFinal) : "",
+    );
+  };
+
   if (isVendedorView) {
     return (
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>Meu Caixa</h1>
-          <p className={styles.subtitle}>Acompanhe o estado do seu caixa e as suas vendas</p>
+          <p className={styles.subtitle}>
+            Acompanhe o estado do seu caixa e as suas vendas
+          </p>
         </div>
 
         {isLoadingCaixa ? (
@@ -249,32 +316,28 @@ function Caixas({ isVendedorView = false }) {
                 <>
                   <div className={styles.caixaInfo}>
                     <div className={styles.infoItem}>
-                      <div className={styles.infoLabel}>Fundo de Troco</div>
-                      <div className={styles.infoValue}>
-                        {handleFormatCoin(meuCaixa.valorInicial)}
-                      </div>
-                    </div>
-                    <div className={styles.infoItem}>
                       <div className={styles.infoLabel}>Total em Vendas</div>
-                      <div className={`${styles.infoValue} ${styles.infoValueSuccess}`}>
+                      <div
+                        className={`${styles.infoValue} ${styles.infoValueSuccess}`}
+                      >
                         {handleFormatCoin(meuCaixa.totalVendas || 0)}
                       </div>
                     </div>
                     <div className={styles.infoItem}>
-                      <div className={styles.infoLabel}>Troco Devolvido</div>
-                      <div className={`${styles.infoValue} ${styles.infoValueWarning}`}>
-                        {handleFormatCoin(meuCaixa.totalTroco || 0)}
+                      <div className={styles.infoLabel}>
+                        Quantidade de Vendas
                       </div>
-                    </div>
-                    <div className={styles.infoItem}>
-                      <div className={styles.infoLabel}>Quantidade Vendas</div>
                       <div className={styles.infoValue}>
                         {meuCaixa.quantidadeVendas || 0}
                       </div>
                     </div>
-                    <div className={`${styles.infoItem} ${styles.infoItemHighlight}`}>
+                    <div
+                      className={`${styles.infoItem} ${styles.infoItemHighlight}`}
+                    >
                       <div className={styles.infoLabel}>Total em Caixa</div>
-                      <div className={`${styles.infoValue} ${styles.infoValuePrimary}`}>
+                      <div
+                        className={`${styles.infoValue} ${styles.infoValuePrimary}`}
+                      >
                         {handleFormatCoin(meuCaixa.totalEmCaixa || 0)}
                       </div>
                     </div>
@@ -304,20 +367,30 @@ function Caixas({ isVendedorView = false }) {
                 </div>
                 <div className={styles.sectionContent}>
                   <div className={styles.movimentacaoList}>
-                    {minhasVendas.slice(0, 10).map((venda) => (
-                      <div key={venda.idCompra || venda.docId} className={styles.movimentacaoItem}>
-                        <div className={`${styles.movimentacaoIcon} ${styles.movimentacaoIn}`}>
+                    {minhasVendas.map((venda) => (
+                      <div
+                        key={venda.idCompra || venda.docId}
+                        className={styles.movimentacaoItem}
+                      >
+                        <div
+                          className={`${styles.movimentacaoIcon} ${styles.movimentacaoIn}`}
+                        >
                           <ShoppingCart size={18} />
                         </div>
                         <div className={styles.movimentacaoInfo}>
                           <div className={styles.movimentacaoDesc}>
-                            {venda.produtos?.length || 0} {venda.produtos?.length === 1 ? 'item' : 'itens'} - {venda.clienteNome || 'Consumidor Final'}
+                            {venda.produtos?.length || 0}{" "}
+                            {venda.produtos?.length === 1 ? "item" : "itens"} -{" "}
+                            {venda.clienteNome || "Consumidor Final"}
                           </div>
                           <div className={styles.movimentacaoTime}>
-                            {formatDate(venda.data)} | {formatPayment(venda.pagamento || venda.formaPagamento)}
+                            {formatDate(venda.data)} |{" "}
+                            {formatPayment(venda.pagamento)}
                           </div>
                         </div>
-                        <div className={`${styles.movimentacaoValue} ${styles.valuePositive}`}>
+                        <div
+                          className={`${styles.movimentacaoValue} ${styles.valuePositive}`}
+                        >
                           {handleFormatCoin(venda.total || 0)}
                         </div>
                       </div>
@@ -345,16 +418,6 @@ function Caixas({ isVendedorView = false }) {
       </div>
     );
   }
-
-  const formatPayment = (payment) => {
-    const labels = {
-      dinheiro: "Dinheiro",
-      cartao_credito: "Credito",
-      cartao_debito: "Debito",
-      multicaixa: "Multicaixa",
-    };
-    return labels[payment] || payment || "-";
-  };
 
   const caixasAbertos = caixas.filter((c) => c.status === "aberto");
   const caixasFechados = caixas
@@ -480,7 +543,7 @@ function Caixas({ isVendedorView = false }) {
                   <label className={styles.modalLabel}>Vendedor</label>
                   <select
                     value={selectedVendedor}
-                    onChange={(e) => setSelectedVendedor(e.target.value)}
+                    onChange={handleVendedorChange}
                     className={styles.modalInput}
                     disabled={isLoadingVendedores}
                   >
@@ -545,8 +608,13 @@ function Caixas({ isVendedorView = false }) {
               <button
                 onClick={modalType === "abrir" ? abrirCaixa : fecharCaixa}
                 className={styles.modalConfirm}
+                disabled={isSubmitting} // 👈
               >
-                {modalType === "abrir" ? "Abrir Caixa" : "Confirmar Fechamento"}
+                {modalType === "abrir"
+                  ? isSubmitting
+                    ? "A abrir..."
+                    : "Abrir Caixa"
+                  : "Confirmar Fechamento"}
               </button>
             </div>
           </div>

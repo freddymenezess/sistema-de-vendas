@@ -1,15 +1,18 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { collection, getDocs, doc, updateDoc, increment } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
 import { db } from "@services/firebase";
 import Products from "@components/Products/Products";
 import Fatura from "@components/Fatura/Fatura";
 import { useSelectedProduct } from "@context/SelectedProductProvider";
 import useAuth from "@hooks/useAuth";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
-import {
-  updateProducts,
-  addVenda,
-} from "@services/firebaseData.service.js";
+import { updateProducts, addVenda } from "@services/firebaseData.service.js";
 import { showError, showWarning } from "@utils/sweetAlert";
 import {
   Search,
@@ -30,8 +33,14 @@ import styles from "./Home.module.css";
 import modalStyles from "../Vendas/Modal.module.css";
 
 function Home() {
-  const { user } = useAuth()
-  const { products, setProducts, handleInc, handleDec, loading: loadingProducts } = useSelectedProduct();
+  const { user } = useAuth();
+  const {
+    products,
+    setProducts,
+    handleInc,
+    handleDec,
+    loading: loadingProducts,
+  } = useSelectedProduct();
 
   const [search, setSearch] = useState("");
   const [formaPagamento, setFormaPagamento] = useState("dinheiro");
@@ -40,17 +49,14 @@ function Home() {
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
   const [showClienteDropdown, setShowClienteDropdown] = useState(false);
   const [searchCliente, setSearchCliente] = useState("");
-  
-  // Estado para valor pago e troco
+
   const [valorPago, setValorPago] = useState("");
   const [troco, setTroco] = useState(0);
-  
-  // Estado para fatura modal
+
   const [showFaturaModal, setShowFaturaModal] = useState(false);
   const [vendaFinalizada, setVendaFinalizada] = useState(null);
   const faturaRef = useRef(null);
 
-  // Carregar clientes do Firebase
   useEffect(() => {
     const loadClientes = async () => {
       try {
@@ -67,7 +73,6 @@ function Home() {
     loadClientes();
   }, []);
 
-  // Filtrar clientes pela busca
   const clientesFiltrados = useMemo(() => {
     if (!searchCliente) return clientes.slice(0, 5);
     return clientes
@@ -84,14 +89,33 @@ function Home() {
     () =>
       products
         .filter((p) => (p.quantity || 0) > 0)
-        .map((p) => ({
-          id: p.id,
-          nome: p.name,
-          src: p.src,
-          preco: p.price,
-          qtd: p.quantity,
-          subtotal: p.price * p.quantity,
-        })),
+        .map((p) => {
+          // precoVenda = p.price (= p.preco), que já é o preço final com ou sem IVA
+          const precoVenda = p.price ?? p.preco ?? 0;
+
+          // precoCusto: campo gravado pelo Estoque
+          const precoCusto = p.precoCusto ?? 0;
+
+          // Se o produto tem IVA, o precoBase é o custo; caso contrário é igual ao precoVenda
+          const addIva = p.addIva ?? false;
+          const precoBase = p.precoBase ?? precoCusto ?? precoVenda;
+
+          // IVA por unidade
+          const ivaUnitario = addIva ? precoVenda - precoBase : 0;
+
+          return {
+            id: p.id,
+            nome: p.name,
+            src: p.src,
+            preco: precoVenda, // preço de venda (exibido ao cliente)
+            precoCusto: precoCusto, // preço de custo (para relatórios)
+            precoBase: precoBase, // base sem IVA
+            addIva: addIva,
+            ivaUnitario: ivaUnitario,
+            qtd: p.quantity,
+            subtotal: precoVenda * p.quantity,
+          };
+        }),
     [products],
   );
 
@@ -107,13 +131,13 @@ function Home() {
 
   const subtotal = carrinho.reduce((acc, i) => acc + i.subtotal, 0);
   const total = subtotal;
-  const totalItems = carrinho.reduce((acc, item) => acc + item.qtd, 0);
+  const totalItems = carrinho.reduce((acc, i) => acc + i.qtd, 0);
+  const totalIva = carrinho.reduce((acc, i) => acc + i.ivaUnitario * i.qtd, 0);
+  const totalCusto = carrinho.reduce((acc, i) => acc + i.precoCusto * i.qtd, 0);
 
-  // Calcular troco quando valor pago muda
   useEffect(() => {
     const pago = parseFloat(valorPago) || 0;
-    const trocoCalc = pago - total;
-    setTroco(trocoCalc > 0 ? trocoCalc : 0);
+    setTroco(pago > total ? pago - total : 0);
   }, [valorPago, total]);
 
   async function handleFinalize() {
@@ -125,7 +149,6 @@ function Home() {
       return;
     }
 
-    // Validar valor pago para pagamento em dinheiro
     if (formaPagamento === "dinheiro") {
       const pago = parseFloat(valorPago) || 0;
       if (pago < total) {
@@ -139,7 +162,6 @@ function Home() {
 
     setLoading(true);
 
-    // Validate stock minimums
     const stockErrors = carrinho.reduce((acc, item) => {
       const prod = products.find((p) => p.id === item.id);
       if (prod && prod.stock - item.qtd < prod.minStock) {
@@ -152,17 +174,17 @@ function Home() {
       stockErrors.forEach((p) =>
         showError(
           "Estoque Insuficiente",
-          `${p.name}: Solicitado ${p.quantidade}, Estoque minimo ${p.minStock}`,
+          `${p.name}: Solicitado ${p.quantidade}, Estoque mínimo ${p.minStock}`,
         ),
       );
       setLoading(false);
       return;
     }
 
-    const subtotalVal = carrinho.reduce((acc, i) => acc + i.subtotal, 0);
-    const totalVal = subtotalVal;
-    const valorPagoNum = formaPagamento === "dinheiro" ? parseFloat(valorPago) || totalVal : totalVal;
-    const trocoVal = formaPagamento === "dinheiro" ? Math.max(0, valorPagoNum - totalVal) : 0;
+    const valorPagoNum =
+      formaPagamento === "dinheiro" ? parseFloat(valorPago) || total : total;
+    const trocoVal =
+      formaPagamento === "dinheiro" ? Math.max(0, valorPagoNum - total) : 0;
 
     const novaVenda = {
       idCompra: Date.now(),
@@ -173,28 +195,36 @@ function Home() {
       formaPagamento: formaPagamento,
       clienteId: clienteSelecionado?.id || "indiferente",
       clienteNome: clienteSelecionado?.nome || "Consumidor Final",
-      cliente: clienteSelecionado ? {
-        nome: clienteSelecionado.nome,
-        nif: clienteSelecionado.nif,
-        telefone: clienteSelecionado.telefone
-      } : null,
+      cliente: clienteSelecionado
+        ? {
+            nome: clienteSelecionado.nome,
+            nif: clienteSelecionado.nif,
+            telefone: clienteSelecionado.telefone,
+          }
+        : null,
+
+      // ── Produtos com preços correctamente discriminados ───────────────────
       produtos: carrinho.map((item) => ({
         id: item.id,
         name: item.nome,
         quantidade: item.qtd,
-        preco: item.preco,
-        precoBase: item.precoBase || (item.preco / 1.14),
-        iva: item.preco - (item.precoBase || (item.preco / 1.14)),
-        preco_pagar: item.subtotal,
+        precoCusto: item.precoCusto, // custo unitário
+        precoBase: item.precoBase, // base sem IVA
+        preco: item.preco, // preço de venda unitário
+        ivaUnitario: item.ivaUnitario, // IVA por unidade
+        ivaTotal: item.ivaUnitario * item.qtd, // IVA total da linha
+        preco_pagar: item.subtotal, // total da linha
       })),
-      subtotal: subtotalVal,
-      total: totalVal,
+
+      subtotal: total, // total de venda (com IVA embutido se aplicável)
+      totalIva: totalIva, // soma do IVA de todos os itens
+      totalCusto: totalCusto, // soma do custo de todos os itens
+      total: total,
       valorPago: valorPagoNum,
       troco: trocoVal,
       status: "concluida",
     };
 
-    // Deduct stock and reset quantities
     const newProds = products.map((prod) => {
       const vendido = carrinho.find((v) => v.id === prod.id);
       return vendido
@@ -203,14 +233,10 @@ function Home() {
     });
 
     try {
-      // Atualiza produtos no Firebase
       await updateProducts(newProds);
       setProducts(newProds.map((p) => ({ ...p, quantity: 0 })));
-
-      // Adiciona venda no Firebase
       await addVenda(novaVenda);
 
-      // Atualiza o caixa do vendedor
       const caixasRef = collection(db, "caixas");
       const caixasSnapshot = await getDocs(caixasRef);
       const caixaAtivo = caixasSnapshot.docs.find((d) => {
@@ -221,20 +247,17 @@ function Home() {
       if (caixaAtivo) {
         const caixaRef = doc(db, "caixas", caixaAtivo.id);
         await updateDoc(caixaRef, {
-          totalVendas: increment(totalVal),
+          totalVendas: increment(total),
           quantidadeVendas: increment(1),
-          // Desconta o troco do fundo de caixa quando aplicavel
-          ...(trocoVal > 0 && { valorInicial: increment(-trocoVal) })
+          ...(trocoVal > 0 && { valorInicial: increment(-trocoVal) }),
         });
       }
 
-      // Mostrar fatura
       setVendaFinalizada({
         ...novaVenda,
         vendedorNome: user.nome || user.email || "-",
       });
       setShowFaturaModal(true);
-
       setLoading(false);
       setClienteSelecionado(null);
       setSearchCliente("");
@@ -245,7 +268,7 @@ function Home() {
       setLoading(false);
       showError(
         "Erro na Venda",
-        "Nao foi possivel finalizar a venda. Tente novamente.",
+        "Não foi possível finalizar a venda. Tente novamente.",
       );
     }
   }
@@ -313,7 +336,7 @@ function Home() {
             <Package size={22} />
           </div>
           <div className={styles.overviewContent}>
-            <span className={styles.overviewLabel}>Produtos Disponiveis</span>
+            <span className={styles.overviewLabel}>Produtos Disponíveis</span>
             <strong className={styles.overviewValue}>{products.length}</strong>
           </div>
         </div>
@@ -355,7 +378,7 @@ function Home() {
               <Search size={20} className={styles.searchIcon} />
               <input
                 type="text"
-                placeholder="Pesquisar produto por nome ou codigo..."
+                placeholder="Pesquisar produto por nome ou código..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className={styles.searchInput}
@@ -404,7 +427,7 @@ function Home() {
             {carrinho.length === 0 ? (
               <div className={styles.cartEmpty}>
                 <ShoppingCart size={48} className={styles.cartEmptyIcon} />
-                <p>O carrinho esta vazio</p>
+                <p>O carrinho está vazio</p>
                 <span>Adicione produtos para iniciar uma venda</span>
               </div>
             ) : (
@@ -412,8 +435,19 @@ function Home() {
                 <div key={item.id} className={styles.cartItem}>
                   <div className={styles.cartItemInfo}>
                     <div className={styles.cartItemName}>{item.nome}</div>
-                    <div className={styles.cartItemPrice}>
-                      {handleFormatCoin(item.preco)}
+                    {/* Preço de venda + indicação de IVA quando aplicável */}
+                    <div className={styles.cartItemPrices}>
+                      <span className={styles.cartItemPrice}>
+                        {handleFormatCoin(item.preco)}
+                      </span>
+                      {item.addIva && item.ivaUnitario > 0 && (
+                        <span
+                          className={styles.cartItemIva}
+                          title="Inclui IVA 14%"
+                        >
+                          IVA {handleFormatCoin(item.ivaUnitario)}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className={styles.quantityControl}>
@@ -431,9 +465,6 @@ function Home() {
                       <Plus size={14} />
                     </button>
                   </div>
-                  <div className={styles.cartItemTotal}>
-                    {handleFormatCoin(item.subtotal)}
-                  </div>
                   <button
                     className={styles.removeButton}
                     onClick={() => handleRemove(item.id)}
@@ -448,15 +479,22 @@ function Home() {
           <div className={styles.cartFooter}>
             <div className={styles.cartTotals}>
               <div className={styles.cartRow}>
-                <span>Subtotal</span>
-                <span>{handleFormatCoin(subtotal)}</span>
+                <span>Subtotal (s/ IVA)</span>
+                <span>{handleFormatCoin(total - totalIva)}</span>
               </div>
+              {totalIva > 0 && (
+                <div className={styles.cartRow}>
+                  <span>IVA (14%)</span>
+                  <span>{handleFormatCoin(totalIva)}</span>
+                </div>
+              )}
               <div className={`${styles.cartRow} ${styles.cartRowTotal}`}>
                 <span>Total</span>
                 <span>{handleFormatCoin(total)}</span>
               </div>
             </div>
 
+            {/* Cliente */}
             <div className={styles.customerSection}>
               <label className={styles.paymentLabel}>Identificar Cliente</label>
               <div className={styles.customerSearchWrapper}>
@@ -467,13 +505,17 @@ function Home() {
                         <UserCheck size={18} />
                       </div>
                       <div className={styles.customerDetails}>
-                        <span className={styles.customerName}>{clienteSelecionado.nome}</span>
+                        <span className={styles.customerName}>
+                          {clienteSelecionado.nome}
+                        </span>
                         <span className={styles.customerSub}>
-                          {clienteSelecionado.telefone || clienteSelecionado.nif || "Cliente Identificado"}
+                          {clienteSelecionado.telefone ||
+                            clienteSelecionado.nif ||
+                            "Cliente Identificado"}
                         </span>
                       </div>
                     </div>
-                    <button 
+                    <button
                       onClick={() => setClienteSelecionado(null)}
                       className={styles.removeCustomer}
                       title="Remover cliente"
@@ -516,7 +558,9 @@ function Home() {
                           </div>
                         ))}
                         {clientesFiltrados.length === 0 && (
-                          <div className={styles.noResults}>Nenhum cliente encontrado</div>
+                          <div className={styles.noResults}>
+                            Nenhum cliente encontrado
+                          </div>
                         )}
                       </div>
                     )}
@@ -525,52 +569,28 @@ function Home() {
               </div>
             </div>
 
+            {/* Forma de Pagamento */}
             <div className={styles.paymentSection}>
               <label className={styles.paymentLabel}>Forma de Pagamento</label>
               <div className={styles.paymentOptions}>
                 <button
-                  className={`${styles.paymentOption} ${
-                    formaPagamento === "dinheiro" ? styles.paymentActive : ""
-                  }`}
+                  className={`${styles.paymentOption} ${formaPagamento === "dinheiro" ? styles.paymentActive : ""}`}
                   onClick={() => setFormaPagamento("dinheiro")}
                 >
                   <Banknote size={20} />
                   <span>Dinheiro</span>
                 </button>
                 <button
-                  className={`${styles.paymentOption} ${
-                    formaPagamento === "cartao_credito"
-                      ? styles.paymentActive
-                      : ""
-                  }`}
+                  className={`${styles.paymentOption} ${formaPagamento === "cartao_credito" ? styles.paymentActive : ""}`}
                   onClick={() => setFormaPagamento("cartao_credito")}
                 >
                   <CreditCard size={20} />
-                  <span>Credito</span>
-                </button>
-                <button
-                  className={`${styles.paymentOption} ${
-                    formaPagamento === "cartao_debito"
-                      ? styles.paymentActive
-                      : ""
-                  }`}
-                  onClick={() => setFormaPagamento("cartao_debito")}
-                >
-                  <CreditCard size={20} />
-                  <span>Debito</span>
-                </button>
-                <button
-                  className={`${styles.paymentOption} ${
-                    formaPagamento === "multicaixa" ? styles.paymentActive : ""
-                  }`}
-                  onClick={() => setFormaPagamento("multicaixa")}
-                >
-                  <span className={styles.multicaixaIcon}>MCX</span>
+                  <span>Cartão</span>
                 </button>
               </div>
             </div>
 
-            {/* Valor pago e troco - apenas para dinheiro */}
+            {/* Troco — apenas dinheiro */}
             {formaPagamento === "dinheiro" && carrinho.length > 0 && (
               <div className={styles.trocoSection}>
                 <div className={styles.trocoInputGroup}>
@@ -589,7 +609,9 @@ function Home() {
                 </div>
                 <div className={styles.trocoDisplay}>
                   <span className={styles.trocoLabel}>Troco a Devolver</span>
-                  <span className={`${styles.trocoValue} ${troco > 0 ? styles.trocoPositivo : ''}`}>
+                  <span
+                    className={`${styles.trocoValue} ${troco > 0 ? styles.trocoPositivo : ""}`}
+                  >
                     {handleFormatCoin(troco)}
                   </span>
                 </div>
@@ -616,9 +638,12 @@ function Home() {
           >
             <div className={modalStyles.header}>
               <h2 className={modalStyles.title}>
-                Venda Realizada - Fatura #{vendaFinalizada.idCompra}
+                Venda Realizada — Fatura #{vendaFinalizada.idCompra}
               </h2>
-              <button onClick={closeFaturaModal} className={modalStyles.closeButton}>
+              <button
+                onClick={closeFaturaModal}
+                className={modalStyles.closeButton}
+              >
                 <X size={20} />
               </button>
             </div>

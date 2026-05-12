@@ -8,8 +8,8 @@ import {
   doc,
 } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { secondaryAuth, db, storage } from "@services/firebase";
+import { secondaryAuth, db } from "@services/firebase";
+import { uploadImagem } from "@services/supabase";
 import { Plus, X, Camera, User } from "lucide-react";
 import {
   showError,
@@ -154,20 +154,12 @@ function Funcionarios() {
     setUploading(true);
 
     try {
-      // Criar preview local
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result);
-      };
+      reader.onloadend = () => setPreviewUrl(reader.result);
       reader.readAsDataURL(file);
 
-      // Upload para Firebase Storage
-      const fileName = `funcionarios/${Date.now()}_${file.name}`;
-      const storageRef = ref(storage, fileName);
-      await uploadBytes(storageRef, file);
-      const downloadUrl = await getDownloadURL(storageRef);
-
-      setFormData({ ...formData, fotoUrl: downloadUrl });
+      const url = await uploadImagem(file, "funcionarios");
+      setFormData({ ...formData, fotoUrl: url });
     } catch (error) {
       console.error("Erro ao fazer upload da foto:", error);
       showError(

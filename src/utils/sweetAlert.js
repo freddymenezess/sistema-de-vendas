@@ -44,6 +44,8 @@ export function showSuccess(title = "Sucesso!", message = "", timer = 2000) {
     ...(timer > 0 && { timer, timerProgressBar: true }),
     didOpen: (modal) => {
       modal.style.borderLeft = `4px solid ${colors.success}`;
+      const bar = modal.querySelector(".swal2-timer-progress-bar");
+      if (bar) bar.style.background = colors.success;
     },
   });
 }
@@ -226,6 +228,8 @@ export function updateToSuccess(
     allowEscapeKey: true,
     didOpen: (modal) => {
       modal.style.borderLeft = `4px solid ${colors.success}`;
+      const bar = modal.querySelector(".swal2-timer-progress-bar");
+      if (bar) bar.style.background = colors.success;
     },
     timer,
     timerProgressBar: timer > 0,
@@ -245,6 +249,8 @@ export function updateToError(title = "Erro!", message = "", timer = 3000) {
     allowEscapeKey: true,
     didOpen: (modal) => {
       modal.style.borderLeft = `4px solid ${colors.error}`;
+      const bar = modal.querySelector(".swal2-timer-progress-bar");
+      if (bar) bar.style.background = colors.error;
     },
     timer,
     timerProgressBar: timer > 0,

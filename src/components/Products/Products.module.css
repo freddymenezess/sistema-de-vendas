@@ -230,6 +230,7 @@
 /* ── FOOTER ──────────────────────────────────────────────── */
 .productFooter {
   display: flex;
+  flex-flow: row wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;

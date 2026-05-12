@@ -213,31 +213,31 @@ function Encomendas() {
 
   const getStatusLabel = (status) => {
     switch (status) {
-      case "pendente":
-        return "Pendente";
-      case "enviada":
-        return "Enviada";
-      case "recebida":
-        return "Recebida";
-      case "cancelada":
-        return "Cancelada";
-      default:
-        return status;
+    case "pendente":
+      return "Pendente";
+    case "enviada":
+      return "Enviada";
+    case "recebida":
+      return "Recebida";
+    case "cancelada":
+      return "Cancelada";
+    default:
+      return status;
     }
   };
 
   const getStatusClass = (status) => {
     switch (status) {
-      case "pendente":
-        return styles.statusPendente;
-      case "enviada":
-        return styles.statusEnviada;
-      case "recebida":
-        return styles.statusRecebida;
-      case "cancelada":
-        return styles.statusCancelada;
-      default:
-        return "";
+    case "pendente":
+      return styles.statusPendente;
+    case "enviada":
+      return styles.statusEnviada;
+    case "recebida":
+      return styles.statusRecebida;
+    case "cancelada":
+      return styles.statusCancelada;
+    default:
+      return "";
     }
   };
 

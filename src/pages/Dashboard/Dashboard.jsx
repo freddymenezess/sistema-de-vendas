@@ -1,6 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { ShoppingCart, DollarSign, Package, Users } from "lucide-react";
-import { getProducts, getVendas } from "@services/firebaseData.service.js";
+import {
+  getProducts,
+  getVendas,
+  getUsersCount,
+} from "@services/firebaseData.service.js";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import useAuth from "@hooks/useAuth";
 import styles from "./Dashboard.module.css";
@@ -10,6 +14,7 @@ function Dashboard() {
   const [compras, setCompras] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [usersCount, setUsersCount] = useState(0);
 
   useEffect(() => {
     loadData();
@@ -17,9 +22,14 @@ function Dashboard() {
 
   const loadData = async () => {
     try {
-      const [vendas, prods] = await Promise.all([getVendas(), getProducts()]);
+      const [vendas, prods, count] = await Promise.all([
+        getVendas(),
+        getProducts(),
+        getUsersCount(),
+      ]);
       setCompras(vendas);
       setProducts(prods);
+      setUsersCount(count);
     } catch (error) {
       console.error("[v0] Erro ao carregar dados do dashboard:", error);
     } finally {
@@ -31,7 +41,7 @@ function Dashboard() {
     const totalVendido = compras.reduce((acc, c) => acc + c.total, 0);
     const totalVendas = compras.length;
     const totalProdutos = products.length;
-    const totalFuncionarios = 0; // Sem dados de funcionários aqui
+    const totalFuncionarios = usersCount; // Usando o estado para contar usuários
 
     return {
       totalVendido,
@@ -39,7 +49,7 @@ function Dashboard() {
       totalProdutos,
       totalFuncionarios,
     };
-  }, [compras, products]);
+  }, [compras, products, usersCount]);
 
   const vendasRecentes = useMemo(() => {
     return [...compras]

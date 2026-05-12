@@ -13,7 +13,6 @@ function Login() {
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const { user } = useAuth();
 
   if (user) {

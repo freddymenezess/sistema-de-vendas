@@ -7,11 +7,14 @@ import {
   updateDoc,
   deleteDoc,
   writeBatch,
+  query,
+  where
 } from "firebase/firestore";
 
 const PRODUCTS_COLLECTION = "products";
 const VENDAS_COLLECTION = "vendas";
 const FORNECEDORES_COLLECTION = "fornecedores";
+const USERS_COLLECTION = "usuarios";
 
 /**
  * Inicializa produtos padrão na Firestore se a coleção estiver vazia
@@ -206,3 +209,26 @@ export async function deleteFornecedor(fornecedorId) {
     console.error("[v0] Erro ao deletar fornecedor:", error);
   }
 }
+
+/**
+ * Buscar o número de funcionários
+ */
+export async function getUsersCount() {
+  try {
+    const usersRef = collection(db, USERS_COLLECTION);
+    
+    // Criamos uma consulta filtrando por cargos específicos
+    const q = query(
+      usersRef, 
+      where("cargo", "in", ["seller", "manager"])
+    );
+    
+    const querySnapshot = await getDocs(q);
+    
+    // Retornamos a quantidade de documentos encontrados
+    return querySnapshot.size;
+  } catch (error) {
+    console.error("Erro ao buscar funcionários:", error);
+    return 0;
+  }
+};

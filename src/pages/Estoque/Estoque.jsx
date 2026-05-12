@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Plus, Package, X, AlertTriangle, Upload, Image } from "lucide-react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "@services/firebase";
+import { uploadImagem } from "@services/supabase";
 import { getProducts, updateProducts } from "@services/firebaseData.service.js";
 import { handleFormatCoin } from "@utils/handleFormatCoin";
 import {
@@ -13,7 +12,7 @@ import {
 import styles from "./Estoque.module.css";
 import modalStyles from "./Modal.module.css";
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
 const CATEGORIAS = [
   "Perfumes",
@@ -24,7 +23,12 @@ const CATEGORIAS = [
   "Outros",
 ];
 
-function Estoque({ readOnly = false }) {
+const calcularPrecoVenda = (precoCusto, addIva) => {
+  const custo = parseFloat(precoCusto) || 0;
+  return addIva ? Math.ceil(custo * 1.14) - 0.01 : custo;
+};
+
+function Stock({ readOnly = false }) {
   const [produtos, setProdutos] = useState([]);
   const [filteredProdutos, setFilteredProdutos] = useState([]);
   const [search, setSearch] = useState("");
@@ -32,6 +36,7 @@ function Estoque({ readOnly = false }) {
   const [showModal, setShowModal] = useState(false);
   const [editingProduto, setEditingProduto] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     categoria: "",
@@ -42,6 +47,7 @@ function Estoque({ readOnly = false }) {
     code: "",
     descricao: "",
     src: "",
+    addIva: true,
   });
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState("");
@@ -87,19 +93,23 @@ function Estoque({ readOnly = false }) {
   const openModal = (produto = null) => {
     if (produto) {
       setEditingProduto(produto);
-      // Se o produto ja tem preco com IVA, calcular o preco base (sem IVA)
-      const precoComIva = produto.preco || 0;
-      const precoBase = produto.precoBase || (precoComIva / 1.14);
+
+      const hadIva =
+        produto.precoCusto > 0 &&
+        Math.abs(produto.preco - produto.precoCusto * 1.14) < 0.01;
+      const addIva = hadIva;
+
       setFormData({
         name: produto.name || "",
         categoria: produto.categoria || "",
-        preco: precoBase.toFixed(2), // Mostrar preco sem IVA no formulario
+        preco: produto.preco?.toFixed(2) || "",
         precoCusto: produto.precoCusto?.toString() || "",
         stock: produto.stock?.toString() || "",
         minStock: produto.minStock?.toString() || "",
         code: produto.code || "",
         descricao: produto.descricao || "",
         src: produto.src || "",
+        addIva,
       });
       setPreviewUrl(produto.src || "");
     } else {
@@ -114,6 +124,7 @@ function Estoque({ readOnly = false }) {
         code: "",
         descricao: "",
         src: "",
+        addIva: true,
       });
       setPreviewUrl("");
     }
@@ -126,17 +137,35 @@ function Estoque({ readOnly = false }) {
     setPreviewUrl("");
   };
 
+  // Atualiza precoCusto e recalcula o preço de venda automaticamente
+  const handlePrecoCustoChange = (value) => {
+    const precoVenda = calcularPrecoVenda(value, formData.addIva);
+    setFormData({
+      ...formData,
+      precoCusto: value,
+      preco: precoVenda > 0 ? precoVenda.toFixed(2) : "",
+    });
+  };
+
+  // Atualiza o checkbox de IVA e recalcula o preço de venda
+  const handleAddIvaChange = (checked) => {
+    const precoVenda = calcularPrecoVenda(formData.precoCusto, checked);
+    setFormData({
+      ...formData,
+      addIva: checked,
+      preco: precoVenda > 0 ? precoVenda.toFixed(2) : "",
+    });
+  };
+
   const handleImageUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validar tipo de arquivo
     if (!file.type.startsWith("image/")) {
       showWarning("Arquivo inválido", "Por favor, selecione uma imagem.");
       return;
     }
 
-    // Validar tamanho (max 2MB)
     if (file.size > MAX_FILE_SIZE) {
       showWarning("Arquivo muito grande", "A imagem deve ter no máximo 2MB.");
       return;
@@ -145,26 +174,17 @@ function Estoque({ readOnly = false }) {
     setUploading(true);
 
     try {
-      // Criar preview local
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result);
-      };
+      reader.onloadend = () => setPreviewUrl(reader.result);
       reader.readAsDataURL(file);
 
-      // Upload para Firebase Storage
-      const fileName = `produtos/${Date.now()}_${file.name}`;
-      const storageRef = ref(storage, fileName);
-      await uploadBytes(storageRef, file);
-      const downloadUrl = await getDownloadURL(storageRef);
+      const url = await uploadImagem(file, "produtos");
 
-      setFormData({ ...formData, src: downloadUrl });
+      // functional update — evita stale closure
+      setFormData((prev) => ({ ...prev, src: url }));
     } catch (error) {
       console.error("Erro ao fazer upload da imagem:", error);
-      showError(
-        "Erro no upload",
-        "Não foi possível fazer upload da imagem. Tente novamente.",
-      );
+      showError("Erro no upload", "Não foi possível fazer upload da imagem.");
     } finally {
       setUploading(false);
     }
@@ -172,19 +192,22 @@ function Estoque({ readOnly = false }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
 
-    // Preco inserido e o preco base (sem IVA)
-    // Preco final = preco base + 14% IVA
-    const precoBase = parseFloat(formData.preco) || 0;
-    const precoComIva = precoBase * 1.14; // Adiciona 14% de IVA
+    const precoCusto = parseFloat(formData.precoCusto) || 0;
+    const precoVenda = calcularPrecoVenda(precoCusto, formData.addIva);
+
+    console.log("src antes de guardar:", formData.src);
 
     const produtoData = {
       name: formData.name,
       categoria: formData.categoria,
-      precoBase: precoBase, // Preco sem IVA
-      preco: precoComIva, // Preco com IVA (preco de venda)
-      price: precoComIva, // Alias para compatibilidade
-      precoCusto: parseFloat(formData.precoCusto) || 0,
+      precoBase: precoCusto, 
+      preco: precoVenda, 
+      price: precoVenda, 
+      precoCusto: precoCusto,
+      addIva: formData.addIva,
       stock: parseInt(formData.stock) || 0,
       minStock: parseInt(formData.minStock) || 0,
       code: formData.code,
@@ -214,6 +237,8 @@ function Estoque({ readOnly = false }) {
       closeModal();
     } catch (error) {
       console.error("[v0] Erro ao salvar produto:", error);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -242,7 +267,7 @@ function Estoque({ readOnly = false }) {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>
-          {readOnly ? "Consulta de Estoque" : "Gestão de Estoque"}
+          {readOnly ? "Consulta de Stock" : "Gestão de Stock"}
         </h1>
         <div className={styles.actions}>
           <input
@@ -277,7 +302,15 @@ function Estoque({ readOnly = false }) {
         {filteredProdutos.map((produto) => (
           <div key={produto.id} className={styles.productCard}>
             <div className={styles.productImage}>
-              <Package size={48} />
+              {produto.src ? (
+                <img
+                  src={produto.src}
+                  alt={produto.name}
+                  className={styles.productImg}
+                />
+              ) : (
+                <Package size={48} />
+              )}
             </div>
             <div className={styles.productContent}>
               <div className={styles.productCategory}>{produto.categoria}</div>
@@ -293,8 +326,7 @@ function Estoque({ readOnly = false }) {
                 </span>
               </div>
               {produto.minStock > 0 &&
-                (produto.stock || 0) <= produto.minStock &&
-                (
+                (produto.stock || 0) <= produto.minStock && (
                   <div className={styles.stockAlert}>
                     <AlertTriangle size={14} />
                     <span>Stock baixo (min: {produto.minStock})</span>
@@ -386,6 +418,7 @@ function Estoque({ readOnly = false }) {
                       required
                     />
                   </div>
+
                   <div className={modalStyles.field}>
                     <label className={modalStyles.label}>Categoria</label>
                     <select
@@ -404,42 +437,54 @@ function Estoque({ readOnly = false }) {
                       ))}
                     </select>
                   </div>
+
                   <div className={modalStyles.fieldRow}>
+                    {/* Preço de Custo — o gestor insere este valor */}
                     <div className={modalStyles.field}>
-                      <label className={modalStyles.label}>Preco Base (sem IVA)</label>
+                      <label className={modalStyles.label}>Preço</label>
                       <input
                         type="number"
                         step="0.01"
-                        value={formData.preco}
-                        onChange={(e) =>
-                          setFormData({ ...formData, preco: e.target.value })
-                        }
+                        min="0"
+                        value={formData.precoCusto}
+                        onChange={(e) => handlePrecoCustoChange(e.target.value)}
                         className={modalStyles.input}
-                        placeholder="Preco final = base + 14% IVA"
+                        placeholder="0.00"
                         required
                       />
-                      {formData.preco && (
-                        <small className={styles.ivaHint}>
-                          Preco de venda: {handleFormatCoin(parseFloat(formData.preco) * 1.14)} (com IVA 14%)
-                        </small>
-                      )}
                     </div>
+
+                    {/* Preço de Venda — calculado automaticamente, read-only */}
                     <div className={modalStyles.field}>
-                      <label className={modalStyles.label}>Preco de Custo</label>
+                      <label className={modalStyles.label}>
+                        Preço de Venda
+                      </label>
                       <input
                         type="number"
-                        step="0.01"
-                        value={formData.precoCusto}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            precoCusto: e.target.value,
-                          })
-                        }
-                        className={modalStyles.input}
+                        value={formData.preco}
+                        readOnly
+                        className={`${modalStyles.input} ${styles.inputReadOnly}`}
+                        placeholder="Calculado automaticamente"
+                        tabIndex={-1}
                       />
                     </div>
                   </div>
+
+                  {/* Checkbox Adicionar IVA */}
+                  <div className={styles.ivaCheckboxWrapper}>
+                    <label className={styles.ivaCheckboxLabel}>
+                      <input
+                        type="checkbox"
+                        checked={formData.addIva}
+                        onChange={(e) => handleAddIvaChange(e.target.checked)}
+                        className={styles.ivaCheckbox}
+                      />
+                      <span className={styles.ivaCheckboxText}>
+                        Adicionar IVA (14%)
+                      </span>
+                    </label>
+                  </div>
+
                   <div className={modalStyles.fieldRow}>
                     <div className={modalStyles.field}>
                       <label className={modalStyles.label}>Quantidade</label>
@@ -447,34 +492,29 @@ function Estoque({ readOnly = false }) {
                         type="number"
                         value={formData.stock}
                         onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            stock: e.target.value,
-                          })
+                          setFormData({ ...formData, stock: e.target.value })
                         }
                         className={modalStyles.input}
                         required
                       />
                     </div>
                     <div className={modalStyles.field}>
-                      <label className={modalStyles.label}>Stock Minimo</label>
+                      <label className={modalStyles.label}>Stock Mínimo</label>
                       <input
                         type="number"
                         value={formData.minStock}
                         onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            minStock: e.target.value,
-                          })
+                          setFormData({ ...formData, minStock: e.target.value })
                         }
                         className={modalStyles.input}
                         placeholder="Alerta quando atingir"
                       />
                     </div>
                   </div>
+
                   <div className={modalStyles.field}>
                     <label className={modalStyles.label}>
-                      Codigo de Barras
+                      Código de Barras
                     </label>
                     <input
                       type="text"
@@ -485,8 +525,9 @@ function Estoque({ readOnly = false }) {
                       className={modalStyles.input}
                     />
                   </div>
+
                   <div className={modalStyles.field}>
-                    <label className={modalStyles.label}>Descricao</label>
+                    <label className={modalStyles.label}>Descrição</label>
                     <textarea
                       value={formData.descricao}
                       onChange={(e) =>
@@ -497,6 +538,7 @@ function Estoque({ readOnly = false }) {
                   </div>
                 </div>
               </div>
+
               <div className={modalStyles.footer}>
                 <button
                   type="button"
@@ -505,8 +547,20 @@ function Estoque({ readOnly = false }) {
                 >
                   Cancelar
                 </button>
-                <button type="submit" className={modalStyles.submitButton}>
-                  {editingProduto ? "Salvar" : "Adicionar"}
+                <button
+                  type="submit"
+                  className={modalStyles.submitButton}
+                  disabled={submitting || uploading} // ← adiciona || uploading
+                >
+                  {uploading
+                    ? "A enviar imagem..."
+                    : submitting
+                      ? editingProduto
+                        ? "A guardar..."
+                        : "A adicionar..."
+                      : editingProduto
+                        ? "Salvar"
+                        : "Adicionar"}
                 </button>
               </div>
             </form>
@@ -517,4 +571,4 @@ function Estoque({ readOnly = false }) {
   );
 }
 
-export default Estoque;
+export default Stock;

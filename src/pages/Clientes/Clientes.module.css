@@ -152,6 +152,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1.25rem;
+  min-width: 0;
 }
 
 .cardHeader {
