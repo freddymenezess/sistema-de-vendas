@@ -12,8 +12,7 @@ function Login() {
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const { user, loading, setLoading } = useAuth();
 
   if (user) {
     if (user.cargo === "admin" || user.cargo === "manager") {

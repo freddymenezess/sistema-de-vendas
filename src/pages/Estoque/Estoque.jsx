@@ -25,7 +25,7 @@ const CATEGORIAS = [
 
 const calcularPrecoVenda = (precoCusto, addIva) => {
   const custo = parseFloat(precoCusto) || 0;
-  return addIva ? Math.ceil(custo * 1.14) - 0.01 : custo;
+  return addIva ? Math.ceil(custo * 1.14) : custo;
 };
 
 function Stock({ readOnly = false }) {
@@ -94,10 +94,7 @@ function Stock({ readOnly = false }) {
     if (produto) {
       setEditingProduto(produto);
 
-      const hadIva =
-        produto.precoCusto > 0 &&
-        Math.abs(produto.preco - produto.precoCusto * 1.14) < 0.01;
-      const addIva = hadIva;
+      const addIva = produto.precoCusto > 0;
 
       setFormData({
         name: produto.name || "",
@@ -203,9 +200,9 @@ function Stock({ readOnly = false }) {
     const produtoData = {
       name: formData.name,
       categoria: formData.categoria,
-      precoBase: precoCusto, 
-      preco: precoVenda, 
-      price: precoVenda, 
+      precoBase: precoCusto,
+      preco: precoVenda,
+      price: precoVenda,
       precoCusto: precoCusto,
       addIva: formData.addIva,
       stock: parseInt(formData.stock) || 0,

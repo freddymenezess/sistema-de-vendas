@@ -132,12 +132,7 @@
   color: white;
   font-weight: 600;
   font-size: 0.875rem;
-  overflow: hidden;
-}
-
-.productImage {
-  width: 40px;
-  height: 40px;
+  overflow: hidden;;
 }
 
 .productImg {

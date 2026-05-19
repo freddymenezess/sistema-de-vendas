@@ -33,10 +33,8 @@ const menuItems = {
       items: [
         { name: "Funcionários", icon: Users, to: "/funcionarios" },
         { name: "Clientes", icon: UserCheck, to: "/clientes" },
-        { name: "Estoque", icon: Package, to: "/stock" },
-        { name: "Encomendas", icon: Truck, to: "/encomendas" },
-        { name: "Caixas", icon: CreditCard, to: "/caixas" },
         { name: "Fornecedores", icon: LucideSquareUser, to: "/fornecedores" },
+        { name: "Devoluções", icon: RotateCcw, to: "/devolucoes" },
       ],
     },
     {
