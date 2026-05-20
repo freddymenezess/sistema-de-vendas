@@ -11,13 +11,11 @@ import {
 } from "lucide-react";
 import {
   getFornecedores,
-  initializeFornecedores,
   addFornecedor,
   updateFornecedor,
   deleteFornecedor,
 } from "@services/firebaseData.service.js";
 import { showError, showSuccess, showDeleteConfirm } from "@utils/sweetAlert";
-import fornecedoresData from "@data/fornecedores.json";
 import styles from "./Fornecedores.module.css";
 import modalStyles from "./Modal.module.css";
 
@@ -41,7 +39,6 @@ function Fornecedores() {
 
   const loadFornecedores = async () => {
     try {
-      await initializeFornecedores(fornecedoresData);
       const data = await getFornecedores();
       setFornecedores(data);
     } catch (error) {

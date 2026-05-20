@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Plus, X, Printer, Package, AlertTriangle, Truck } from "lucide-react";
+import { Plus, X, Printer, AlertTriangle, Truck } from "lucide-react";
 import { getProducts } from "@services/firebaseData.service.js";
 import { getFornecedores } from "@services/firebaseData.service.js";
 import {

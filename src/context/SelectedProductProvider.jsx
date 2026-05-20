@@ -1,6 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { getProducts, initializeDefaultProducts } from "@services/firebaseData.service.js";
-import prodsStorage from "@data/products.json";
+import { getProducts } from "@services/firebaseData.service.js";
 
 const SelectedProductContext = createContext();
 
@@ -13,19 +12,12 @@ export const SelectedProductProvider = ({ children }) => {
   useEffect(() => {
     const initProducts = async () => {
       try {
-        // Inicializa com produtos padrão se não existirem
-        await initializeDefaultProducts(prodsStorage);
-        // Carrega produtos do Firebase
         const firebaseProducts = await getProducts();
         if (firebaseProducts.length > 0) {
           setProducts(firebaseProducts);
-        } else {
-          // Fallback para produtos padrão se Firebase estiver vazio
-          setProducts(prodsStorage);
         }
       } catch (error) {
         console.error("[v0] Erro ao carregar produtos:", error);
-        setProducts(prodsStorage);
       } finally {
         setLoading(false);
       }
